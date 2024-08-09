@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.header-wrapper--border-bottom {
-  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.header-nav-item {
+  padding: 12px;
 }

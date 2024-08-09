@@ -1,8 +1,8 @@
 function Header() {
   return (
-    <header className="py-2 px-[50px] relative">
-      <div className="h-[4.4rem] w-[4.4rem] p-0">
-        <span className="flex items-center justify-center">
+    <header className="py-2 px-[50px] relative grid grid-cols-4 items-center border-b-[1px] border-color-foreground/8">
+      <div className="h-[44px] w-[44px] flex items-center p-0 col-span-1">
+        <span className="flex justify-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -15,8 +15,8 @@ function Header() {
           </svg>
         </span>
       </div>
-      <h1>
-        <a href="/">
+      <h1 className="col-span-2 justify-self-center">
+        <a href="/" className="p-[7.5px] flex items-center">
           <div>
             <img
               src="//uncommonjames.com/cdn/shop/files/logo__uj.svg?v=1685119912&amp;width=600"
@@ -30,8 +30,8 @@ function Header() {
           </div>
         </a>
       </h1>
-      <div>
-        <a href="/account">
+      <div className="col-span-1 justify-self-end flex">
+        <a href="/account" className="h-[44px] w-[44px] flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -58,7 +58,7 @@ function Header() {
             </g>
           </svg>
         </a>
-        <a href="/cart">
+        <a href="/cart" className="h-[44px] w-[44px] flex items-center">
           <svg
             x="0px"
             y="0px"
@@ -137,441 +137,91 @@ function Header() {
           </svg>
         </a>
       </div>
-      <nav className="header__inline-menu">
-        <ul className="list-menu list-menu--inline" role="list">
+      <nav className="col-span-2 col-start-2">
+        <ul role="list" className="flex justify-center items-center">
           <li>
             <a
+              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
               href="/collections/bestsellers"
-              className="header__menu-item list-menu__item link link--text focus-inset"
             >
               <span>Best Sellers</span>
             </a>
           </li>
           <li>
-            <header-menu>
-              <details id="Details-HeaderMenu-2" className="mega-menu">
-                <summary className="header__menu-item list-menu__item link focus-inset">
-                  <span>Jewelry</span>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    className="icon icon-caret"
-                    viewBox="0 0 22 13"
-                  >
-                    <polyline
-                      points="21.557 1.222 11 11.778 0.443 1.222"
-                      fill="none"
-                      stroke="#121212"
-                      strokeMiterlimit="10"
-                    ></polyline>
-                  </svg>
-                </summary>
-
-                <div
-                  id="MegaMenu-Content-2"
-                  className="mega-menu__content gradient motion-reduce global-settings-popup"
-                  tabIndex="-1"
-                >
-                  <div className="mega-menu__list page-width" role="list">
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Shop by Category
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/necklaces"
-                            className="mega-menu__link link"
-                          >
-                            Necklaces
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/earrings"
-                            className="mega-menu__link link"
-                          >
-                            Earrings
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/rings"
-                            className="mega-menu__link link"
-                          >
-                            Rings
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/bracelets"
-                            className="mega-menu__link link"
-                          >
-                            Bracelets
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/charm-bar"
-                            className="mega-menu__link link"
-                          >
-                            Charms
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/jewelry"
-                            className="mega-menu__link link"
-                          >
-                            Shop All
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Featured Collections
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/vermeil-jewelry"
-                            className="mega-menu__link link"
-                          >
-                            Vermeil
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/silver"
-                            className="mega-menu__link link"
-                          >
-                            Silver Jewelry
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/engravable-jewelry"
-                            className="mega-menu__link link"
-                          >
-                            Engravable Jewelry
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/bestsellers"
-                            className="mega-menu__link link"
-                          >
-                            Best Sellers
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/signature-sets"
-                            className="mega-menu__link link"
-                          >
-                            Signature Sets
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/kristins-monthly-style-edit"
-                            className="mega-menu__link link"
-                          >
-                            Kristin's Style Edit
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Trending Collections
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/charm-bar"
-                            className="mega-menu__link link"
-                          >
-                            Charms
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/color"
-                            className="mega-menu__link link"
-                          >
-                            Colorful Jewelry
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/layer-up"
-                            className="mega-menu__link link"
-                          >
-                            Layer Up Collection
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/wedding-season"
-                            className="mega-menu__link link"
-                          >
-                            Wedding Season Collection
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/just-add-sparkle"
-                            className="mega-menu__link link"
-                          >
-                            Just Add Sparkle
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </details>
-            </header-menu>
-          </li>
-          <li>
-            <header-menu>
-              <details id="Details-HeaderMenu-3" className="mega-menu">
-                <summary className="header__menu-item list-menu__item link focus-inset">
-                  <span>Beauty</span>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    className="icon icon-caret"
-                    viewBox="0 0 22 13"
-                  >
-                    <polyline
-                      points="21.557 1.222 11 11.778 0.443 1.222"
-                      fill="none"
-                      stroke="#121212"
-                      strokeMiterlimit="10"
-                    ></polyline>
-                  </svg>
-                </summary>
-
-                <div
-                  id="MegaMenu-Content-3"
-                  className="mega-menu__content gradient motion-reduce global-settings-popup"
-                  tabIndex="-1"
-                >
-                  <div className="mega-menu__list page-width" role="list">
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Shop by Category
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/beauty-bundles"
-                            className="mega-menu__link link"
-                          >
-                            Bundles and Duos
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/beauty-accessories"
-                            className="mega-menu__link link"
-                          >
-                            Beauty Accessories
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/uncommon-beauty"
-                            className="mega-menu__link link"
-                          >
-                            Shop All
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Featured Collections
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/anti-aging"
-                            className="mega-menu__link link"
-                          >
-                            Anti-Aging Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/hydrating"
-                            className="mega-menu__link link"
-                          >
-                            Hydrating Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/brightening"
-                            className="mega-menu__link link"
-                          >
-                            Brightening Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/exfoliation"
-                            className="mega-menu__link link"
-                          >
-                            Exfoliating Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/cleansing"
-                            className="mega-menu__link link"
-                          >
-                            Cleansing and Purifying Skincare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </details>
-            </header-menu>
+            <a
+              className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+              href="/collections/jewelry"
+            >
+              <span>Jewelry</span>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 22 13"
+                className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
+              >
+                <polyline
+                  points="21.557 1.222 11 11.778 0.443 1.222"
+                  fill="none"
+                  stroke="#121212"
+                  strokeMiterlimit="10"
+                ></polyline>
+              </svg>
+            </a>
           </li>
           <li>
             <a
-              href="/products/hard-feelings-fragrance"
-              className="header__menu-item list-menu__item link link--text focus-inset"
+              className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+              href="/collections/beauty"
+            >
+              <span>Beauty</span>
+              <svg
+                className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 22 13"
+              >
+                <polyline
+                  points="21.557 1.222 11 11.778 0.443 1.222"
+                  fill="none"
+                  stroke="#121212"
+                  strokeMiterlimit="10"
+                ></polyline>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
+              href="/collections/fragrance"
             >
               <span>Fragrance</span>
             </a>
           </li>
           <li>
-            <header-menu>
-              <details id="Details-HeaderMenu-5" className="mega-menu">
-                <summary className="header__menu-item list-menu__item link focus-inset">
-                  <span>Lifestyle</span>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    className="icon icon-caret"
-                    viewBox="0 0 22 13"
-                  >
-                    <polyline
-                      points="21.557 1.222 11 11.778 0.443 1.222"
-                      fill="none"
-                      stroke="#121212"
-                      strokeMiterlimit="10"
-                    ></polyline>
-                  </svg>
-                </summary>
-
-                <div
-                  id="MegaMenu-Content-5"
-                  className="mega-menu__content gradient motion-reduce global-settings-popup"
-                  tabIndex="-1"
-                >
-                  <div className="mega-menu__list page-width" role="list">
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Shop by Category
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/apparel"
-                            className="mega-menu__link link"
-                          >
-                            Apparel
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/accessories"
-                            className="mega-menu__link link"
-                          >
-                            Accessories
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/candles"
-                            className="mega-menu__link link"
-                          >
-                            Soy Wax Candles
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/uj-home"
-                            className="mega-menu__link link"
-                          >
-                            Kitchen and Home Decor
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/uncommon-lifestyle"
-                            className="mega-menu__link link"
-                          >
-                            Shop All
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h2 className="mega-menu__link--level-2-title">
-                        Featured Collections
-                      </h2>
-
-                      <ul className="list-unstyled" role="list">
-                        <li>
-                          <a
-                            href="/collections/seasonal-favorites"
-                            className="mega-menu__link link"
-                          >
-                            Seasonal Favorites
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/city-jewelry-and-merch"
-                            className="mega-menu__link link"
-                          >
-                            City Jewelry and Merch
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="/collections/kristins-cookbooks"
-                            className="mega-menu__link link"
-                          >
-                            Kristin Cavallari's Cookbooks
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </details>
-            </header-menu>
+            <a
+              className="header-nav-item !pr-[27px] text-color-foreground/75 relative hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
+              href="/collections/lifestyle"
+            >
+              <span>Lifestyle</span>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 22 13"
+                className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
+              >
+                <polyline
+                  points="21.557 1.222 11 11.778 0.443 1.222"
+                  fill="none"
+                  stroke="#121212"
+                  strokeMiterlimit="10"
+                ></polyline>
+              </svg>
+            </a>
           </li>
           <li>
             <a
+              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
               href="/collections/sale"
-              className="header__menu-item list-menu__item link link--text focus-inset"
             >
               <span>Sale</span>
             </a>
