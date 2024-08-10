@@ -44,3 +44,11 @@ header .active {
 .header-nav-item {
   padding: 12px;
 }
+
+.link {
+  @apply text-color-foreground/75 block text-[13px] py-[6px] cursor-pointer underline-offset-3px tracking-[0.6px];
+}
+
+.link:hover {
+  @apply underline text-black;
+}

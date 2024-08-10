@@ -35,7 +35,7 @@ function ProductCard({ isOptional = false, isOff = false }) {
       )}
       <div className="py-[10px] pb-[17px] text-center text-sm">
         <h3>
-          <a href="/" className="group-hover:underline underline-offset-3.5px">
+          <a href="/" className="group-hover:underline underline-offset-3px">
             Hard Feelings Eau De Parfum
           </a>
         </h3>

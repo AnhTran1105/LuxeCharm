@@ -7,13 +7,14 @@ export default {
       hover: "#a16854",
       "badge-background": "rgb(236,218,218)",
       white: "#fff",
+      black: "#000",
     },
     extend: {
       opacity: {
         8: "0.08",
       },
       textUnderlineOffset: {
-        "3.5px": "3.5px",
+        "3px": "3px",
       },
     },
   },
