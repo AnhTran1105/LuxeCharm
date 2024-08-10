@@ -1,13 +1,16 @@
+import { NavLink } from "react-router-dom";
+import HeaderMenu from "./HeaderMenu";
+
 function Header() {
   return (
-    <header className="py-2 px-[50px] relative grid grid-cols-4 items-center border-b-[1px] border-color-foreground/8">
-      <div className="h-[44px] w-[44px] flex items-center p-0 col-span-1">
+    <header className="py-2 px-[50px] relative grid grid-cols-4 items-center border-b-[1px] border-color-foreground/8 text-[14px]">
+      <div className="h-[44px] w-[44px] flex items-center p-0 col-span-1 group cursor-pointer">
         <span className="flex justify-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             id="search"
-            className="h-[20px] w-[20px]"
+            className="h-[20px] w-[20px] group-hover:scale-[1.07]"
           >
             <g>
               <path d="M359,344.9a170.577,170.577,0,0,0,43.4-113.8c0-94.5-76.9-171.3-171.3-171.3-94.5,0-171.3,76.9-171.3,171.3s76.9,171.3,171.3,171.3A170.577,170.577,0,0,0,344.9,359l90.3,90.3a9.82,9.82,0,0,0,7.1,2.9,10.243,10.243,0,0,0,7.1-2.9,9.959,9.959,0,0,0,0-14.1ZM79.7,231.1c0-83.4,67.9-151.3,151.3-151.3s151.3,67.9,151.3,151.3S314.4,382.4,231,382.4,79.7,314.5,79.7,231.1Z"></path>
@@ -31,14 +34,17 @@ function Header() {
         </a>
       </h1>
       <div className="col-span-1 justify-self-end flex">
-        <a href="/account" className="h-[44px] w-[44px] flex items-center">
+        <a
+          href="/account"
+          className="h-[44px] w-[44px] flex items-center group cursor-pointer"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             focusable="false"
             fill="none"
             viewBox="0 0 18 19"
-            className="w-[20px] h-[20px]"
+            className="w-[20px] h-[20px] group-hover:scale-[1.07]"
           >
             <g>
               <circle
@@ -58,12 +64,16 @@ function Header() {
             </g>
           </svg>
         </a>
-        <a href="/cart" className="h-[44px] w-[44px] flex items-center">
+        <a
+          href="/cart"
+          className="h-[44px] w-[44px] flex items-center group cursor-pointer"
+        >
           <svg
+            className="group-hover:scale-[1.07]"
             x="0px"
             y="0px"
-            width="17.24px"
-            height="15.822px"
+            width="20px"
+            height="20px"
             viewBox="0.218 4.167 17.24 15.822"
             enableBackground="new 0.218 4.167 17.24 15.822"
             xmlSpace="preserve"
@@ -140,38 +150,41 @@ function Header() {
       <nav className="col-span-2 col-start-2">
         <ul role="list" className="flex justify-center items-center">
           <li>
-            <a
-              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
-              href="/collections/bestsellers"
+            <NavLink
+              className={`header-nav-item text-color-foreground/75  hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] 
+                text-hover hover:text-hover`}
+              to="/collections/bestsellers"
             >
               <span>Best Sellers</span>
-            </a>
+            </NavLink>
           </li>
-          <li>
-            <a
-              className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
-              href="/collections/jewelry"
-            >
-              <span>Jewelry</span>
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 22 13"
-                className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
+          <HeaderMenu>
+            <li>
+              <NavLink
+                className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+                // to="/collections/jewelry"
               >
-                <polyline
-                  points="21.557 1.222 11 11.778 0.443 1.222"
-                  fill="none"
-                  stroke="#121212"
-                  strokeMiterlimit="10"
-                ></polyline>
-              </svg>
-            </a>
-          </li>
+                <span>Jewelry</span>
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  viewBox="0 0 22 13"
+                  className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
+                >
+                  <polyline
+                    points="21.557 1.222 11 11.778 0.443 1.222"
+                    fill="none"
+                    stroke="#121212"
+                    strokeMiterlimit="10"
+                  ></polyline>
+                </svg>
+              </NavLink>
+            </li>
+          </HeaderMenu>
           <li>
-            <a
-              className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
-              href="/collections/beauty"
+            <NavLink
+              className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+              to="/collections/beauty"
             >
               <span>Beauty</span>
               <svg
@@ -187,20 +200,20 @@ function Header() {
                   strokeMiterlimit="10"
                 ></polyline>
               </svg>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
-              href="/collections/fragrance"
+            <NavLink
+              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
+              to="/collections/fragrance"
             >
               <span>Fragrance</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              className="header-nav-item !pr-[27px] text-color-foreground/75 relative hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
-              href="/collections/lifestyle"
+            <NavLink
+              className="header-nav-item !pr-[27px] text-color-foreground/75 relative hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
+              to="/collections/lifestyle"
             >
               <span>Lifestyle</span>
               <svg
@@ -216,15 +229,15 @@ function Header() {
                   strokeMiterlimit="10"
                 ></polyline>
               </svg>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[3px] transition-[text-decoration] ease-linear duration-[0.1s]"
-              href="/collections/sale"
+            <NavLink
+              className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
+              to="/collections/sale"
             >
               <span>Sale</span>
-            </a>
+            </NavLink>
           </li>
         </ul>
       </nav>
