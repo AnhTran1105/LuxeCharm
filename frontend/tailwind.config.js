@@ -16,6 +16,9 @@ export default {
       textUnderlineOffset: {
         "3px": "3px",
       },
+      scale: {
+        103: "103%",
+      },
     },
   },
   plugins: [],

@@ -72,7 +72,6 @@ function Header() {
       .filter((ref) => ref !== menuRef)
       .forEach((ref) => {
         ref.current.classList.add("opacity-0");
-        ref.current.classList.add("z-[-1]");
       });
 
     [jewelryIconRef, beautyIconRef, lifestyleIconRef]
@@ -82,13 +81,13 @@ function Header() {
       });
 
     menuRef.current.classList.toggle("opacity-0");
-    menuRef.current.classList.remove("z-[-1]");
+    menuRef.current.classList.toggle("invisible");
     iconRef.current.classList.toggle("rotate-180");
   };
 
   return (
     <header
-      className={`border-b-[1px] bg-white border-color-foreground/8 ${
+      className={`border-b-[1px] bg-white z-[9999] border-color-foreground/8 ${
         isAtTop ? "static" : "fixed top-0 left-0"
       } w-full transition-transform duration-300 ease-out ${
         isVisible
@@ -286,7 +285,7 @@ function Header() {
                 </svg>
               </button>
               <div
-                className="opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
+                className="invisible opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
                 ref={jewelryMenuRef}
                 tabIndex="-1"
               >
@@ -429,7 +428,7 @@ function Header() {
                 </svg>
               </button>
               <div
-                className="opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
+                className="invisible opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
                 ref={beautyMenuRef}
                 tabIndex="-1"
               >
@@ -527,7 +526,7 @@ function Header() {
                 </svg>
               </button>
               <div
-                className="opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
+                className="invisible opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
                 ref={lifestyleMenuRef}
                 tabIndex="-1"
               >
