@@ -1,4 +1,5 @@
 import ProductCard from "../components/ProductCard";
+import ProductCarousel from "../components/ProductCarousel";
 
 function Home() {
   return (
@@ -153,25 +154,7 @@ function Home() {
       </a>
       {/* End Banner */}
       {/* Products */}
-      <div className="py-3 my-4">
-        <ul role="list" className="grid grid-cols-5 gap-3 px-[15px]">
-          <li>
-            <ProductCard />
-          </li>
-          <li>
-            <ProductCard />
-          </li>
-          <li>
-            <ProductCard isOptional={true} />
-          </li>
-          <li>
-            <ProductCard isOff={true} />
-          </li>
-          <li>
-            <ProductCard isOptional={true} />
-          </li>
-        </ul>
-      </div>
+      <ProductCarousel />
       {/* End Products */}
       {/* Banner */}
       <div className="pt-7 px-[50px] grid grid-cols-3 gap-3">

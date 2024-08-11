@@ -23,6 +23,10 @@
   }
 }
 
+:root {
+  position: relative;
+}
+
 a {
   display: inline-block;
   text-decoration: none;
@@ -56,4 +60,35 @@ header .active {
 .policies:before {
   content: "\b7";
   padding: 0 8px;
+}
+
+.slick-arrow {
+  z-index: 3;
+}
+
+.slick-arrow::before {
+  content: none;
+}
+
+.slick-prev {
+  left: 16px;
+}
+
+.slick-next {
+  right: 16px;
+}
+
+.slick-prev,
+.slick-next {
+  width: auto;
+  height: auto;
+}
+
+.slick-disabled {
+  opacity: 0.3;
+}
+
+.slick-list {
+  overflow: hidden;
+  padding: 0 0 16px 0;
 }

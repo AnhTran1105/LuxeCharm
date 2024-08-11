@@ -8,6 +8,7 @@ export default {
       "badge-background": "rgb(236,218,218)",
       white: "#fff",
       black: "#000",
+      foreground75: "rgba(18, 18, 18, 0.75)",
     },
     extend: {
       opacity: {
