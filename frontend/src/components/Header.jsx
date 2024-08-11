@@ -4,6 +4,25 @@ import { useRef, useState, useEffect } from "react";
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
+  const [menuToggle, setMenuToggle] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setIsAtTop(true);
+      } else {
+        setIsAtTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const controlHeader = () => {
     if (typeof window !== "undefined") {
@@ -26,6 +45,18 @@ function Header() {
     }
   }, [lastScrollY]);
 
+  useEffect(() => {
+    if (
+      [jewelryMenuRef, beautyMenuRef, lifestyleMenuRef].some(
+        (ref) => ref.current && !ref.current.classList.contains("opacity-0")
+      )
+    ) {
+      setIsMenuOpened(true);
+    } else {
+      setIsMenuOpened(false);
+    }
+  }, [menuToggle]);
+
   const headerRef = useRef();
   const jewelryMenuRef = useRef();
   const beautyMenuRef = useRef();
@@ -36,6 +67,7 @@ function Header() {
   const lifestyleIconRef = useRef();
 
   const toggleMenu = (menuRef, iconRef) => {
+    setMenuToggle(!menuToggle);
     [jewelryMenuRef, beautyMenuRef, lifestyleMenuRef]
       .filter((ref) => ref !== menuRef)
       .forEach((ref) => {
@@ -54,26 +86,21 @@ function Header() {
     iconRef.current.classList.toggle("rotate-180");
   };
 
-  const isMenuVisible = () => {
-    if (!isVisible) {
-      [jewelryMenuRef, beautyMenuRef, lifestyleMenuRef].forEach((ref) => {
-        console.log(ref.current.classList.contains("opacity-0"));
-        if (!ref.current.classList.contains("opacity-0"))
-          return "transform -translate-y-[calc(100%+262px)]";
-      });
-
-      return "transform -translate-y-full";
-    }
-    return "transform translate-y-0";
-  };
-
   return (
     <header
-      className={`border-b-[1px] bg-white border-color-foreground/8 fixed top-0 left-0 w-full transition-transform duration-300 ease-linear ${isMenuVisible()}`}
+      className={`border-b-[1px] bg-white border-color-foreground/8 ${
+        isAtTop ? "static" : "fixed top-0 left-0"
+      } w-full transition-transform duration-300 ease-out ${
+        isVisible
+          ? "transform translate-y-0"
+          : isMenuOpened
+          ? "transform -translate-y-[calc(100%+262px)]"
+          : "transform -translate-y-full"
+      }`}
     >
       <div
         ref={headerRef}
-        className="py-2 px-[50px] relative grid grid-cols-4 items-center  text-[14px]"
+        className="py-2 px-[50px] grid grid-cols-4 items-center text-[14px]"
       >
         <div className="h-[44px] w-[44px] flex items-center p-0 col-span-1 group cursor-pointer">
           <span className="flex justify-start">
@@ -235,7 +262,11 @@ function Header() {
               onClick={() => toggleMenu(jewelryMenuRef, jewelryIconRef)}
             >
               <button
-                className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+                className={`header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
+                  jewelryMenuRef.current &&
+                  !jewelryMenuRef.current.classList.contains("opacity-0") &&
+                  "underline underline-offset-[2.5px] hover:decoration-2"
+                }`}
                 // to="/collections/jewelry"
               >
                 <span>Jewelry</span>
@@ -374,7 +405,11 @@ function Header() {
 
             <li onClick={() => toggleMenu(beautyMenuRef, beautyIconRef)}>
               <button
-                className="header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative"
+                className={`header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
+                  beautyMenuRef.current &&
+                  !beautyMenuRef.current.classList.contains("opacity-0") &&
+                  "underline underline-offset-[2.5px] hover:decoration-2"
+                }`}
                 // to="/collections/beauty"
               >
                 <span>Beauty</span>
@@ -468,7 +503,11 @@ function Header() {
             </li>
             <li onClick={() => toggleMenu(lifestyleMenuRef, lifestyleIconRef)}>
               <button
-                className="header-nav-item !pr-[27px] text-color-foreground/75 relative hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
+                className={`header-nav-item !pr-[27px] text-color-foreground/75 relative hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] ${
+                  lifestyleMenuRef.current &&
+                  !lifestyleMenuRef.current.classList.contains("opacity-0") &&
+                  "underline underline-offset-[2.5px] hover:decoration-2"
+                }`}
                 // to="/collections/lifestyle"
               >
                 <span>Lifestyle</span>
