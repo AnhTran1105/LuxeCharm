@@ -161,7 +161,7 @@ function Footer() {
                 href="/"
                 title=""
               >
-                LuxCharm
+                LuxeCharm
               </a>
             </small>
             <ul className="flex">

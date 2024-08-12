@@ -131,3 +131,7 @@ a:not(.arrow).pagination-item:hover:after {
   transform: translate(-50%);
   background-color: currentColor;
 }
+
+.carousel .carousel-item {
+  @apply px-[6px];
+}

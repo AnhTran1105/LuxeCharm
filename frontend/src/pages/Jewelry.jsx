@@ -1,7 +1,16 @@
-import Tippy from "@tippyjs/react/headless";
 import ProductCard from "../components/ProductCard";
+import FilterMenu from "../components/FilterMenu";
+import { useRef } from "react";
 
 function Jewelry() {
+  const toggleMenuVisibility = useRef([]);
+
+  const handleButtonClick = (index) => {
+    if (toggleMenuVisibility.current[index]) {
+      toggleMenuVisibility.current[index]();
+    }
+  };
+
   return (
     <div className="pt-10 pb-5">
       <div className="px-[50px] mx-auto my-0 flex flex-col items-center justify-center">
@@ -43,13 +52,13 @@ function Jewelry() {
                 className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
                 href="/collections/statement-earrings"
               >
-                statement{" "}
+                statement
               </a>
               <a
                 className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
                 href="/collections/earrings"
               >
-                earrings
+                &nbsp;earrings
               </a>
               . If you need an arm candy look, simply stack up our{" "}
               <a
@@ -142,35 +151,56 @@ function Jewelry() {
         </div>
         {/* Filter Form */}
         <div className="pt-[10px] flex w-full text-foreground75 text-sm">
-          <div className="mb-[5px]">
+          <div className="mb-5 w-full flex justify-between">
             <div className="flex justify-center items-center">
               <h2 className="mr-5">Filter:</h2>
-              <Tippy
-                interactive
-                placement="bottom"
-                offset={[0, 0]}
-                visible={true}
-                render={() => (
-                  <div className="border border-color-foreground/10 bg-white w-[350px]">
-                    <div className="border-b border-color-foreground/20 py-[15px] px-5 flex justify-between items-center">
-                      <span>0 selected</span>
-                      <a
-                        href="/collections/jewelry"
-                        className="link"
-                        role="button"
-                      >
-                        Reset
-                      </a>
-                    </div>
-                    <ul role="list" className="py-[5px] px-5">
-                      <li>
-                        <span aria-hidden="true">Anklets (1)</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
+              <FilterMenu
+                onToggleVisibility={(toggleFn) =>
+                  (toggleMenuVisibility.current[0] = toggleFn)
+                }
+                items={[
+                  {
+                    name: "Anklets",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Body Chains",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Bracelets",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Charms",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Earrings",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Gift Bundles",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Mystery",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Necklaces",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Rings",
+                    quantity: 1,
+                  },
+                ]}
               >
-                <div className="mr-[35px] flex justify-center items-center group cursor-pointer">
+                <div
+                  onClick={() => handleButtonClick(0)}
+                  className="mr-[35px] flex justify-center items-center group cursor-pointer"
+                >
                   <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
                     Category
                   </span>
@@ -188,7 +218,196 @@ function Jewelry() {
                     ></polyline>
                   </svg>
                 </div>
-              </Tippy>
+              </FilterMenu>
+              <FilterMenu
+                onToggleVisibility={(toggleFn) =>
+                  (toggleMenuVisibility.current[1] = toggleFn)
+                }
+                items={[
+                  {
+                    name: "In stock",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Out of stock",
+                    quantity: 1,
+                  },
+                ]}
+              >
+                <div
+                  onClick={() => handleButtonClick(1)}
+                  className="mr-[35px] flex justify-center items-center group cursor-pointer"
+                >
+                  <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+                    Availability
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 22 13"
+                    className="w-[10px] h-[10px]"
+                  >
+                    <polyline
+                      points="21.557 1.222 11 11.778 0.443 1.222"
+                      fill="none"
+                      stroke="#121212"
+                      strokeMiterlimit="10"
+                    ></polyline>
+                  </svg>
+                </div>
+              </FilterMenu>
+              <FilterMenu
+                onToggleVisibility={(toggleFn) =>
+                  (toggleMenuVisibility.current[2] = toggleFn)
+                }
+                items={[
+                  {
+                    name: "Gold",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Gold Vermeil",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Mixed Metal",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Rose Gold",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Silver",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Sterling Silver",
+                    quantity: 1,
+                  },
+                ]}
+              >
+                <div
+                  onClick={() => handleButtonClick(2)}
+                  className="mr-[35px] flex justify-center items-center group cursor-pointer"
+                >
+                  <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+                    Metal
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 22 13"
+                    className="w-[10px] h-[10px]"
+                  >
+                    <polyline
+                      points="21.557 1.222 11 11.778 0.443 1.222"
+                      fill="none"
+                      stroke="#121212"
+                      strokeMiterlimit="10"
+                    ></polyline>
+                  </svg>
+                </div>
+              </FilterMenu>
+              <FilterMenu
+                onToggleVisibility={(toggleFn) =>
+                  (toggleMenuVisibility.current[3] = toggleFn)
+                }
+                items={[
+                  {
+                    name: "Faux Leather",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Resin",
+                    quantity: 1,
+                  },
+                ]}
+              >
+                <div
+                  onClick={() => handleButtonClick(3)}
+                  className="mr-[35px] flex justify-center items-center group cursor-pointer"
+                >
+                  <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+                    Material
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 22 13"
+                    className="w-[10px] h-[10px]"
+                  >
+                    <polyline
+                      points="21.557 1.222 11 11.778 0.443 1.222"
+                      fill="none"
+                      stroke="#121212"
+                      strokeMiterlimit="10"
+                    ></polyline>
+                  </svg>
+                </div>
+              </FilterMenu>
+              <FilterMenu
+                onToggleVisibility={(toggleFn) =>
+                  (toggleMenuVisibility.current[4] = toggleFn)
+                }
+                items={[
+                  {
+                    name: "Faux Leather",
+                    quantity: 1,
+                  },
+                  {
+                    name: "Resin",
+                    quantity: 1,
+                  },
+                ]}
+              >
+                <div
+                  onClick={() => handleButtonClick(4)}
+                  className="mr-[35px] flex justify-center items-center group cursor-pointer"
+                >
+                  <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+                    Price
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 22 13"
+                    className="w-[10px] h-[10px]"
+                  >
+                    <polyline
+                      points="21.557 1.222 11 11.778 0.443 1.222"
+                      fill="none"
+                      stroke="#121212"
+                      strokeMiterlimit="10"
+                    ></polyline>
+                  </svg>
+                </div>
+              </FilterMenu>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="mr-5">Sort by:</h2>
+              <div
+                onClick={handleButtonClick}
+                className="mr-[35px] w-[150px] flex justify-between items-center group cursor-pointer"
+              >
+                <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+                  Featured
+                </span>
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  viewBox="0 0 22 13"
+                  className="w-[10px] h-[10px]"
+                >
+                  <polyline
+                    points="21.557 1.222 11 11.778 0.443 1.222"
+                    fill="none"
+                    stroke="#121212"
+                    strokeMiterlimit="10"
+                  ></polyline>
+                </svg>
+              </div>
+              <h2 className="mr-5">524 products</h2>
             </div>
           </div>
         </div>

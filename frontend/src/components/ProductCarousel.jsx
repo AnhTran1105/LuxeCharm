@@ -110,8 +110,8 @@ function ProductCarousel() {
   };
   return (
     <div className="py-3 my-4">
-      <ul role="list" className="px-[15px] group">
-        <Slider {...settings} className="-mx-[6px]">
+      <ul role="list" className="px-[15px]">
+        <Slider {...settings} className="-mx-[6px] carousel">
           <ProductCard />
           <ProductCard />
           <ProductCard isOptional={true} />

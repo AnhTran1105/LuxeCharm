@@ -1,6 +1,6 @@
 function ProductCard({ isOptional = false, isOff = false }) {
   return (
-    <li className="group cursor-pointer relative">
+    <li className="group cursor-pointer relative carousel-item">
       <div className="relative overflow-hidden">
         <img
           srcSet="//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=165 165w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=360 360w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=533 533w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=720 720w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=940 940w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240&amp;width=1066 1066w,//uncommonjames.com/cdn/shop/files/S01-HARDFEELINGSFRAG-50ml-1.jpg?v=1722020240 2251w

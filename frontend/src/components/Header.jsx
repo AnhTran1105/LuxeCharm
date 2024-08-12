@@ -71,7 +71,10 @@ function Header() {
     [jewelryMenuRef, beautyMenuRef, lifestyleMenuRef]
       .filter((ref) => ref !== menuRef)
       .forEach((ref) => {
-        ref.current.classList.add("opacity-0");
+        if (ref.current && !ref.current.classList.contains("opacity-0")) {
+          ref.current.classList.add("opacity-0");
+          ref.current.classList.add("invisible");
+        }
       });
 
     [jewelryIconRef, beautyIconRef, lifestyleIconRef]
@@ -81,7 +84,7 @@ function Header() {
       });
 
     menuRef.current.classList.toggle("opacity-0");
-    menuRef.current.classList.toggle("invisible");
+    menuRef.current.classList.remove("invisible");
     iconRef.current.classList.toggle("rotate-180");
   };
 
