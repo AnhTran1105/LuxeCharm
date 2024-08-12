@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
+import Logo from "../assets/images/LuxuryCharming.png";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -84,7 +85,7 @@ function Header() {
       });
 
     menuRef.current.classList.toggle("opacity-0");
-    menuRef.current.classList.remove("invisible");
+    menuRef.current.classList.toggle("invisible");
     iconRef.current.classList.toggle("rotate-180");
   };
 
@@ -119,18 +120,14 @@ function Header() {
           </span>
         </div>
         <h1 className="col-span-2 justify-self-center">
-          <a href="/" className="p-[7.5px] flex items-center">
-            <div>
-              <img
-                src="//uncommonjames.com/cdn/shop/files/logo__uj.svg?v=1685119912&amp;width=600"
-                alt="Uncommon James Homepage"
-                srcSet="//uncommonjames.com/cdn/shop/files/logo__uj.svg?v=1685119912&amp;width=170 170w, //uncommonjames.com/cdn/shop/files/logo__uj.svg?v=1685119912&amp;width=255 255w, //uncommonjames.com/cdn/shop/files/logo__uj.svg?v=1685119912&amp;width=340 340w"
-                width="170"
-                height="16.11111111111111"
-                loading="eager"
-                sizes="(max-width: 340px) 50vw, 170px"
-              />
-            </div>
+          <a href="/" className="p-[7.5px] pb-0 flex items-center">
+            <img
+              src={Logo}
+              alt="LuxeCharm Homepage"
+              className="w-[140px]"
+              width="170px"
+              height="16.11111111111111px"
+            />
           </a>
         </h1>
         <div className="col-span-1 justify-self-end flex">
