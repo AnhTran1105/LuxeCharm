@@ -92,3 +92,42 @@ header .active {
   overflow: hidden;
   padding: 0 0 16px 0;
 }
+
+.pagination-item {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  text-decoration: none;
+}
+
+a:not(.arrow).pagination-item:hover:after {
+  content: "";
+  height: 1px;
+  display: block;
+  width: 20px;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: currentColor;
+}
+
+.active-page {
+  @apply text-color-foreground/75;
+}
+
+.active-page.pagination-item:after {
+  content: "";
+  height: 1px;
+  display: block;
+  width: 20px;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: currentColor;
+}

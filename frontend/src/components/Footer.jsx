@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="pt-12 pb-4">
+    <footer className="pt-12 pb-4 bg-background">
       <div className="max-w-[920px] mx-auto px-[50px]">
         <div className="grid grid-cols-3 gap-3">
           <div>

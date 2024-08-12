@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Jewelry from "./pages/Jewelry";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/collections/jewelry" element={<Jewelry />} />
         <Route path="/collections/bestsellers" element={<BestSellers />} />
       </Routes>
       <Footer />
@@ -34,7 +36,7 @@ export default function App() {
         </button>
       </div>
       <div className="fixed bottom-[20px] rounded-full right-[15px] z-[999] bg-[#f3efeb] flex justify-center items-center p-3">
-        <span className="rounded-[2px] mr-3 text-lg tracking-[1.2px] text-[#706962] uppercase flex justify-center items-center">
+        <span className="rounded-[2px] mr-2 text-lg tracking-[1.2px] text-[#706962] uppercase flex justify-center items-center">
           <svg
             className="fill-[#706962]"
             xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +63,9 @@ export default function App() {
             </g>
           </svg>
         </span>
-        <span className="text-[#706962] font-bold">Help</span>
+        <span className="text-[#706962] font-SofiaBold font-bold leading-normal">
+          Help
+        </span>
       </div>
     </BrowserRouter>
   );
