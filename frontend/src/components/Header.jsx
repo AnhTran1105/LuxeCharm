@@ -132,7 +132,7 @@ function Header() {
         </h1>
         <div className="col-span-1 justify-self-end flex">
           <a
-            href="/account"
+            href="/account/login"
             className="h-[44px] w-[44px] flex items-center group cursor-pointer"
           >
             <svg

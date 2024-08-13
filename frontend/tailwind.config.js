@@ -7,7 +7,7 @@ export default {
       hover: "#a16854",
       "badge-background": "rgb(236,218,218)",
       white: "#fff",
-      black: "#000",
+      black: "#121212",
       background: "rgb(243, 243, 243)",
       foreground75: "rgba(18, 18, 18, 0.75)",
     },

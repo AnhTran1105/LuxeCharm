@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Jewelry from "./pages/Jewelry";
+import Login from "./pages/Login";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/collections/jewelry" element={<Jewelry />} />
         <Route path="/collections/bestsellers" element={<BestSellers />} />
+        <Route path="/account/login" element={<Login />} />
       </Routes>
       <Footer />
       <div className="fixed w-[235px] bottom-[20px] left-[15px] z-[999] bg-[#666] flex justify-center items-center px-3 py-2">
