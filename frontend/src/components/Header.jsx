@@ -124,9 +124,9 @@ function Header() {
             <img
               src={Logo}
               alt="LuxeCharm Homepage"
-              className="w-[140px]"
-              width="170px"
-              height="16.11111111111111px"
+              className={`${
+                isAtTop ? "w-[140px]" : "w-[100px]"
+              } transition-[width] duration-300 ease`}
             />
           </a>
         </h1>
