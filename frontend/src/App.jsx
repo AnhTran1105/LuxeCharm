@@ -37,7 +37,7 @@ export default function App() {
           </svg>
         </button>
       </div>
-      <div className="fixed bottom-[20px] rounded-full right-[15px] z-[999] bg-[#f3efeb] flex justify-center items-center p-3">
+      <div className="fixed border bottom-[20px] rounded-full right-[15px] z-[999] bg-[#f3efeb] flex justify-center items-center p-3">
         <span className="rounded-[2px] mr-2 text-lg tracking-[1.2px] text-[#706962] uppercase flex justify-center items-center">
           <svg
             className="fill-[#706962]"
