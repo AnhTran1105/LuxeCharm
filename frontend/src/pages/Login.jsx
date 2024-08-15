@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
-import { useAxios } from "../hooks/useAxios";
-import axios from "axios";
+import axios from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -27,20 +27,28 @@ function Login() {
   });
 
   const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
 
   const onSubmit = (formData) => {
-    dispatch(signInStart());
-    async () => {
+    (async () => {
       try {
-        const response = await axios.post("/auth/login", {
+        dispatch(signInStart());
+        const response = await axios.post("auth/login", {
           email: formData.email,
           password: formData.password,
         });
-        console.log(response.data);
+        if (response.data.success === false) {
+          dispatch(signInFailure(response.data.message));
+          return;
+        }
+        dispatch(signInSuccess(response.data));
+        navigate("/");
       } catch (error) {
         console.error(error);
       }
-    };
+    })();
   };
 
   return (
