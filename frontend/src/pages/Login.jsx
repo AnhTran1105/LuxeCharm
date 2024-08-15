@@ -9,6 +9,7 @@ import {
 } from "../redux/user/userSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 const schema = yup
   .object({
@@ -144,9 +145,9 @@ function Login() {
             "
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)]"
             >
-              <span>Sign in</span>
+              <span>Log in</span>
             </button>
-
+            <OAuth />
             <div className="flex justify-center">
               <a
                 className="!text-sm link underline hover:decoration-2 w-fit"
