@@ -5,6 +5,7 @@ import {
   getProductById,
 } from "../controllers/product.controller.js";
 import { param } from "express-validator";
+import upload from "../middleware/multer.js";
 
 const router = express.Router();
 
@@ -14,6 +15,14 @@ router.get(
   getProductById
 );
 router.get("/products", getAllProducts);
-router.post("/products", createProduct);
+router.post(
+  "/products",
+  upload.fields([
+    { name: "backgroundImage", maxCount: 1 },
+    { name: "hoverImage", maxCount: 1 },
+    { name: "images", maxCount: 10 },
+  ]),
+  createProduct
+);
 
 export default router;

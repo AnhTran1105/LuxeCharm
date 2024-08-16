@@ -48,14 +48,8 @@ const productSchema = mongoose.Schema(
         "Sterling Silver",
       ],
     },
-    inStock: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     rating: {
       type: Number,
-      required: true,
       min: 0,
       max: 5,
       default: 0,
@@ -66,6 +60,14 @@ const productSchema = mongoose.Schema(
         required: true,
       },
     ],
+    backgroundImage: {
+      type: String,
+      required: true,
+    },
+    hoverImage: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
