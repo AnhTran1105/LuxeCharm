@@ -173,7 +173,7 @@ a:not(.arrow).pagination-item:hover:after {
   z-index: 1;
 }
 
-.field:hover.field:after {
+.field:not(.dropdown):hover.field:after {
   box-shadow: 0 0 0 2px rgba(18, 18, 18, 0.55);
   outline: 0;
 }
@@ -207,7 +207,8 @@ a:not(.arrow).pagination-item:hover:after {
   padding-bottom: 10px;
 }
 
-.field input:not(:focus) {
+.field input:not(:focus),
+.field .default-option {
   box-shadow: 0 0 0 2px rgba(18, 18, 18, 0);
 }
 

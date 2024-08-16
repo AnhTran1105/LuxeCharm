@@ -3,6 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
+import DropdownMenu from "../../components/DropdownMenu";
+import { useState } from "react";
 
 const schema = yup
   .object({
@@ -14,6 +16,9 @@ const schema = yup
   .required();
 
 function ProductCreating() {
+  const [metal, setMetal] = useState("");
+  const [category, setCategory] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -61,7 +66,7 @@ function ProductCreating() {
                 placeholder="name"
                 autoCorrect="off"
                 {...register("name")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
               />
               <label htmlFor="name">Name*</label>
             </div>
@@ -96,7 +101,7 @@ function ProductCreating() {
                 placeholder="description"
                 autoCorrect="off"
                 {...register("description")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
               />
               <label htmlFor="description">Description*</label>
             </div>
@@ -122,7 +127,7 @@ function ProductCreating() {
                 </span>
               </p>
             )}
-            <div className="grid grid-cols-2 gap-6 mt-5 items-center two-cols">
+            <div className="grid grid-cols-2 gap-5 mt-5 items-center two-cols">
               <div className="field">
                 <input
                   id="price"
@@ -132,7 +137,7 @@ function ProductCreating() {
                   placeholder="price"
                   autoCorrect="off"
                   {...register("price")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
                 />
                 <label htmlFor="price">Price*</label>
               </div>
@@ -167,11 +172,57 @@ function ProductCreating() {
                   placeholder="quantity"
                   autoCorrect="off"
                   {...register("quantity")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
                 />
                 <label htmlFor="quantity">Quantity*</label>
               </div>
             </div>
+            <div className="mt-5">
+              <DropdownMenu
+                defaultOption="Choose product metal"
+                title="Metal"
+                options={[
+                  "Gold",
+                  "Gold Vermeil",
+                  "Mixed Metal",
+                  "Rose Gold",
+                  "Silver",
+                  "Sterling Silver",
+                ]}
+                onValueChange={(newValue) => setMetal(newValue)}
+              />
+            </div>
+            <div className="mt-5">
+              <DropdownMenu
+                defaultOption="Choose category"
+                title="Category"
+                options={[
+                  "Anklets",
+                  "Body Chains",
+                  "Bracelets",
+                  "Charms",
+                  "Earrings",
+                  "Gift Bundles",
+                  "Mystery",
+                  "Necklaces",
+                  "Rings",
+                ]}
+                onValueChange={(newValue) => setCategory(newValue)}
+              />
+            </div>
+            {/* <label htmlFor="backgroundImage">Background Image:</label>
+            <input
+              type="file"
+              id="backgroundImage"
+              name="backgroundImage"
+              required
+            />
+
+            <label htmlFor="hoverImage">Hover Image:</label>
+            <input type="file" id="hoverImage" name="hoverImage" required />
+
+            <label htmlFor="images">Additional Images:</label>
+            <input type="file" id="images" name="images" multiple /> */}
             <button
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
