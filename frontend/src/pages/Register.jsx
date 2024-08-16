@@ -1,6 +1,14 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
 
 const schema = yup
   .object({
@@ -12,6 +20,8 @@ const schema = yup
   .required();
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,7 +29,27 @@ function Register() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (formData) => {
+    (async () => {
+      try {
+        dispatch(signInStart());
+        const response = await axios.post("auth/register", {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        });
+        if (response.data.success === false) {
+          dispatch(signInFailure(response.data.message));
+          return;
+        }
+        dispatch(signInSuccess(response.data));
+        navigate("/login");
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
 
   return (
     <div className="flex justify-center items-center">
