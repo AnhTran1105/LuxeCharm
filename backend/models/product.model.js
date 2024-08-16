@@ -7,6 +7,25 @@ const productSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        "Anklets",
+        "Body Chains",
+        "Bracelets",
+        "Charms",
+        "Earrings",
+        "Gift Bundles",
+        "Mystery",
+        "Necklaces",
+        "Rings",
+      ],
+    },
+    description: {
+      type: String,
+      required: true,
+    },
     quantity: {
       type: Number,
       required: true,
@@ -18,23 +37,35 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     metal: {
-      type: String,
+      type: [String],
       required: true,
       enum: [
         "Gold",
-        "GoldVermeil",
-        "MixedMetal",
-        "RoseGold",
+        "Gold Vermeil",
+        "Mixed Metal",
+        "Rose Gold",
         "Silver",
-        "SterlingSilver",
+        "Sterling Silver",
       ],
-      default: "Gold",
     },
     inStock: {
       type: Boolean,
       required: true,
-      default: true,
+      default: false,
     },
+    rating: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 5,
+      default: 0,
+    },
+    imageUrls: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
