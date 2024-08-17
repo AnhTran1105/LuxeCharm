@@ -47,7 +47,13 @@ function DropdownMenu({ title, options, defaultOption, onValueChange }) {
         >
           <div className="flex justify-between items-center p-[15px] default-option w-full h-[45px]">
             <span className="text-base">
-              {value ? title + ": " + value : defaultOption + "*"}
+              {value ? (
+                <span className="text-color-foreground">
+                  {title + ": " + value}
+                </span>
+              ) : (
+                <span>{defaultOption + "*"}</span>
+              )}
             </span>
             <svg
               className={`${visible && "rotate-180"}`}

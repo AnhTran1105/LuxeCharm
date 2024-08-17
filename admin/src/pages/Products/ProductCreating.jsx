@@ -30,27 +30,28 @@ function ProductCreating() {
   });
 
   const onSubmit = (formData) => {
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("category", category);
+    data.append("description", formData.description);
+    data.append("price", formData.price);
+    data.append("quantity", formData.quantity);
+    data.append("metal", metal);
+
+    data.append("backgroundImage", backgroundImage);
+    data.append("hoverImage", hoverImage);
+
+    additionalImages.forEach((file) => {
+      data.append("imageUrls", file);
+    });
+
     (async () => {
       try {
-        const response = await axios.post(
-          "products",
-          {
-            name: formData.name,
-            category: category,
-            description: formData.description,
-            price: formData.price,
-            quantity: formData.quantity,
-            metal: metal,
-            backgroundImage: backgroundImage,
-            hoverImage: hoverImage,
-            imageUrls: additionalImages,
+        const response = await axios.post("products", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        });
         console.log(response.data);
       } catch (error) {
         console.log(error);
@@ -61,7 +62,7 @@ function ProductCreating() {
   return (
     <div className="flex justify-center items-center">
       <div className="max-w-[478px] py-9 px-[15px] text-center">
-        <h1 className="text-[40px]">Create Product</h1>
+        <h1 className="text-[40px]">Create Products</h1>
         <div>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -223,7 +224,10 @@ function ProductCreating() {
               />
             </div>
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="backgroundImage" className="text-base text-left">
+              <label
+                htmlFor="backgroundImage"
+                className="text-base text-left mr-4"
+              >
                 Background*
               </label>
               <input
@@ -236,7 +240,7 @@ function ProductCreating() {
               />
             </div>
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="hoverImage" className="text-base text-left">
+              <label htmlFor="hoverImage" className="text-base text-left mr-4">
                 Hover*
               </label>
               <input
@@ -249,7 +253,10 @@ function ProductCreating() {
               />
             </div>
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="additionalImages" className="text-base text-left">
+              <label
+                htmlFor="additionalImages"
+                className="text-base text-left mr-4"
+              >
                 Additional*
               </label>
               <input
@@ -268,7 +275,7 @@ function ProductCreating() {
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              <span>Create new product</span>
+              <span>Create new products</span>
             </button>
           </form>
         </div>

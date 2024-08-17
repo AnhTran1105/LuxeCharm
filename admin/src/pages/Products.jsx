@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import ProductCreating from "./Products/ProductCreating";
+import ProductCard from "../components/ProductCard";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -18,24 +19,23 @@ function Products() {
 
   return (
     <div className="mt-10">
-      <div></div>
-      <ul className="grid grid-cols-2 gap-4" role="list">
-        {products.map((product) => (
-          <li
-            key={product._id}
-            className="flex flex-col justify-center items-center"
-          >
-            <img />
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-            <p>{product.metal}</p>
-            <p>{product.quantity}</p>
-            <p>{product.price}</p>
-            <p>{product.quantity > 0 ? "In stock" : "Out of stock"}</p>
-          </li>
-        ))}
+      <ul role="list" className="grid grid-cols-5 gap-3 px-[15px]">
+        <li>
+          <ProductCard />
+        </li>
+        <li>
+          <ProductCard />
+        </li>
+        <li>
+          <ProductCard isOptional={true} />
+        </li>
+        <li>
+          <ProductCard isOff={true} />
+        </li>
+        <li>
+          <ProductCard isOptional={true} />
+        </li>
       </ul>
-      <ProductCreating />
     </div>
   );
 }

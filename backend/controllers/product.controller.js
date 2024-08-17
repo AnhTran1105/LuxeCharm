@@ -36,10 +36,11 @@ export const createProduct = async (req, res, next) => {
 
     const newProduct = new Product({
       name: req.body.name,
-      quantity: req.body.quantity,
+      category: req.body.category,
+      description: req.body.description,
       price: req.body.price,
+      quantity: req.body.quantity,
       metal: req.body.metal,
-      inStock: req.body.inStock,
       backgroundImage: backgroundImage.secure_url,
       hoverImage: hoverImage.secure_url,
       imageUrls,
