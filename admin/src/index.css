@@ -293,3 +293,7 @@ textarea::-moz-placeholder {
 textarea::placeholder {
   color: transparent;
 }
+
+.button {
+  @apply p-3 border border-solid hover:outline-1 hover:outline hover:text-color-foreground transition-[outline] duration-100 text-[15px] flex items-center;
+}

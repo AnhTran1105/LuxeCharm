@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
+import ProductCreating from "./pages/Products/ProductCreating";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
+        <Route path="products/create-products" element={<ProductCreating />} />
         <Route path="/account/login" element={<Login />} />
         <Route path="/account/register" element={<Register />} />
       </Routes>

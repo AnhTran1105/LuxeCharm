@@ -4,6 +4,7 @@ import * as yup from "yup";
 import axios from "../../utils/axios";
 import DropdownMenu from "../../components/DropdownMenu";
 import { useState } from "react";
+import CheckboxMenu from "../../components/CheckboxMenu";
 
 const schema = yup
   .object({
@@ -15,7 +16,7 @@ const schema = yup
   .required();
 
 function ProductCreating() {
-  const [metal, setMetal] = useState("");
+  const [metals, setMetals] = useState([]);
   const [category, setCategory] = useState("");
   const [backgroundImage, setBackgroundImage] = useState();
   const [hoverImage, setHoverImage] = useState();
@@ -36,7 +37,9 @@ function ProductCreating() {
     data.append("description", formData.description);
     data.append("price", formData.price);
     data.append("quantity", formData.quantity);
-    data.append("metal", metal);
+    metals.forEach((metal) => {
+      data.append("metals[]", metal);
+    });
 
     data.append("backgroundImage", backgroundImage);
     data.append("hoverImage", hoverImage);
@@ -59,10 +62,12 @@ function ProductCreating() {
     })();
   };
 
+  console.log(metals);
+
   return (
     <div className="flex justify-center items-center">
       <div className="max-w-[478px] py-9 px-[15px] text-center">
-        <h1 className="text-[40px]">Create Products</h1>
+        <h1 className="text-[40px]">Create Product</h1>
         <div>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -209,9 +214,11 @@ function ProductCreating() {
               </div>
             </div>
             <div className="mt-5">
-              <DropdownMenu
-                defaultOption="Choose product metal"
-                title="Metal"
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Metals of product:
+              </p>
+              <CheckboxMenu
+                onValueChange={(value) => setMetals(value)}
                 options={[
                   "Gold",
                   "Gold Vermeil",
@@ -220,15 +227,17 @@ function ProductCreating() {
                   "Silver",
                   "Sterling Silver",
                 ]}
-                onValueChange={(newValue) => setMetal(newValue)}
               />
             </div>
-            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
+            <p className="text-left text-base mt-5 font-SofiaBold text-color-foreground">
+              Product images:
+            </p>
+            <div className="flex items-center justify-between border mt-4 px-[15px] h-[45px] hover-border hover:border-no-color">
               <label
                 htmlFor="backgroundImage"
                 className="text-base text-left mr-4"
               >
-                Background*
+                Primary*
               </label>
               <input
                 type="file"
@@ -241,7 +250,7 @@ function ProductCreating() {
             </div>
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
               <label htmlFor="hoverImage" className="text-base text-left mr-4">
-                Hover*
+                Hovering*
               </label>
               <input
                 type="file"
@@ -257,7 +266,7 @@ function ProductCreating() {
                 htmlFor="additionalImages"
                 className="text-base text-left mr-4"
               >
-                Additional*
+                Others*
               </label>
               <input
                 type="file"
@@ -275,7 +284,7 @@ function ProductCreating() {
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              <span>Create new products</span>
+              <span>Create new product</span>
             </button>
           </form>
         </div>

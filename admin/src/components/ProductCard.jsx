@@ -45,9 +45,6 @@ function ProductCard({ isOptional = false, isOff = false }) {
           </div>
         </div>
       </div>
-      <button className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]">
-        <span>{isOptional ? "Choose options" : "Add to cart"}</span>
-      </button>
     </li>
   );
 }

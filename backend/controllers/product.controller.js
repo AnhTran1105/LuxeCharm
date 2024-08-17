@@ -40,7 +40,7 @@ export const createProduct = async (req, res, next) => {
       description: req.body.description,
       price: req.body.price,
       quantity: req.body.quantity,
-      metal: req.body.metal,
+      metals: req.body.metals,
       backgroundImage: backgroundImage.secure_url,
       hoverImage: hoverImage.secure_url,
       imageUrls,

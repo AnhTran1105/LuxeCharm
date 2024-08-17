@@ -36,7 +36,7 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    metal: {
+    metals: {
       type: [String],
       required: true,
       enum: [
