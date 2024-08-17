@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import Product from "../models/product.model.js";
+import cloudinary from "cloudinary";
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ export const createProduct = async (req, res, next) => {
       }
     );
     const imageUrls = await Promise.all(
-      req.files.images.map(async (file) => {
+      req.files.imageUrls.map(async (file) => {
         const result = await cloudinary.v2.uploader.upload(file.path, {
           folder: "products/images",
         });

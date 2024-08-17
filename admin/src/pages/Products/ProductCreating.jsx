@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
-import { useNavigate } from "react-router-dom";
 import DropdownMenu from "../../components/DropdownMenu";
 import { useState } from "react";
 
@@ -18,6 +17,9 @@ const schema = yup
 function ProductCreating() {
   const [metal, setMetal] = useState("");
   const [category, setCategory] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState();
+  const [hoverImage, setHoverImage] = useState();
+  const [additionalImages, setAdditionalImages] = useState();
 
   const {
     register,
@@ -27,20 +29,29 @@ function ProductCreating() {
     resolver: yupResolver(schema),
   });
 
-  const navigate = useNavigate();
-
   const onSubmit = (formData) => {
     (async () => {
       try {
-        const response = await axios.post("products", {
-          name: formData.email,
-          password: formData.password,
-        });
-        if (response.data.success === false) {
-          return;
-        }
-
-        navigate("/");
+        const response = await axios.post(
+          "products",
+          {
+            name: formData.name,
+            category: category,
+            description: formData.description,
+            price: formData.price,
+            quantity: formData.quantity,
+            metal: metal,
+            backgroundImage: backgroundImage,
+            hoverImage: hoverImage,
+            imageUrls: additionalImages,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -92,8 +103,27 @@ function ProductCreating() {
                 </span>
               </p>
             )}
+            <div className="mt-5">
+              <DropdownMenu
+                defaultOption="Choose category"
+                title="Category"
+                options={[
+                  "Anklets",
+                  "Body Chains",
+                  "Bracelets",
+                  "Charms",
+                  "Earrings",
+                  "Gift Bundles",
+                  "Mystery",
+                  "Necklaces",
+                  "Rings",
+                ]}
+                onValueChange={(newValue) => setCategory(newValue)}
+              />
+            </div>
             <div className="field">
-              <input
+              <textarea
+                rows="8"
                 id="description"
                 autoComplete="description"
                 required
@@ -101,7 +131,7 @@ function ProductCreating() {
                 placeholder="description"
                 autoCorrect="off"
                 {...register("description")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
               />
               <label htmlFor="description">Description*</label>
             </div>
@@ -192,37 +222,48 @@ function ProductCreating() {
                 onValueChange={(newValue) => setMetal(newValue)}
               />
             </div>
-            <div className="mt-5">
-              <DropdownMenu
-                defaultOption="Choose category"
-                title="Category"
-                options={[
-                  "Anklets",
-                  "Body Chains",
-                  "Bracelets",
-                  "Charms",
-                  "Earrings",
-                  "Gift Bundles",
-                  "Mystery",
-                  "Necklaces",
-                  "Rings",
-                ]}
-                onValueChange={(newValue) => setCategory(newValue)}
+            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
+              <label htmlFor="backgroundImage" className="text-base text-left">
+                Background*
+              </label>
+              <input
+                type="file"
+                id="backgroundImage"
+                onChange={(e) => setBackgroundImage(e.target.files[0])}
+                name="backgroundImage"
+                required
+                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
               />
             </div>
-            {/* <label htmlFor="backgroundImage">Background Image:</label>
-            <input
-              type="file"
-              id="backgroundImage"
-              name="backgroundImage"
-              required
-            />
-
-            <label htmlFor="hoverImage">Hover Image:</label>
-            <input type="file" id="hoverImage" name="hoverImage" required />
-
-            <label htmlFor="images">Additional Images:</label>
-            <input type="file" id="images" name="images" multiple /> */}
+            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
+              <label htmlFor="hoverImage" className="text-base text-left">
+                Hover*
+              </label>
+              <input
+                type="file"
+                id="hoverImage"
+                onChange={(e) => setHoverImage(e.target.files[0])}
+                name="hoverImage"
+                required
+                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
+              />
+            </div>
+            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
+              <label htmlFor="additionalImages" className="text-base text-left">
+                Additional*
+              </label>
+              <input
+                type="file"
+                id="additionalImages"
+                name="additionalImages"
+                multiple
+                onChange={(e) =>
+                  setAdditionalImages(Array.from(e.target.files))
+                }
+                required
+                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
+              />
+            </div>
             <button
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
