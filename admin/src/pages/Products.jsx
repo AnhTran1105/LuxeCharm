@@ -20,7 +20,7 @@ function Products() {
   return (
     <div className="mt-10 flex flex-col gap-5 px-[15px]">
       <div className="flex gap-4">
-        <a className="button" href="/products/create-products">
+        <a className="button" href="/products/create-product">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -34,7 +34,7 @@ function Products() {
           </svg>
           <span>Create new products</span>
         </a>
-        <a className="button" href="/products/create-products">
+        <a className="button" href="/products/create-product">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

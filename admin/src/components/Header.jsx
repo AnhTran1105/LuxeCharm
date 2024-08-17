@@ -258,14 +258,14 @@ function Header() {
 
             <li>
               <NavLink
-                className={`header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
+                className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
                   jewelryMenuRef.current &&
                   !jewelryMenuRef.current.classList.contains("opacity-0") &&
                   "underline underline-offset-[2.5px] hover:decoration-2"
                 }`}
                 to="/products"
               >
-                <span>Jewelry</span>
+                <span>Product</span>
               </NavLink>
             </li>
 
