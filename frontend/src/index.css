@@ -24,6 +24,18 @@
   }
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 :root {
   position: relative;
   --color-foreground: rgb(18, 18, 18);
@@ -237,4 +249,67 @@ input::-moz-placeholder {
 
 input::placeholder {
   color: transparent;
+}
+
+.quantity {
+  color: rgba(var(--color-foreground));
+  position: relative;
+  width: 142px;
+  display: flex;
+  min-height: 45px;
+}
+
+.quantity:before {
+  background: rgb(var(--color-background));
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.quantity:after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  left: 1px;
+  border: 0.1rem solid transparent;
+  box-shadow: 0 0 0 1px rgba(18, 18, 18, 0.55);
+  transition: box-shadow 0.1s ease;
+  z-index: 1;
+}
+
+.quantity-input {
+  color: currentColor;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.85;
+  text-align: center;
+  background-color: transparent;
+  border: 0;
+  padding: 0 0.5rem;
+  width: 100%;
+  flex-grow: 1;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.quantity-button {
+  width: 45px;
+  flex-shrink: 0;
+  font-size: 18px;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--color-foreground));
+  padding: 0;
 }
