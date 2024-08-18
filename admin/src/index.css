@@ -250,6 +250,11 @@ input[type="file"] {
   direction: rtl;
 }
 
+input:disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
 /* input[type="file"]::-webkit-file-upload-button {
 } */
 

@@ -1,30 +1,4 @@
-const mongoose = require("mongoose");
-
-const variationSchema = mongoose.Schema({
-  metal: {
-    type: String,
-    enum: [
-      "Gold",
-      "Gold Vermeil",
-      "Mixed Metal",
-      "Rose Gold",
-      "Silver",
-      "Sterling Silver",
-    ],
-    required: true,
-  },
-  size: {
-    type: String,
-    required: function () {
-      return this.category === "Rings";
-    },
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-});
+import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema(
   {
@@ -57,7 +31,39 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    variations: [variationSchema],
+    metals: {
+      type: [String],
+      required: true,
+      enum: [
+        "Gold",
+        "Gold Vermeil",
+        "Mixed Metal",
+        "Rose Gold",
+        "Silver",
+        "Sterling Silver",
+      ],
+    },
+    quantities: [
+      {
+        metal: {
+          type: String,
+          required: true,
+          enum: [
+            "Gold",
+            "Gold Vermeil",
+            "Mixed Metal",
+            "Rose Gold",
+            "Silver",
+            "Sterling Silver",
+          ],
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
+      },
+    ],
     rating: {
       type: Number,
       min: 0,
@@ -82,4 +88,6 @@ const productSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+
+export default Product;

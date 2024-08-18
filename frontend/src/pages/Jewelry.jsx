@@ -1,6 +1,7 @@
 import ProductCard from "../components/ProductCard";
 import FilterMenu from "../components/FilterMenu";
 import { useRef } from "react";
+import ProductList from "../components/ProductList";
 
 function Jewelry() {
   const toggleMenuVisibility = useRef([]);
@@ -413,28 +414,7 @@ function Jewelry() {
         </div>
         {/* End Filter Form  */}
         {/* Product List */}
-        <ul role="list" className="grid grid-cols-4 gap-3">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
-        </ul>
+        <ProductList />
         {/* End Product List  */}
         {/* Pagination */}
         <nav className="mt-[50px]">

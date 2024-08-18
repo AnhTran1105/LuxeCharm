@@ -10,13 +10,12 @@ const schema = yup
   .object({
     name: yup.string().required(),
     description: yup.string().required(),
-    quantity: yup.number().positive().required().default(0),
     price: yup.number().positive().required().default(0),
   })
   .required();
 
 function ProductCreating() {
-  const [metals, setMetals] = useState([]);
+  const [variations, setVariations] = useState([]);
   const [category, setCategory] = useState("");
   const [backgroundImage, setBackgroundImage] = useState();
   const [hoverImage, setHoverImage] = useState();
@@ -36,9 +35,12 @@ function ProductCreating() {
     data.append("category", category);
     data.append("description", formData.description);
     data.append("price", formData.price);
-    data.append("quantity", formData.quantity);
-    metals.forEach((metal) => {
-      data.append("metals[]", metal);
+
+    variations.forEach((variation) => {
+      data.append("quantities[]", variation.quantity);
+    });
+    variations.forEach((variation) => {
+      data.append("metals[]", variation.metal);
     });
 
     data.append("backgroundImage", backgroundImage);
@@ -61,8 +63,6 @@ function ProductCreating() {
       }
     })();
   };
-
-  console.log(metals);
 
   return (
     <div className="flex justify-center items-center">
@@ -163,62 +163,51 @@ function ProductCreating() {
                 </span>
               </p>
             )}
-            <div className="grid grid-cols-2 gap-5 mt-5 items-center two-cols">
-              <div className="field">
-                <input
-                  id="price"
-                  autoComplete="price"
-                  required
-                  autoCapitalize="off"
-                  placeholder="price"
-                  autoCorrect="off"
-                  {...register("price")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                />
-                <label htmlFor="price">Price*</label>
-              </div>
-              {errors.price && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    enableBackground="new 0 0 24 24"
-                    className="fill-red mr-2"
-                    width={20}
-                    height={20}
-                    viewBox="0 0 24 24"
-                    id="exclamation-mark"
-                  >
-                    <path
-                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                    ></path>
-                  </svg>
 
-                  <span className="first-letter:capitalize">
-                    {errors.price?.message}
-                  </span>
-                </p>
-              )}
-              <div className="field !mt-0">
-                <input
-                  id="quantity"
-                  autoComplete="quantity"
-                  required
-                  autoCapitalize="off"
-                  placeholder="quantity"
-                  autoCorrect="off"
-                  {...register("quantity")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                />
-                <label htmlFor="quantity">Quantity*</label>
-              </div>
+            <div className="field">
+              <input
+                id="price"
+                autoComplete="price"
+                required
+                autoCapitalize="off"
+                placeholder="price"
+                type="number"
+                min={0}
+                autoCorrect="off"
+                {...register("price")}
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+              />
+              <label htmlFor="price">Price*</label>
             </div>
+            {errors.price && (
+              <p className="text-left px-4 pt-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  enableBackground="new 0 0 24 24"
+                  className="fill-red mr-2"
+                  width={20}
+                  height={20}
+                  viewBox="0 0 24 24"
+                  id="exclamation-mark"
+                >
+                  <path
+                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                  ></path>
+                </svg>
+
+                <span className="first-letter:capitalize">
+                  {errors.price?.message}
+                </span>
+              </p>
+            )}
+
             <div className="mt-5">
               <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
                 Metals of product:
               </p>
               <CheckboxMenu
-                onValueChange={(value) => setMetals(value)}
+                onValueChange={(value) => setVariations(value)}
                 options={[
                   "Gold",
                   "Gold Vermeil",

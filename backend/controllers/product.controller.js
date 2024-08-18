@@ -34,13 +34,18 @@ export const createProduct = async (req, res, next) => {
       })
     );
 
+    const quantities = req.body.metals.map((metal, index) => ({
+      metal: metal,
+      quantity: req.body.quantities[index],
+    }));
+
     const newProduct = new Product({
       name: req.body.name,
       category: req.body.category,
       description: req.body.description,
       price: req.body.price,
-      quantity: req.body.quantity,
       metals: req.body.metals,
+      quantities: quantities,
       backgroundImage: backgroundImage.secure_url,
       hoverImage: hoverImage.secure_url,
       imageUrls,
