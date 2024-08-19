@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { useParams } from "react-router-dom";
+import CustomPaging from "../components/CustomPaging";
 
 function Product() {
   const [product, setProduct] = useState();
@@ -21,10 +22,12 @@ function Product() {
 
   return (
     product && (
-      <section className="mt-9 mb-3">
-        <div className="grid grid-cols-2">
-          <div></div>
-          <div className="pl-[50px]">
+      <section className="pt-9 pb-3 px-[50px]">
+        <div className="flex">
+          <div className="max-w-[55%] w-[calc(55%-6px)]">
+            <CustomPaging otherImages={product.imageUrls} />
+          </div>
+          <div className="pl-[50px] max-w-[45%] w-[calc(45%-6px)]">
             <div className="mb-[15px]">
               <h1 className="text-[22px]">{product.name}</h1>
             </div>
@@ -39,7 +42,7 @@ function Product() {
                 {product.quantities.map((item) =>
                   item.quantity > 0 ? (
                     <button
-                      className="py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 tracking-[1px] leading-none text-sm first:bg-color-foreground first:text-white"
+                      className="py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground tracking-[1px] leading-none text-sm first:bg-color-foreground first:text-white"
                       key={item.metal}
                     >
                       {item.metal}
@@ -101,7 +104,7 @@ function Product() {
                   type="number"
                   min={1}
                   step={1}
-                  value={1}
+                  defaultValue={1}
                 />
                 <button className="quantity-button">
                   <svg
@@ -122,11 +125,14 @@ function Product() {
                 </button>
               </div>
             </div>
-            <div className="my-[15px]">
+            <div className="my-[15px] max-w-[440px]">
               <button className="text-center w-full border border-solid px-[30px] h-[45px] text-[15px]">
                 Add to cart
               </button>
             </div>
+            <p className="my-[25px] text-xs text-foreground75">
+              {product.description}
+            </p>
           </div>
         </div>
       </section>

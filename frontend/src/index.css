@@ -24,6 +24,10 @@
   }
 }
 
+img {
+  @apply object-cover object-center;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -312,4 +316,62 @@ input::placeholder {
   justify-content: center;
   color: rgb(var(--color-foreground));
   padding: 0;
+}
+
+/* .slider-container .slick-track {
+  display: flex;
+  justify-content: center;
+} */
+
+.product-carousel .slick-prev {
+  left: -45px;
+}
+
+.product-carousel .slick-next {
+  right: -45px;
+}
+
+.product-showing {
+  @apply px-[6px];
+}
+
+.slick-dots {
+  position: relative;
+  bottom: 0;
+}
+
+.slick-dots li {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.slick-dots.slick-thumb {
+  @apply !grid grid-cols-5 gap-3;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin-top: 20px;
+}
+
+.slick-dots.slick-thumb li {
+  @apply w-full;
+}
+
+.slick-dots.slick-thumb li.slick-active a {
+  @apply outline outline-color-foreground;
+}
+
+.slick-dots.slick-thumb li a img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slick-dots.slick-thumb li:not(.slick-active) a img {
+  @apply hover:opacity-75;
 }

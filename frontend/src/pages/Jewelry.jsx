@@ -1,4 +1,3 @@
-import ProductCard from "../components/ProductCard";
 import FilterMenu from "../components/FilterMenu";
 import { useRef } from "react";
 import ProductList from "../components/ProductList";
