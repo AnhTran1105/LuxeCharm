@@ -24,10 +24,10 @@ function Product() {
     product && (
       <section className="pt-9 pb-3 px-[50px]">
         <div className="flex">
-          <div className="max-w-[55%] w-[calc(55%-6px)]">
+          <div className="max-w-[55%] w-[55%]">
             <CustomPaging otherImages={product.imageUrls} />
           </div>
-          <div className="pl-[50px] max-w-[45%] w-[calc(45%-6px)]">
+          <div className="pl-[50px] max-w-[45%] w-[45%]">
             <div className="mb-[15px]">
               <h1 className="text-[22px]">{product.name}</h1>
             </div>

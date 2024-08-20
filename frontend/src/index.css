@@ -375,3 +375,16 @@ input::placeholder {
 .slick-dots.slick-thumb li:not(.slick-active) a img {
   @apply hover:opacity-75;
 }
+
+.custom-paging .slick-arrow {
+  @apply top-[40%];
+  background-color: transparent !important;
+}
+
+.custom-paging .slick-arrow:hover:not(.slick-disabled) svg {
+  @apply scale-110;
+}
+
+.custom-paging .slick-dots.slick-thumb {
+  @apply px-10;
+}

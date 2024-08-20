@@ -92,7 +92,7 @@ function Header() {
   return (
     <header
       className={`border-b-[1px] bg-white z-[9999] border-color-foreground/8 ${
-        isAtTop ? "static" : "fixed top-0 left-0"
+        isAtTop ? "relative" : "fixed top-0 left-0"
       } w-full transition-transform duration-300 ease-out ${
         isVisible
           ? "transform translate-y-0"
@@ -295,7 +295,7 @@ function Header() {
                 </svg>
               </button>
               <div
-                className="invisible opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
+                className="invisible opacity-0 transition-opacity duration-100 z-9999 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
                 ref={beautyMenuRef}
                 tabIndex="-1"
               >
@@ -393,7 +393,7 @@ function Header() {
                 </svg>
               </button>
               <div
-                className="invisible opacity-0 transition-opacity duration-100 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
+                className="invisible opacity-0 transition-opacity duration-100 z-9999 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
                 ref={lifestyleMenuRef}
                 tabIndex="-1"
               >
