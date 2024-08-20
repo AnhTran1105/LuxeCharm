@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axios";
-import ProductCreating from "./Products/ProductCreating";
-import ProductCard from "../components/ProductCard";
 
 function Products() {
   const [products, setProducts] = useState([]);

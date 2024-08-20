@@ -24,10 +24,27 @@
   }
 }
 
+.Toastify__toast {
+  @apply !p-4 border border-foreground75 !rounded-none !shadow-sm !text-center !text-color-foreground;
+}
+
+.Toastify__toast-theme--dark {
+  @apply !bg-white;
+}
+
+.Toastify__progress-bar-theme--dark {
+  @apply !bg-white;
+}
+
 :root {
   position: relative;
   --color-foreground: rgb(18, 18, 18);
   --inputs-border-width: 1px;
+  --toastify-toast-width: 360px !important;
+}
+
+#root {
+  background-color: #fff;
 }
 
 a {

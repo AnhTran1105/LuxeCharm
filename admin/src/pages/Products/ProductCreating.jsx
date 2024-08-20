@@ -3,8 +3,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
 import DropdownMenu from "../../components/DropdownMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckboxMenu from "../../components/CheckboxMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { sendMessage } from "../../redux/notification/notificationSlice";
+import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
 
 const schema = yup
   .object({
@@ -20,6 +23,7 @@ function ProductCreating() {
   const [backgroundImage, setBackgroundImage] = useState();
   const [hoverImage, setHoverImage] = useState();
   const [additionalImages, setAdditionalImages] = useState();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -30,6 +34,7 @@ function ProductCreating() {
   });
 
   const onSubmit = (formData) => {
+    dispatch(startLoading());
     const data = new FormData();
     data.append("name", formData.name);
     data.append("category", category);
@@ -57,12 +62,21 @@ function ProductCreating() {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log(response.data);
+        dispatch(stopLoading());
+        dispatch(sendMessage(response.data));
       } catch (error) {
         console.log(error);
+        dispatch(sendMessage(error.message));
       }
     })();
   };
+
+  useEffect(() => {
+    dispatch(sendMessage({ message: "Test Message", type: "success" }));
+  }, []);
+
+  const { message } = useSelector((state) => state.notification);
+  console.log(message);
 
   return (
     <div className="flex justify-center items-center">
