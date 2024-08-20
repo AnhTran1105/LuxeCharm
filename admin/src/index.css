@@ -302,3 +302,27 @@ textarea::placeholder {
 .button {
   @apply p-3 border border-solid hover:outline-1 hover:outline hover:text-color-foreground transition-[outline] duration-100 text-[15px] flex items-center;
 }
+
+#table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+}
+
+#table td,
+#table th {
+  @apply border border-solid border-foreground75;
+  padding: 8px;
+}
+
+/* #table tr:nth-child(even) {
+  background-color: #f2f2f2;
+} */
+
+#table tr:hover {
+  @apply bg-third;
+}
+
+#table th {
+  @apply bg-primary py-3 text-white;
+}
