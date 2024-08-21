@@ -3,6 +3,7 @@ import {
   getAllProducts,
   createProduct,
   getProductById,
+  deleteProducts,
 } from "../controllers/product.controller.js";
 import { param } from "express-validator";
 import upload from "../middleware/multer.js";
@@ -24,5 +25,7 @@ router.post(
   ]),
   createProduct
 );
+
+router.delete("/products", deleteProducts);
 
 export default router;

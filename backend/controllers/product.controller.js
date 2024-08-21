@@ -71,3 +71,25 @@ export const getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteProducts = async (req, res, next) => {
+  const { productIds } = req.body;
+
+  if (!Array.isArray(productIds) || productIds.length === 0) {
+    return res.status(400).json({ message: "Invalid productIds array." });
+  }
+
+  try {
+    const result = await Product.deleteMany({ _id: { $in: productIds } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No products found to delete." });
+    }
+
+    return res.status(200).json({
+      message: `${result.deletedCount} product(s) successfully deleted.`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -18,7 +18,7 @@ function Products() {
   console.log(products);
 
   return (
-    <div className="mt-10 flex flex-col gap-5 px-[50px]">
+    <div className="my-10 flex flex-col gap-5 px-[50px]">
       <div className="flex gap-4 justify-end">
         <a className="button" href="/products/create-product">
           <svg
