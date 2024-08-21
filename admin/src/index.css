@@ -36,6 +36,16 @@
   @apply !bg-white;
 }
 
+.Toastify__close-button {
+  @apply !text-foreground75 !opacity-100;
+}
+
+.Toastify__toast-body {
+  @apply !text-foreground75;
+  font-family: "Sofia";
+  font-size: 16px;
+}
+
 :root {
   position: relative;
   --color-foreground: rgb(18, 18, 18);

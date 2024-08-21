@@ -63,20 +63,13 @@ function ProductCreating() {
           },
         });
         dispatch(stopLoading());
-        dispatch(sendMessage(response.data));
+        dispatch(sendMessage({ message: response.data, type: "success" }));
       } catch (error) {
-        console.log(error);
-        dispatch(sendMessage(error.message));
+        dispatch(stopLoading());
+        dispatch(sendMessage({ message: error.message, type: "error" }));
       }
     })();
   };
-
-  useEffect(() => {
-    dispatch(sendMessage({ message: "Test Message", type: "success" }));
-  }, []);
-
-  const { message } = useSelector((state) => state.notification);
-  console.log(message);
 
   return (
     <div className="flex justify-center items-center">

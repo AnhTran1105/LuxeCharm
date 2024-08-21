@@ -17,6 +17,7 @@ export default {
       third: "#eaeaea",
     },
     fontFamily: {
+      Sofia: ['"Sofia'],
       SofiaBold: ['"SofiaBold"'],
     },
     extend: {
