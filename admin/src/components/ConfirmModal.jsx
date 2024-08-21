@@ -5,14 +5,11 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { useEffect } from "react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { openModal, closeModal } from "../redux/modal/modalSlice.js";
 import Button from "./Button.jsx";
 
-function ConfirmModal({ title, description, onValueChange }) {
-  const [isOpen, setIsOpen] = useState(false);
-
+function ConfirmModal({ title, description, isOpen, setIsOpen, onSubmit }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,14 +17,8 @@ function ConfirmModal({ title, description, onValueChange }) {
     else dispatch(closeModal());
   }, [isOpen, dispatch]);
 
-  const handleButtonClick = (isOpen) => {
-    onValueChange(isOpen);
-    setIsOpen(false);
-  };
-
   return (
     <>
-      <button onClick={() => setIsOpen(true)}>Open dialog</button>
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen(false)}
@@ -61,12 +52,15 @@ function ConfirmModal({ title, description, onValueChange }) {
               <Button
                 onClick={() => setIsOpen(false)}
                 content="No"
-                className="w-16"
+                className="w-20"
               />
               <Button
-                onClick={() => handleButtonClick(isOpen)}
+                onClick={() => {
+                  onSubmit();
+                  setIsOpen(false);
+                }}
                 content="Yes"
-                className="w-16"
+                className="w-20 hover:bg-red hover:border-red hover:text-white"
               />
             </div>
           </DialogPanel>

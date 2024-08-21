@@ -3,9 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
 import DropdownMenu from "../../components/DropdownMenu";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CheckboxMenu from "../../components/CheckboxMenu";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
 
