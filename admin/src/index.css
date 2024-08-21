@@ -353,3 +353,69 @@ textarea::placeholder {
 #table th {
   @apply bg-primary py-3 text-white;
 }
+
+.product-carousel .slick-prev {
+  left: -45px;
+}
+
+.product-carousel .slick-next {
+  right: -45px;
+}
+
+.product-showing {
+  @apply px-[6px];
+}
+
+.slick-dots {
+  position: relative;
+  bottom: 0;
+}
+
+.slick-dots li {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.slick-dots.slick-thumb {
+  @apply !grid grid-cols-5 gap-3;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin-top: 20px;
+}
+
+.slick-dots.slick-thumb li {
+  @apply w-full;
+}
+
+.slick-dots.slick-thumb li.slick-active a {
+  @apply outline outline-color-foreground;
+}
+
+.slick-dots.slick-thumb li a img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slick-dots.slick-thumb li:not(.slick-active) a img {
+  @apply hover:opacity-75;
+}
+
+.custom-paging .slick-arrow {
+  @apply top-[40%];
+  background-color: transparent !important;
+}
+
+.custom-paging .slick-arrow:hover:not(.slick-disabled) svg {
+  @apply scale-110;
+}
+
+.custom-paging .slick-dots.slick-thumb {
+  @apply px-10;
+}

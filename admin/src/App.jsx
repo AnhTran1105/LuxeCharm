@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { dismissMessage } from "./redux/notification/notificationSlice.js";
 import LoaderPortal from "./components/LoaderPortal.jsx";
 import { HashLoader } from "react-spinners";
+import Product from "./pages/Products/Product.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -63,6 +64,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<Product />} />
         <Route path="products/create-product" element={<ProductCreating />} />
         <Route path="/account/login" element={<Login />} />
         <Route path="/account/register" element={<Register />} />
