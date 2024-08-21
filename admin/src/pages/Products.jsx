@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axios";
+import ConfirmModal from "../components/ConfirmModal";
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const [isComfirmed, setIsComfirmed] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -15,7 +18,7 @@ function Products() {
     })();
   }, []);
 
-  console.log(products);
+  console.log(isComfirmed);
 
   return (
     <div className="my-10 flex flex-col gap-5 px-[50px]">
@@ -55,16 +58,11 @@ function Products() {
           <span>Delete product</span>
         </a>
       </div>
-      {/* <ul
-        role="list"
-        className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3"
-      >
-        <ProductCard />
-        <ProductCard />
-        <ProductCard isOptional={true} />
-        <ProductCard isOff={true} />
-        <ProductCard isOptional={true} />
-      </ul> */}
+      <ConfirmModal
+        title="Delete products"
+        description="Are you sure you want to delete these products?"
+        onValueChange={setIsComfirmed}
+      />
       <table id="table">
         <thead>
           <tr>

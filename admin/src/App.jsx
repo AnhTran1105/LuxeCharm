@@ -23,14 +23,15 @@ export default function App() {
     (state) => state.notification
   );
   const { isLoading } = useSelector((state) => state.loading);
+  const { isOpen } = useSelector((state) => state.modal);
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading || isOpen) {
       root?.classList.add("brightness-50");
     } else {
       root?.classList.remove("brightness-50");
     }
-  }, [isLoading, root?.classList]);
+  }, [isLoading, isOpen, root?.classList]);
 
   useEffect(() => {
     if (showToast) {
