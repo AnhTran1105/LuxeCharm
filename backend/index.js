@@ -39,7 +39,7 @@ app.listen(port, () => {
 const corsOpts = {
   origin: "*",
 
-  methods: ["GET", "POST", "DELETE"],
+  methods: ["GET", "POST", "DELETE", "PUT"],
 
   allowedHeaders: ["Content-Type"],
 };

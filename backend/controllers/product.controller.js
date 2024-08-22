@@ -96,62 +96,75 @@ export const deleteProducts = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   try {
-    const { productId } = req.params;
-
+    const productId = req.params.id;
     const product = await Product.findById(productId);
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    if (req.files.backgroundImage) {
-      const backgroundImage = await cloudinary.v2.uploader.upload(
-        req.files.backgroundImage[0].path,
-        {
-          folder: "products/backgrounds",
-        }
-      );
-      product.backgroundImage = backgroundImage.secure_url;
+    if (!Array.isArray(product.imageUrls)) {
+      product.imageUrls = [];
     }
 
-    if (req.files.hoverImage) {
-      const hoverImage = await cloudinary.v2.uploader.upload(
-        req.files.hoverImage[0].path,
-        {
-          folder: "products/hovers",
-        }
-      );
-      product.hoverImage = hoverImage.secure_url;
+    console.log(req.body);
+
+    if (
+      req.body.imagesToDelete &&
+      Array.isArray(JSON.parse(req.body.imagesToDelete))
+    ) {
+      const imagesToDelete = JSON.parse(req.body.imagesToDelete);
+      for (const imageUrl of imagesToDelete) {
+        await cloudinary.v2.uploader.destroy(imageUrl);
+        product.imageUrls = product.imageUrls.filter((url) => url !== imageUrl);
+      }
     }
 
-    if (req.files.imageUrls) {
-      const imageUrls = await Promise.all(
+    if (req.files && req.files.imageUrls && req.files.imageUrls.length > 0) {
+      const newImageUrls = await Promise.all(
         req.files.imageUrls.map(async (file) => {
-          const result = await cloudinary.v2.uploader.upload(file.path, {
+          const result = await cloudinary.v2.uploader.upload(file.buffer, {
             folder: "products/images",
           });
           return result.secure_url;
         })
       );
-      product.imageUrls = imageUrls;
+      product.imageUrls.push(...newImageUrls);
     }
+
+    const quantities = req.body.metals.map((metal, index) => ({
+      metal: metal,
+      quantity: req.body.quantities[index],
+    }));
 
     product.name = req.body.name || product.name;
     product.category = req.body.category || product.category;
     product.description = req.body.description || product.description;
     product.price = req.body.price || product.price;
+    product.quantities = quantities || product.quantities;
+    product.metals = req.body.metals || product.metals;
 
-    if (req.body.metals && req.body.quantities) {
-      const quantities = req.body.metals.map((metal, index) => ({
-        metal: metal,
-        quantity: req.body.quantities[index],
-      }));
-      product.metals = req.body.metals;
-      product.quantities = quantities;
+    if (req.files && req.files.backgroundImage) {
+      product.backgroundImage = (
+        await cloudinary.v2.uploader.upload(
+          req.files.backgroundImage[0].buffer,
+          {
+            folder: "products/backgrounds",
+          }
+        )
+      ).secure_url;
+    }
+
+    if (req.files && req.files.hoverImage) {
+      product.hoverImage = (
+        await cloudinary.v2.uploader.upload(req.files.hoverImage[0].buffer, {
+          folder: "products/hovers",
+        })
+      ).secure_url;
     }
 
     await product.save();
-
-    res.status(200).json("Product updated successfully!");
+    res.status(200).json({ message: "Product updated successfully!" });
   } catch (error) {
     next(error);
   }

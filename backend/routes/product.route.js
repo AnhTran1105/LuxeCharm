@@ -28,6 +28,14 @@ router.post(
 );
 
 router.delete("/products", deleteProducts);
-router.put("/products/:productId", updateProduct);
+router.put(
+  "/products/:id",
+  upload.fields([
+    { name: "backgroundImage", maxCount: 1 },
+    { name: "hoverImage", maxCount: 1 },
+    { name: "imageUrls", maxCount: 3 },
+  ]),
+  updateProduct
+);
 
 export default router;
