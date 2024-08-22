@@ -1,36 +1,45 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function CheckboxMenu({ options, onValueChange }) {
-  const [selectedValues, setSelectedValues] = useState([]);
+function CheckboxMenu({ options, onValueChange, values: propValues }) {
+  const [selectedValues, setSelectedValues] = useState(propValues || []);
+
+  useEffect(() => {
+    if (
+      propValues &&
+      JSON.stringify(propValues) !== JSON.stringify(selectedValues)
+    ) {
+      setSelectedValues(propValues);
+    }
+  }, [propValues, selectedValues]);
 
   const handleItemClick = (option) => {
     if (!selectedValues.some((value) => value.metal === option)) {
-      setSelectedValues([...selectedValues, { metal: option, quantity: 0 }]);
+      const updatedValues = [...selectedValues, { metal: option, quantity: 0 }];
+      setSelectedValues(updatedValues);
+      onValueChange(updatedValues);
     } else {
-      const arr = selectedValues.filter((value) => value.metal !== option);
-      setSelectedValues(arr);
+      const updatedValues = selectedValues.filter(
+        (value) => value.metal !== option
+      );
+      setSelectedValues(updatedValues);
+      onValueChange(updatedValues);
     }
   };
 
   const handleQuantityChange = (option, quantity) => {
-    setSelectedValues((prevValues) =>
-      prevValues.map((value) =>
-        value.metal === option ? { ...value, quantity } : value
-      )
+    const updatedValues = selectedValues.map((value) =>
+      value.metal === option ? { ...value, quantity } : value
     );
+    setSelectedValues(updatedValues);
+    onValueChange(updatedValues);
   };
-
-  useEffect(() => {
-    onValueChange(selectedValues);
-  }, [selectedValues, onValueChange]);
 
   return (
     <ul className="grid gap-5" role="list">
       {options.map((option, index) => (
         <div
           key={index}
-          className="grid items-center grid-cols-3 h-[47px] pl-[15px] border cursor-pointer hover-border hover:border-no-color "
+          className="grid items-center grid-cols-3 h-[47px] pl-[15px] border cursor-pointer hover-border hover:border-no-color"
         >
           <li
             className="flex items-center col-span-2 h-[45px] border-r"
@@ -47,9 +56,9 @@ function CheckboxMenu({ options, onValueChange }) {
               >
                 <path
                   d="M486.468,491.821H26.47c-3.977,0-7.202-3.224-7.202-7.201V28.317c0-3.978,3.225-7.201,7.202-7.201h459.998
-    				c3.978,0,7.201,3.224,7.201,7.201V484.62C493.669,488.598,490.445,491.821,486.468,491.821z M33.671,477.419h445.595v-441.9
-    				H33.671V477.419z"
-                ></path>
+      c3.978,0,7.201,3.224,7.201,7.201V484.62C493.669,488.598,490.445,491.821,486.468,491.821z M33.671,477.419h445.595v-441.9
+      H33.671V477.419z"
+                />
               </svg>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
