@@ -21,7 +21,7 @@ router.post(
   upload.fields([
     { name: "backgroundImage", maxCount: 1 },
     { name: "hoverImage", maxCount: 1 },
-    { name: "imageUrls", maxCount: 10 },
+    { name: "imageUrls", maxCount: 3 },
   ]),
   createProduct
 );
