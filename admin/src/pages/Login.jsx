@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
@@ -24,7 +24,6 @@ function Login() {
   });
 
   const dispatch = useDispatch();
-  // const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 

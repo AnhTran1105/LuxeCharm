@@ -18,7 +18,7 @@ function Products() {
     (async () => {
       try {
         const productResponse = await axios.get("/products");
-        setProducts(productResponse.data);
+        setProducts(productResponse);
       } catch (error) {
         console.error(error);
       }
@@ -31,12 +31,10 @@ function Products() {
       const response = await axios.delete("/products", {
         data: { productIds: selectedIds },
       });
-      dispatch(
-        sendMessage({ message: response.data.message, type: "success" })
-      );
+      dispatch(sendMessage({ message: response.message, type: "success" }));
       setIsRefresh(!isRefresh);
     } catch (error) {
-      dispatch(sendMessage({ message: error.response, type: "error" }));
+      dispatch(sendMessage({ message: error.messsage, type: "error" }));
     } finally {
       setSelectedIds([]);
       setCheckingVisible(false);
