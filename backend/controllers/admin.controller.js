@@ -17,7 +17,7 @@ export const createAdminAccount = async () => {
   }
 };
 
-export const adminLogin = async (req, res, next) => {
+export const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const admin = await Admin.findOne({ email });
