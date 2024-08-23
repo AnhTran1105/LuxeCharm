@@ -61,7 +61,7 @@ function ProductUpdating() {
     if (updatedHoverImage) data.append("hoverImage", updatedHoverImage);
 
     newImages.forEach((file) => {
-      data.append("imageUrls[]", file);
+      data.append("imageUrls", file);
     });
 
     if (imagesToDelete.length > 0) {
@@ -119,8 +119,6 @@ function ProductUpdating() {
   const handleImageAdd = (event) => {
     setNewImages((prev) => [...prev, ...event.target.files]);
   };
-
-  console.log(updatedBackgroundImage, updatedHoverImage);
 
   return (
     product && (
@@ -282,7 +280,10 @@ function ProductUpdating() {
                 <div className="relative w-[50%]">
                   <img src={backgroundImage} alt="background-image" />
                   <button
-                    onClick={() => setBackgroundImage(null)}
+                    onClick={() => {
+                      setBackgroundImage(null);
+                      setImagesToDelete((prev) => [...prev, backgroundImage]);
+                    }}
                     type="button"
                     className="absolute top-2 right-2 group"
                   >
@@ -320,7 +321,10 @@ function ProductUpdating() {
                 <div className="relative w-[50%]">
                   <img src={hoverImage} alt="hover-image" />
                   <button
-                    onClick={() => setHoverImage(null)}
+                    onClick={() => {
+                      setHoverImage(null);
+                      setImagesToDelete((prev) => [...prev, hoverImage]);
+                    }}
                     className="absolute top-2 right-2 group"
                   >
                     <svg
@@ -350,29 +354,32 @@ function ProductUpdating() {
                 className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
               />
             </div>
-            <div className="grid grid-cols-3 gap-4 mt-5">
-              {imageUrls.map((url, index) => (
-                <div key={index} className="relative">
-                  <img src={url} alt={`image-${index}`} />
-                  <button
-                    onClick={() => handleImageDelete(url)}
-                    className="absolute top-2 right-2 group"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 48 48"
-                      className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                      id="close"
+            {imageUrls.length > 0 && (
+              <div className="grid grid-cols-3 gap-4 mt-5">
+                {imageUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img src={url} alt={`image-${index}`} />
+                    <button
+                      type="button"
+                      onClick={() => handleImageDelete(url)}
+                      className="absolute top-2 right-2 group"
                     >
-                      <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                      <path fill="none" d="M0 0h48v48H0z"></path>
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 48 48"
+                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                        id="close"
+                      >
+                        <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
+                        <path fill="none" d="M0 0h48v48H0z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
               <label htmlFor="imageUrls" className="text-base text-left mr-4">
                 More
