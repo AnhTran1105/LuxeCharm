@@ -6,8 +6,9 @@ import {
   deleteProducts,
   updateProduct,
 } from "../controllers/product.controller.js";
+import { verifyAdmin } from "../middlewares/auth.js";
 import { param } from "express-validator";
-import upload from "../middleware/multer.js";
+import upload from "../middlewares/multer.js";
 
 const router = express.Router();
 
@@ -17,8 +18,10 @@ router.get(
   getProductById
 );
 router.get("/products", getAllProducts);
+
 router.post(
   "/products",
+  verifyAdmin,
   upload.fields([
     { name: "backgroundImage", maxCount: 1 },
     { name: "hoverImage", maxCount: 1 },
@@ -27,9 +30,10 @@ router.post(
   createProduct
 );
 
-router.delete("/products", deleteProducts);
+router.delete("/products", verifyAdmin, deleteProducts);
 router.put(
   "/products/:id",
+  verifyAdmin,
   upload.fields([
     { name: "backgroundImage", maxCount: 1 },
     { name: "hoverImage", maxCount: 1 },

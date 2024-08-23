@@ -15,6 +15,7 @@ import LoaderPortal from "./components/LoaderPortal.jsx";
 import { HashLoader } from "react-spinners";
 import Product from "./pages/Products/Product.jsx";
 import ProductUpdating from "./pages/Products/ProductUpdating.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -63,16 +64,17 @@ export default function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<Product />} />
-        <Route
-          path="/products/:id/update-product"
-          element={<ProductUpdating />}
-        />
-        <Route path="products/create-product" element={<ProductCreating />} />
         <Route path="/account/login" element={<Login />} />
-        <Route path="/account/register" element={<Register />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Product />} />
+          <Route
+            path="/products/:id/update-product"
+            element={<ProductUpdating />}
+          />
+          <Route path="products/create-product" element={<ProductCreating />} />
+        </Route>
       </Routes>
       <LoaderPortal>
         {isLoading && (

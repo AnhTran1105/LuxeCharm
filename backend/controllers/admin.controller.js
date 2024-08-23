@@ -19,18 +19,19 @@ export const createAdminAccount = async () => {
 
 export const login = async (req, res, next) => {
   const { email, password } = req.body;
-  try {
-    const admin = await Admin.findOne({ email });
-    if (!admin)
-      return next(errorHandler(404, "Admin email address is incorrect!"));
 
-    const validPassword = bcryptjs.compareSync(password, admin.password);
+  try {
+    const validAdmin = await Admin.findOne({ email });
+    if (!validAdmin)
+      return next(errorHandler(404, "Your email address is incorrect!"));
+
+    const validPassword = bcryptjs.compareSync(password, validAdmin.password);
 
     if (!validPassword)
-      return next(errorHandler(401, "Admin password is incorrect!"));
+      return next(errorHandler(401, "Your password is incorrect!"));
 
     const token = jwt.sign(
-      { id: admin._id, role: "admin" },
+      { id: validAdmin._id, role: "admin" },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
@@ -38,12 +39,12 @@ export const login = async (req, res, next) => {
     );
 
     res
-      .cookie("admin_token", token, {
+      .cookie("access_token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       })
       .status(200)
-      .json({ message: "Admin logged in successfully!" });
+      .json({ message: "Logged in successfully!", access_token: token });
   } catch (error) {
     next(error);
   }

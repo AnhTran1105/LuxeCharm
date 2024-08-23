@@ -2,11 +2,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
@@ -15,7 +10,7 @@ import { sendMessage } from "../redux/notification/notificationSlice";
 const schema = yup
   .object({
     email: yup.string().email().required(),
-    password: yup.string().required().min(6),
+    password: yup.string().required().min(5),
   })
   .required();
 
@@ -29,7 +24,7 @@ function Login() {
   });
 
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  // const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -40,11 +35,13 @@ function Login() {
         email: formData.email,
         password: formData.password,
       });
-      localStorage.setItem("admin_token", response.data.token);
+      localStorage.setItem("access_token", response.access_token);
+      dispatch(sendMessage({ message: response.message, type: "success" }));
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
     } finally {
       dispatch(stopLoading());
+      navigate("/");
     }
   };
 
@@ -58,7 +55,7 @@ function Login() {
             className="mt-10 text-sm text-color-foreground/75"
           >
             <p className="my-[10px]">* indicates a required field</p>
-            {error && (
+            {/* {error && (
               <div className="min-w-[446px] min-h-[45px] border border-red flex justify-center items-center text-red">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +73,7 @@ function Login() {
                 </svg>
                 {error}
               </div>
-            )}
+            )} */}
             <div className="field">
               <input
                 id="email"
