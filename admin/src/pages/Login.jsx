@@ -6,6 +6,7 @@ import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { sendMessage } from "../redux/notification/notificationSlice";
+import { setToken } from "../redux/auth/authSlice";
 
 const schema = yup
   .object({
@@ -34,7 +35,8 @@ function Login() {
         email: formData.email,
         password: formData.password,
       });
-      localStorage.setItem("access_token", response.access_token);
+      const { access_token } = response;
+      dispatch(setToken(access_token));
       dispatch(sendMessage({ message: response.message, type: "success" }));
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
