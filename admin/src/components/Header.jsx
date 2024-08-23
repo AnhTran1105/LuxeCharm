@@ -265,7 +265,7 @@ function Header() {
                 }`}
                 to="/products"
               >
-                <span>Product</span>
+                <span>Products</span>
               </NavLink>
             </li>
 

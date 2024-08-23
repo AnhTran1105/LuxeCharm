@@ -29,7 +29,9 @@ export const login = async (req, res, next) => {
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword)
       return next(errorHandler(401, "Your password is incorrect!"));
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res
       .cookie("access_token", token, {
         httpOnly: true,

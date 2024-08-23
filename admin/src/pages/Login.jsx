@@ -9,7 +9,8 @@ import {
 } from "../redux/user/userSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
+import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
+import { sendMessage } from "../redux/notification/notificationSlice";
 
 const schema = yup
   .object({
@@ -32,25 +33,19 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (formData) => {
-    (async () => {
-      try {
-        dispatch(signInStart());
-        const response = await axios.post("auth/login", {
-          email: formData.email,
-          password: formData.password,
-        });
-        if (response.data.success === false) {
-          dispatch(signInFailure(response.data.message));
-          return;
-        }
-        dispatch(signInSuccess(response.data));
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-        dispatch(signInFailure(error.response.data.message));
-      }
-    })();
+  const onSubmit = async (formData) => {
+    dispatch(startLoading());
+    try {
+      const response = await axios.post("admin/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      localStorage.setItem("admin_token", response.data.token);
+    } catch (error) {
+      dispatch(sendMessage({ message: error.message, type: "error" }));
+    } finally {
+      dispatch(stopLoading());
+    }
   };
 
   return (
@@ -153,28 +148,12 @@ function Login() {
                 </span>
               </p>
             )}
-            <a
-              className="!text-sm text-left link mt-[10px] underline hover:decoration-2 w-fit"
-              href="/password/recover"
-            >
-              Forgot your password?
-            </a>
             <button
               type="submit"
-              disabled={loading}
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              {loading ? <Loading loading={true} /> : <span>Log in</span>}
+              Login now
             </button>
-
-            <div className="flex justify-center">
-              <a
-                className="!text-sm link underline hover:decoration-2 w-fit"
-                href="/account/register"
-              >
-                Create account
-              </a>
-            </div>
           </form>
         </div>
       </div>

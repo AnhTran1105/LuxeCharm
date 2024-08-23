@@ -29,6 +29,7 @@ function ProductUpdating() {
   const [imageUrls, setImageUrls] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [imagesToDelete, setImagesToDelete] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -74,11 +75,14 @@ function ProductUpdating() {
           "Content-Type": "multipart/form-data",
         },
       });
-      dispatch(stopLoading());
-      dispatch(sendMessage({ message: response.data, type: "success" }));
+      dispatch(
+        sendMessage({ message: response.data.message, type: "success" })
+      );
     } catch (error) {
-      dispatch(stopLoading());
       dispatch(sendMessage({ message: error.message, type: "error" }));
+    } finally {
+      dispatch(stopLoading());
+      setRefresh(!refresh);
     }
   };
 
@@ -101,7 +105,7 @@ function ProductUpdating() {
         console.error(error);
       }
     })();
-  }, [id, setValue]);
+  }, [id, setValue, refresh]);
 
   const handleBackgroundImageChange = (e) => {
     setUpdatedBackgroundImage(e.target.files[0]);
