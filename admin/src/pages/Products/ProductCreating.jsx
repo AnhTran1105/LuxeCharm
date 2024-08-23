@@ -63,7 +63,7 @@ function ProductCreating() {
           },
         });
         dispatch(stopLoading());
-        dispatch(sendMessage({ message: response.data, type: "success" }));
+        dispatch(sendMessage({ message: response.message, type: "success" }));
       } catch (error) {
         dispatch(stopLoading());
         dispatch(sendMessage({ message: error.message, type: "error" }));

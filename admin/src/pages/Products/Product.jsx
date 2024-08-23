@@ -13,15 +13,15 @@ function Product() {
     (async () => {
       try {
         const productResponse = await axios.get(`/products/${id}`);
-        setProduct(productResponse.data);
+        setProduct(productResponse);
         setImages(
           [
-            ...productResponse.data.imageUrls,
-            productResponse.data.hoverImage,
-            productResponse.data.backgroundImage,
+            ...productResponse.imageUrls,
+            productResponse.hoverImage,
+            productResponse.backgroundImage,
           ].reverse()
         );
-        setMetal(productResponse.data.quantities[0].metal);
+        setMetal(productResponse.quantities[0].metal);
       } catch (error) {
         console.error(error);
       }

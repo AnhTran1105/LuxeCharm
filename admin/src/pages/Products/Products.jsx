@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "../utils/axios";
-import ConfirmModal from "../components/ConfirmModal";
+import axios from "../../utils/axios";
+import ConfirmModal from "../../components/ConfirmModal";
 import { useDispatch } from "react-redux";
-import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
-import { sendMessage } from "../redux/notification/notificationSlice";
+import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
+import { sendMessage } from "../../redux/notification/notificationSlice";
 
 function Products() {
   const [products, setProducts] = useState([]);

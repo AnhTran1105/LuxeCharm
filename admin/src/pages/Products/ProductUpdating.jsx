@@ -75,9 +75,7 @@ function ProductUpdating() {
           "Content-Type": "multipart/form-data",
         },
       });
-      dispatch(
-        sendMessage({ message: response.data.message, type: "success" })
-      );
+      dispatch(sendMessage({ message: response.message, type: "success" }));
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
     } finally {
@@ -90,17 +88,15 @@ function ProductUpdating() {
     (async () => {
       try {
         const productResponse = await axios.get(`/products/${id}`);
-        const { data } = productResponse;
-
-        setProduct(data);
-        setCategory(data.category);
-        setVariations(data.quantities);
-        setBackgroundImage(data.backgroundImage);
-        setHoverImage(data.hoverImage);
-        setImageUrls(data.imageUrls);
-        setValue("name", data.name);
-        setValue("description", data.description);
-        setValue("price", data.price);
+        setProduct(productResponse);
+        setCategory(productResponse.category);
+        setVariations(productResponse.quantities);
+        setBackgroundImage(productResponse.backgroundImage);
+        setHoverImage(productResponse.hoverImage);
+        setImageUrls(productResponse.imageUrls);
+        setValue("name", productResponse.name);
+        setValue("description", productResponse.description);
+        setValue("price", productResponse.price);
       } catch (error) {
         console.error(error);
       }
@@ -393,6 +389,7 @@ function ProductUpdating() {
                 id="imageUrls"
                 multiple
                 onChange={handleImageAdd}
+                disabled={newImages.length + imageUrls.length === 3}
                 className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
               />
             </div>

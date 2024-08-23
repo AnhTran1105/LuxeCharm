@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Login from "./pages/Login";
-import Products from "./pages/Products";
+import Products from "./pages/Products/Products";
 import ProductCreating from "./pages/Products/ProductCreating";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
