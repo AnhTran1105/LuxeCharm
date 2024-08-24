@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
+import { logout } from "../redux/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -8,6 +10,7 @@ function Header() {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [menuToggle, setMenuToggle] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -258,107 +261,22 @@ function Header() {
 
             <li>
               <NavLink
-                className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
-                  jewelryMenuRef.current &&
-                  !jewelryMenuRef.current.classList.contains("opacity-0") &&
-                  "underline underline-offset-[2.5px] hover:decoration-2"
-                }`}
+                className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative`}
                 to="/products"
               >
                 <span>Products</span>
               </NavLink>
             </li>
 
-            <li onClick={() => toggleMenu(beautyMenuRef, beautyIconRef)}>
-              <button
-                className={`header-nav-item !pr-[27px] text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative ${
-                  beautyMenuRef.current &&
-                  !beautyMenuRef.current.classList.contains("opacity-0") &&
-                  "underline underline-offset-[2.5px] hover:decoration-2"
-                }`}
-                // to="/collections/beauty"
+            <li>
+              <NavLink
+                className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative`}
+                to="/users"
               >
-                <span>Beauty</span>
-                <svg
-                  ref={beautyIconRef}
-                  className="absolute right-[8px] h-[6px] top-[calc(50%-2px)]"
-                  aria-hidden="true"
-                  focusable="false"
-                  viewBox="0 0 22 13"
-                >
-                  <polyline
-                    points="21.557 1.222 11 11.778 0.443 1.222"
-                    fill="none"
-                    stroke="#121212"
-                    strokeMiterlimit="10"
-                  ></polyline>
-                </svg>
-              </button>
-              <div
-                className="invisible opacity-0 transition-opacity duration-100 z-9999 ease-linear absolute left-0 right-0 bg-white top-[calc(100%+1px)]"
-                ref={beautyMenuRef}
-                tabIndex="-1"
-              >
-                <div className="py-6 flex justify-center">
-                  <div className="px-10 grid grid-cols-2 gap-6 w-[32%]">
-                    <div className="">
-                      <h2 className="mb-2 underline-offset-3px text-sm py-[6px] underline">
-                        Shop by Category
-                      </h2>
-                      <ul role="list">
-                        <li>
-                          <a className="link" href="/collections/necklaces">
-                            Bundles and Duos
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/earrings">
-                            Beauty Accessories
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/jewelry">
-                            Shop All
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="">
-                      <h2 className="mb-2 underline-offset-3px text-sm py-[6px] underline">
-                        Featured Collections
-                      </h2>
-                      <ul role="list">
-                        <li>
-                          <a className="link" href="/collections/necklaces">
-                            Anti-Aging Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/earrings">
-                            Hydrating Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/rings">
-                            Brightening Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/bracelets">
-                            Exfoliating Skincare
-                          </a>
-                        </li>
-                        <li>
-                          <a className="link" href="/collections/charm-bar">
-                            Cleansing and Purifying Skincare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <span>Users</span>
+              </NavLink>
             </li>
+
             <li>
               <NavLink
                 className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
@@ -458,12 +376,13 @@ function Header() {
               </div>
             </li>
             <li>
-              <NavLink
+              <button
+                onClick={() => dispatch(logout())}
                 className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
                 to="/collections/sale"
               >
-                <span>Sale</span>
-              </NavLink>
+                <span>Logout</span>
+              </button>
             </li>
           </ul>
         </nav>

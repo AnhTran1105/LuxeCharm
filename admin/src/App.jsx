@@ -15,6 +15,7 @@ import { HashLoader } from "react-spinners";
 import Product from "./pages/Products/Product.jsx";
 import ProductUpdating from "./pages/Products/ProductUpdating.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import Users from "./pages/Users/Users.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -73,6 +74,7 @@ export default function App() {
             element={<ProductUpdating />}
           />
           <Route path="products/create-product" element={<ProductCreating />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Routes>
       <LoaderPortal>

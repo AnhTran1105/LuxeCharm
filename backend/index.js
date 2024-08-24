@@ -47,7 +47,7 @@ const corsOpts = {
 
 app.use(cors(corsOpts));
 
-app.use("/api/user", userRouter);
+app.use("/api", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", productRouter);
 app.use("/api/admin", adminRouter);

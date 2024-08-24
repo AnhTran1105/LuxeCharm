@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import Product from "../models/product.model.js";
 import cloudinary from "cloudinary";
 
-export const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find().sort("-lastUpdated");
     res.json(products);
@@ -104,10 +104,6 @@ export const updateProduct = async (req, res, next) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-
-    // if (!Array.isArray(product.imageUrls)) {
-    //   product.imageUrls = [];
-    // }
 
     if (
       req.body.imagesToDelete &&

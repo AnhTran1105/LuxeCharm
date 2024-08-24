@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 
-function Products() {
-  const [products, setProducts] = useState([]);
+function Users() {
+  const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [checkingVisible, setCheckingVisible] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -17,8 +17,8 @@ function Products() {
   useEffect(() => {
     (async () => {
       try {
-        const productResponse = await axios.get("/products");
-        setProducts(productResponse);
+        const userResponse = await axios.get("/users");
+        setUsers(userResponse);
       } catch (error) {
         console.error(error);
       }
@@ -28,8 +28,8 @@ function Products() {
   const onSubmit = async () => {
     dispatch(startLoading());
     try {
-      const response = await axios.delete("/products", {
-        data: { productIds: selectedIds },
+      const response = await axios.delete("/users", {
+        data: { userIds: selectedIds },
       });
       dispatch(sendMessage({ message: response.message, type: "success" }));
       setIsRefresh(!isRefresh);
@@ -46,7 +46,7 @@ function Products() {
     <div className="my-10 flex flex-col gap-5 px-[50px]">
       <div className="flex gap-4 justify-between">
         <div className="flex gap-4">
-          <a className="button" href="/products/create-product">
+          <a className="button" href="/users/create-user">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -58,7 +58,7 @@ function Products() {
               <path d="M38 26H26v12h-4V26H10v-4h12V10h4v12h12v4z"></path>
               <path fill="none" d="M0 0h48v48H0z"></path>
             </svg>
-            <span>Create new product</span>
+            <span>Create new user</span>
           </a>
           <button
             className="button"
@@ -77,7 +77,7 @@ function Products() {
                   <path fill="none" d="M0 0h24v24H0V0z"></path>
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
                 </svg>
-                <span>Select products</span>
+                <span>Select Users</span>
               </>
             ) : (
               <>
@@ -92,7 +92,7 @@ function Products() {
                   <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
                   <path fill="none" d="M0 0h48v48H0z"></path>
                 </svg>
-                <span>Unselect products</span>
+                <span>Unselect Users</span>
               </>
             )}
           </button>
@@ -122,14 +122,14 @@ function Products() {
           </svg>
           <span>
             {selectedIds.length > 1
-              ? `Delete ${selectedIds.length} products`
-              : "Delete 1 product"}
+              ? `Delete ${selectedIds.length} Users`
+              : "Delete 1 user"}
           </span>
         </button>
       </div>
       <ConfirmModal
-        title="Delete products"
-        description="Are you sure you want to delete these products?"
+        title="Delete Users"
+        description="Are you sure you want to delete these users?"
         onValueChange={setIsModalOpen}
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
@@ -148,38 +148,36 @@ function Products() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {Users.map((user, index) => (
             <tr
-              key={product._id}
+              key={user._id}
               onClick={() => {
                 if (!checkingVisible)
                   window.location.href =
-                    window.location.origin + `/products/${product._id}`;
+                    window.location.origin + `/Users/${user._id}`;
               }}
               className="cursor-pointer text-foreground75 hover:text-color-foreground"
             >
               <td>{index + 1}</td>
-              <td>{product.name}</td>
-              <td>{product.category}</td>
+              <td>{user.name}</td>
+              <td>{user.category}</td>
               <td>
-                {product.quantities.map((item) => (
+                {user.quantities.map((item) => (
                   <p key={item.metal}>{item.metal + ": " + item.quantity}</p>
                 ))}
               </td>
-              <td>${product.price}.00</td>
-              <td>{product.rating}</td>
+              <td>${user.price}.00</td>
+              <td>{user.rating}</td>
               {checkingVisible && (
                 <td className="relative">
                   <div
                     className="flex items-center justify-center absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
                     onClick={() => {
-                      if (selectedIds.includes(product._id)) {
-                        const arr = selectedIds.filter(
-                          (id) => id !== product._id
-                        );
+                      if (selectedIds.includes(user._id)) {
+                        const arr = selectedIds.filter((id) => id !== user._id);
                         setSelectedIds(arr);
                       } else {
-                        setSelectedIds([...selectedIds, product._id]);
+                        setSelectedIds([...selectedIds, user._id]);
                       }
                     }}
                   >
@@ -204,7 +202,7 @@ function Products() {
                         height="24"
                         viewBox="0 0 24 24"
                         className={`absolute fill-color-foreground top-0 left-0 ${
-                          selectedIds.some((id) => id === product._id)
+                          selectedIds.some((id) => id === user._id)
                             ? "opacity-100"
                             : "opacity-0"
                         } transition-opacity duration-100 ease-linear`}
@@ -225,4 +223,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default Users;
