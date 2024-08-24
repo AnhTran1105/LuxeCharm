@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   signInStart,
   signInSuccess,
@@ -16,6 +16,7 @@ const schema = yup
     lastName: yup.string(),
     email: yup.string().email().required(),
     password: yup.string().required().min(6),
+    address: yup.string(),
   })
   .required();
 
@@ -36,6 +37,7 @@ function Register() {
         const response = await axios.post("auth/register", {
           firstName: formData.firstName,
           lastName: formData.lastName,
+          address: formData.address,
           email: formData.email,
           password: formData.password,
         });
@@ -126,6 +128,40 @@ function Register() {
 
                 <span className="first-letter:capitalize flex">
                   {errors.lastName?.message}
+                </span>
+              </p>
+            )}
+            <div className="field">
+              <input
+                id="address"
+                autoComplete="address"
+                autoCapitalize="off"
+                placeholder="address"
+                autoCorrect="off"
+                {...register("address")}
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+              />
+              <label htmlFor="address">Address</label>
+            </div>
+            {errors.address && (
+              <p className="text-left px-4 pt-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  enableBackground="new 0 0 24 24"
+                  className="fill-red mr-2"
+                  width={20}
+                  height={20}
+                  viewBox="0 0 24 24"
+                  id="exclamation-mark"
+                >
+                  <path
+                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                  ></path>
+                </svg>
+
+                <span className="first-letter:capitalize flex">
+                  {errors.address?.message}
                 </span>
               </p>
             )}

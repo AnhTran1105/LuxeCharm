@@ -9,10 +9,10 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem("token");
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      config.headers.Authorization = `Bearer ${access_token}`;
+    }
     return config;
   },
   (error) => {
@@ -22,10 +22,10 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    return response;
+    return response.data;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   }
 );
 

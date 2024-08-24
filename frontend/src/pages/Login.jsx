@@ -2,11 +2,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice";
+import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
+import { setToken } from "../redux/auth/authSlice";
+import { sendMessage } from "../redux/notification/notificationSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
@@ -33,25 +31,22 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (formData) => {
-    (async () => {
-      try {
-        dispatch(signInStart());
-        const response = await axios.post("auth/login", {
-          email: formData.email,
-          password: formData.password,
-        });
-        if (response.data.success === false) {
-          dispatch(signInFailure(response.data.message));
-          return;
-        }
-        dispatch(signInSuccess(response.data));
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-        dispatch(signInFailure(error.response.data.message));
-      }
-    })();
+  const onSubmit = async (formData) => {
+    dispatch(startLoading());
+    try {
+      const response = await axios.post("admin/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      const { access_token } = response;
+      dispatch(setToken(access_token));
+      dispatch(sendMessage({ message: response.message, type: "success" }));
+    } catch (error) {
+      dispatch(sendMessage({ message: error.message, type: "error" }));
+    } finally {
+      dispatch(stopLoading());
+      navigate("/");
+    }
   };
 
   return (

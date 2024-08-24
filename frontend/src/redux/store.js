@@ -1,8 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./user/userSlice";
+import notificationReducer from "./notification/notificationSlice";
+import loadingReducer from "./loading/loadingSlice";
+import authReducer from "./auth/authSlice";
+import { authMiddleware } from "./middleware/authMiddleware";
 
 export const store = configureStore({
-  reducer: { user: userReducer },
+  reducer: {
+    notification: notificationReducer,
+    loading: loadingReducer,
+    auth: authReducer,
+  },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({ serializableCheck: false }).concat(authMiddleware),
 });
