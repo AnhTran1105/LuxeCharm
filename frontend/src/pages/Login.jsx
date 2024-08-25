@@ -8,7 +8,6 @@ import { sendMessage } from "../redux/notification/notificationSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import Loading from "../components/Loading";
 
 const schema = yup
   .object({
@@ -27,14 +26,15 @@ function Login() {
   });
 
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+
+  const { loading } = useSelector((state) => state.loading);
 
   const navigate = useNavigate();
 
   const onSubmit = async (formData) => {
     dispatch(startLoading());
     try {
-      const response = await axios.post("admin/login", {
+      const response = await axios.post("auth/login", {
         email: formData.email,
         password: formData.password,
       });
@@ -59,25 +59,6 @@ function Login() {
             className="mt-10 text-sm text-color-foreground/75"
           >
             <p className="my-[10px]">* indicates a required field</p>
-            {error && (
-              <div className="min-w-[446px] min-h-[45px] border border-red flex justify-center items-center text-red">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  enableBackground="new 0 0 24 24"
-                  className="fill-red mr-2"
-                  width={20}
-                  height={20}
-                  viewBox="0 0 24 24"
-                  id="exclamation-mark"
-                >
-                  <path
-                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                  ></path>
-                </svg>
-                {error}
-              </div>
-            )}
             <div className="field">
               <input
                 id="email"
@@ -157,10 +138,9 @@ function Login() {
             </a>
             <button
               type="submit"
-              disabled={loading}
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              {loading ? <Loading loading={true} /> : <span>Log in</span>}
+              Login now
             </button>
 
             <OAuth />

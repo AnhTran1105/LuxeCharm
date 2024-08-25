@@ -47,7 +47,7 @@ function Register() {
       dispatch(sendMessage({ message: error.message, type: "error" }));
     } finally {
       dispatch(stopLoading());
-      // navigate("/account/login");
+      navigate("/account/login");
     }
   };
 

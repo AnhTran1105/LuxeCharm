@@ -8,7 +8,7 @@ function ProductList() {
     (async () => {
       try {
         const productResponse = await axios.get("/products");
-        setProducts(productResponse.data);
+        setProducts(productResponse);
       } catch (error) {
         console.error(error);
       }
