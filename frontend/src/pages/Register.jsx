@@ -39,7 +39,7 @@ function Register() {
       });
       dispatch(
         sendMessage({
-          message: "Created account successfully!",
+          message: response.message,
           type: "success",
         })
       );

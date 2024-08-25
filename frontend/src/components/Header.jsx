@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
+import { useDispatch } from "react-redux";
+import { showCart } from "../redux/cart/cartSlice";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -8,6 +10,7 @@ function Header() {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [menuToggle, setMenuToggle] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -161,8 +164,8 @@ function Header() {
               </g>
             </svg>
           </a>
-          <a
-            href="/cart"
+          <button
+            onClick={() => dispatch(showCart())}
             className="h-[44px] w-[44px] flex items-center group cursor-pointer"
           >
             <svg
@@ -242,7 +245,7 @@ function Header() {
                 ></line>
               </g>
             </svg>
-          </a>
+          </button>
         </div>
         <nav className="col-span-2 col-start-2 mt-[10.5px]">
           <ul role="list" className="flex justify-center items-center">

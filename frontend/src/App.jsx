@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { dismissMessage } from "./redux/notification/notificationSlice.js";
 import LoaderPortal from "./components/LoaderPortal.jsx";
 import { HashLoader } from "react-spinners";
+import Cart from "./components/Cart.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -83,6 +84,7 @@ export default function App() {
           />
         )}
       </LoaderPortal>
+      <Cart />
       {/* <div className="fixed w-[235px] bottom-[20px] left-[15px] z-[999] bg-[#666] flex justify-center items-center px-3 py-2">
         <button className="rounded-[2px] mr-3 mt-[3px] text-lg tracking-[1.2px] text-white uppercase flex justify-center items-center">
           Unlock 20% Off

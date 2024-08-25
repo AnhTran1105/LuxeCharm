@@ -11,14 +11,14 @@ function Product() {
     (async () => {
       try {
         const productResponse = await axios.get(`/products/${id}`);
-        setProduct(productResponse.data);
+        setProduct(productResponse);
       } catch (error) {
         console.error(error);
       }
     })();
   }, [id]);
 
-  console.log(product);
+  // console.log(product);
 
   return (
     product && (

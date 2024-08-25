@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { setToken } from "../redux/auth/authSlice";
 import { sendMessage } from "../redux/notification/notificationSlice";
@@ -26,8 +26,6 @@ function Login() {
   });
 
   const dispatch = useDispatch();
-
-  const { loading } = useSelector((state) => state.loading);
 
   const navigate = useNavigate();
 
