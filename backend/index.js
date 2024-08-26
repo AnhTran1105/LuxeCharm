@@ -52,7 +52,7 @@ app.use("/api", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", productRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api", cartRouter);
+app.use("/api/cart", cartRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
