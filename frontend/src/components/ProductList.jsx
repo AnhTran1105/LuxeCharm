@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cart/cartSlice";
+import { handleAddToCart } from "../redux/cart/cartSlice";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -75,7 +75,9 @@ function ProductList() {
             </button>
           ) : (
             <button
-              onClick={() => dispatch(addToCart(product))}
+              onClick={() =>
+                dispatch(handleAddToCart({ ...product, quantity: 1 }))
+              }
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]"
             >
               <span>Add to cart</span>

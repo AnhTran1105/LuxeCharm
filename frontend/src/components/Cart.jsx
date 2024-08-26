@@ -12,11 +12,12 @@ import { removeFromCart } from "../redux/cart/cartSlice";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
-  const [value, setValue] = useState(1);
+  const cartItems = useSelector((state) => state.cart.items);
+
+  const [values, setValues] = useState(cartItems.map((item) => item.quantity));
   const dispatch = useDispatch();
 
-  const cartItems = useSelector((state) => state.cart.items);
-  console.log(cartItems);
+  //   console.log(values);
 
   return (
     isShow && (
@@ -101,10 +102,10 @@ function Cart() {
                       <div className="leading-3 text-xs">{item.metals[0]}</div>
                       <div className="flex justify-between w-full items-center">
                         <div className="mt-[10px] text-left">
-                          <QuantityWidget onChangeValue={setValue} />
+                          <QuantityWidget onChangeValue={setValues} />
                         </div>
                         <div className="mt-[5px] text-right text-xs leading-4">
-                          ${item.price}.00
+                          ${item.price * item.quantity}.00
                         </div>
                       </div>
                     </div>

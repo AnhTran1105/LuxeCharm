@@ -1,14 +1,68 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "../../utils/axios";
 
 const initialState = {
   items: JSON.parse(localStorage.getItem("cartItems")) || [],
+  isLoggedIn: !!localStorage.getItem("access_token"),
 };
+
+export const handleAddToCart = createAsyncThunk(
+  "cart/handleAddToCart",
+  async (item, { getState }) => {
+    const state = getState();
+    if (state.cart.isLoggedIn) {
+      const response = await axios.post("/cart", item, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      return response;
+    } else {
+      return item;
+    }
+  }
+);
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action) => {
+    removeFromCart: (state, action) => {
+      const itemId = action.payload._id;
+      state.items = state.items.filter((item) => item._id !== itemId);
+
+      if (!state.isLoggedIn) {
+        localStorage.setItem("cartItems", JSON.stringify(state.items));
+      } else {
+        axios.delete(`/api/cart/${itemId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+      }
+    },
+    clearCart: (state) => {
+      state.items = [];
+      localStorage.removeItem("cartItems");
+    },
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
+    migrateCartToBackend: (state) => {
+      if (state.isLoggedIn) {
+        state.items.forEach(async (item) => {
+          await axios.post("/cart", item, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          });
+        });
+        localStorage.removeItem("cartItems");
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(handleAddToCart.fulfilled, (state, action) => {
       const item = action.payload;
       const existingItem = state.items.find((i) => i._id === item._id);
 
@@ -18,20 +72,17 @@ const cartSlice = createSlice({
         state.items.push(item);
       }
 
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
-    },
-    removeFromCart: (state, action) => {
-      state.items = state.items.filter(
-        (item) => item._id !== action.payload._id
-      );
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
-    },
-    clearCart: (state) => {
-      state.items = [];
-      localStorage.removeItem("cartItems");
-    },
+      if (!state.isLoggedIn) {
+        localStorage.setItem("cartItems", JSON.stringify(state.items));
+      }
+    });
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const {
+  removeFromCart,
+  clearCart,
+  setIsLoggedIn,
+  migrateCartToBackend,
+} = cartSlice.actions;
 export default cartSlice.reducer;
