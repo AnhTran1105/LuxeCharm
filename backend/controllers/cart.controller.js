@@ -44,3 +44,37 @@ export const addToCart = async (req, res, next) => {
     next(error);
   }
 };
+
+export const syncCart = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const cartItems = req.body.cartItems;
+
+    let cart = await Cart.findOne({ user: userId });
+
+    if (!cart) {
+      cart = new Cart({ user: userId, items: [] });
+    }
+
+    cartItems.forEach((item) => {
+      const existingItem = cart.items.find(
+        (cartItem) => cartItem.product.toString() === item.productId
+      );
+
+      if (existingItem) {
+        existingItem.quantity += item.quantity;
+      } else {
+        cart.items.push({
+          product: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+        });
+      }
+    });
+
+    await cart.save();
+    res.status(200).json({ message: "Cart synchronized successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -11,6 +11,8 @@ export default {
       red: "#E4003A",
       background: "rgb(243, 243, 243)",
       foreground75: "rgba(18, 18, 18, 0.75)",
+      border: "#e8e3dd",
+      hoverMini: "#f2f2f2",
     },
     fontFamily: {
       SofiaBold: ['"SofiaBold"'],

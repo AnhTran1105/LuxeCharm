@@ -29,6 +29,28 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const syncCart = async (access_token) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length > 0) {
+      try {
+        await axios.post(
+          "/cart/sync",
+          {
+            cartItems: cart,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error syncing cart: ", error);
+      }
+    }
+  };
+
   const onSubmit = async (formData) => {
     dispatch(startLoading());
     try {
@@ -38,6 +60,7 @@ function Login() {
       });
       const { access_token } = response;
       dispatch(setToken(access_token));
+      syncCart(access_token);
       dispatch(sendMessage({ message: response.message, type: "success" }));
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
