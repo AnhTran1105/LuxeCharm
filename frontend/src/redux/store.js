@@ -3,7 +3,7 @@ import notificationReducer from "./notification/notificationSlice";
 import loadingReducer from "./loading/loadingSlice";
 import authReducer from "./auth/authSlice";
 import modalReducer from "./modal/modalSlice";
-import cartReducer from "./cart/cartSlice";
+import cartModalReducer from "./cartModal/cartModalSlice";
 import { authMiddleware } from "./middleware/authMiddleware";
 
 export const store = configureStore({
@@ -12,7 +12,7 @@ export const store = configureStore({
     loading: loadingReducer,
     auth: authReducer,
     modal: modalReducer,
-    cart: cartReducer,
+    cartModal: cartModalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(authMiddleware),

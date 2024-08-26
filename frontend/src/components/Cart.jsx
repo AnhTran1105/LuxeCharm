@@ -6,11 +6,11 @@ import {
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { hideCart } from "../redux/cart/cartSlice";
+import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 
 function Cart() {
-  const { isShow } = useSelector((state) => state.cart);
+  const { isShow } = useSelector((state) => state.cartModal);
   const [value, setValue] = useState(1);
   const dispatch = useDispatch();
 

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
 import { useDispatch } from "react-redux";
-import { showCart } from "../redux/cart/cartSlice";
+import { showCart } from "../redux/cartModal/cartModalSlice";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
