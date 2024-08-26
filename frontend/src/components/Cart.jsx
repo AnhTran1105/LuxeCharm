@@ -14,7 +14,7 @@ function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
   const cartItems = useSelector((state) => state.cart.items);
 
-  const [values, setValues] = useState(cartItems.map((item) => item.quantity));
+  const [values, setValues] = useState(1);
   const dispatch = useDispatch();
 
   //   console.log(values);

@@ -30,26 +30,33 @@ export const addToCart = async (req, res, next) => {
     if (!cart) {
       cart = new Cart({
         userId: userId,
-        items: [product, quantity],
-        totalPrice: 0,
+        items: [
+          {
+            product: productId,
+            quantity: quantity,
+            price: product.price,
+          },
+        ],
+        totalPrice: product.price * quantity,
       });
-    }
-
-    const itemIndex = cart.items.findIndex(
-      (item) => item.product.toString() === productId
-    );
-
-    if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({
-        product: productId,
-        quantity,
-        price: product.price,
-      });
+      const itemIndex = cart.items.findIndex(
+        (item) => item.product.toString() === productId
+      );
+
+      if (itemIndex > -1) {
+        cart.items[itemIndex].quantity += quantity;
+      } else {
+        cart.items.push({
+          product: productId,
+          quantity,
+          price: product.price,
+        });
+      }
+
+      cart.totalPrice += product.price * quantity;
     }
 
-    cart.totalPrice += product.price * quantity;
     await cart.save();
 
     res.status(200).json({ message: "Product added to cart", cart });

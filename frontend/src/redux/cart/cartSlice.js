@@ -8,15 +8,27 @@ const initialState = {
 
 export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
-  async (item, { getState }) => {
+  async (product, { getState }) => {
     const state = getState();
     if (state.cart.isLoggedIn) {
-      const response = await axios.post("/cart", item, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      return response;
+      try {
+        const response = await axios.post(
+          "/cart",
+          {
+            productId: product._id,
+            quantity: product.quantity,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       return item;
     }
