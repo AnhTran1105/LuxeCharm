@@ -4,7 +4,7 @@ import Cart from "../models/cart.model.js";
 export const getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id }).populate(
-      "items.productId"
+      "items.product"
     );
     if (!cart) return res.status(404).json({ message: "Cart not found" });
     res.status(200).json(cart);

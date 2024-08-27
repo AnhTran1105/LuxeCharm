@@ -9,15 +9,33 @@ import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
+import axios from "../utils/axios";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
   const cartItems = useSelector((state) => state.cart.items);
 
+  const [cart, setCart] = useState();
+
   const [values, setValues] = useState(1);
   const dispatch = useDispatch();
 
-  //   console.log(values);
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/cart", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        setCart(response);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  console.log(cart);
 
   return (
     isShow && (
@@ -51,7 +69,7 @@ function Cart() {
                 <path fill="none" d="M0 0h48v48H0z"></path>
               </svg>
             </button>
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="py-10 px-5 border-b border-border text-center">
                 <div>Your cart is empty!</div>
                 <div>Add your favorite items to your cart.</div>
@@ -61,14 +79,17 @@ function Cart() {
                 role="list"
                 className="max-h-[calc(100%-165px)] overflow-y-auto"
               >
-                {cartItems.map((item) => (
+                {cart.items.map((item) => (
                   <li
                     key={item._id}
                     className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
                   >
                     <div className="w-[90px]">
-                      <a href={`/products/${item._id}`} tabIndex={-1}>
-                        <img src={item.backgroundImage} alt={item.name} />
+                      <a href={`/products/${item.product._id}`} tabIndex={-1}>
+                        <img
+                          src={item.product.backgroundImage}
+                          alt={item.product.name}
+                        />
                       </a>
                     </div>
                     <div className="pl-5 w-full relative">
@@ -92,20 +113,22 @@ function Cart() {
                         </svg>
                       </button>
                       <a
-                        href={`/products/${item._id}`}
-                        alt={item.name}
+                        href={`/products/${item.product._id}`}
+                        alt={item.product.name}
                         className="mr-[30px] font-SofiaBold text-sm leading-5"
                         tabIndex={0}
                       >
-                        {item.name}
+                        {item.product.name}
                       </a>
-                      <div className="leading-3 text-xs">{item.metals[0]}</div>
+                      <div className="leading-3 text-xs">
+                        {item.product.metals[0]}
+                      </div>
                       <div className="flex justify-between w-full items-center">
                         <div className="mt-[10px] text-left">
                           <QuantityWidget onChangeValue={setValues} />
                         </div>
                         <div className="mt-[5px] text-right text-xs leading-4">
-                          ${item.price * item.quantity}.00
+                          ${item.product.price * item.quantity}.00
                         </div>
                       </div>
                     </div>
@@ -116,8 +139,13 @@ function Cart() {
 
             <div className="border-t border-border p-5 z-20 absolute bottom-0 right-0 left-0">
               <div className="flex justify-between font-SofiaBold mb-3">
-                <div>Subtotal (2 items):</div>
-                <div>$116.00</div>
+                <div>
+                  {`Subtotal (${cart.items.length} ${
+                    cart.items.length > 1 ? "items" : "item"
+                  })`}
+                  :
+                </div>
+                <div>${cart.totalPrice}.00</div>
               </div>
               <button className="w-full border-f border border-solid p-2 hover:bg-hover hover:text-white">
                 Check out

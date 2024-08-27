@@ -30,7 +30,7 @@ export const handleAddToCart = createAsyncThunk(
         console.error(error);
       }
     } else {
-      return item;
+      return product;
     }
   }
 );

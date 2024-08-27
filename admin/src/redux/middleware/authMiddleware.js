@@ -1,9 +1,13 @@
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { logout } from "../auth/authSlice";
 
 export const authMiddleware = (store) => (next) => (action) => {
   const state = store.getState();
   const token = state.auth.token;
+
+  if (action.type === logout.type) {
+    return next(action);
+  }
 
   if (token) {
     const decodedToken = jwtDecode(token);
