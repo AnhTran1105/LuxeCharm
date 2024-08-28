@@ -4,12 +4,14 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
 import axios from "../utils/axios";
+import { debounce } from "lodash";
+import { updateCartItemQuantity } from "../redux/cart/cartSlice";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -17,7 +19,7 @@ function Cart() {
 
   const [cart, setCart] = useState();
 
-  const [values, setValues] = useState(1);
+  const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,6 +31,13 @@ function Cart() {
           },
         });
         setCart(response);
+        setProducts(
+          response.items.map((item) => ({
+            productId: item.product._id,
+            quantity: item.quantity,
+            price: item.product.price,
+          }))
+        );
       } catch (error) {
         console.error(error);
       }
@@ -36,6 +45,31 @@ function Cart() {
   }, []);
 
   console.log(cart);
+
+  const useUpdateQuantity = () => {
+    const debouncedUpdate = debounce((productId, quantity, price) => {
+      dispatch(updateCartItemQuantity({ productId, quantity, price }));
+    }, 300);
+
+    const updateQuantity = useCallback(
+      (productId, quantity, price) => {
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.productId === productId
+              ? { ...product, quantity, price }
+              : product
+          )
+        );
+
+        debouncedUpdate(productId, quantity, price);
+      },
+      [debouncedUpdate]
+    );
+
+    return updateQuantity;
+  };
+
+  const updateQuantity = useUpdateQuantity();
 
   return (
     isShow && (
@@ -125,7 +159,13 @@ function Cart() {
                       </div>
                       <div className="flex justify-between w-full items-center">
                         <div className="mt-[10px] text-left">
-                          <QuantityWidget onChangeValue={setValues} />
+                          <QuantityWidget
+                            item={products.find(
+                              (product) =>
+                                product.productId === item.product._id
+                            )}
+                            updateQuantity={updateQuantity}
+                          />
                         </div>
                         <div className="mt-[5px] text-right text-xs leading-4">
                           ${item.product.price * item.quantity}.00
@@ -140,9 +180,9 @@ function Cart() {
             <div className="border-t border-border p-5 z-20 absolute bottom-0 right-0 left-0">
               <div className="flex justify-between font-SofiaBold mb-3">
                 <div>
-                  {`Subtotal (${cart.items.length} ${
-                    cart.items.length > 1 ? "items" : "item"
-                  })`}
+                  {`Subtotal (${cart.items.reduce((total, item) => {
+                    return total + item.quantity;
+                  }, 0)} ${cart.items.length > 1 ? "items" : "item"})`}
                   :
                 </div>
                 <div>${cart.totalPrice}.00</div>

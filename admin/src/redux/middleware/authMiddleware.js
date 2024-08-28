@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { logout } from "../auth/authSlice";
 
 export const authMiddleware = (store) => (next) => (action) => {

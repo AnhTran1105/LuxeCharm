@@ -76,7 +76,13 @@ function ProductList() {
           ) : (
             <button
               onClick={() =>
-                dispatch(handleAddToCart({ _id: product._id, quantity: 1 }))
+                dispatch(
+                  handleAddToCart({
+                    _id: product._id,
+                    quantity: 1,
+                    price: product.price,
+                  })
+                )
               }
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]"
             >

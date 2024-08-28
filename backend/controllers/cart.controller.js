@@ -117,3 +117,37 @@ export const syncCart = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateCartItemQuantity = async (req, res, next) => {
+  const { productId, quantity, price } = req.body;
+
+  console.log(req.body);
+
+  try {
+    const userId = req.user.id;
+
+    let cart = await Cart.findOne({ userId: userId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found!" });
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId
+    );
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: "Product not found in cart!" });
+    }
+
+    cart.totalPrice += price * (quantity - cart.items[itemIndex].quantity);
+
+    cart.items[itemIndex].quantity = quantity;
+
+    await cart.save();
+
+    res.status(200).json({ message: "Quantity updated", cart });
+  } catch (error) {
+    next(error);
+  }
+};

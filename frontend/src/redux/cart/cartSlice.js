@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { showCart } from "../cartModal/cartModalSlice";
 
 const initialState = {
   items: JSON.parse(localStorage.getItem("cartItems")) || [],
@@ -8,15 +9,16 @@ const initialState = {
 
 export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
-  async (product, { getState }) => {
+  async (product, { getState, dispatch }) => {
     const state = getState();
     if (state.cart.isLoggedIn) {
       try {
-        const response = await axios.post(
+        await axios.post(
           "/cart",
           {
             productId: product._id,
             quantity: product.quantity,
+            price: product.price,
           },
           {
             headers: {
@@ -24,13 +26,37 @@ export const handleAddToCart = createAsyncThunk(
             },
           }
         );
-
-        console.log(response);
+        dispatch(showCart());
       } catch (error) {
         console.error(error);
       }
     } else {
+      dispatch(showCart());
       return product;
+    }
+  }
+);
+
+export const updateCartItemQuantity = createAsyncThunk(
+  "cart/updateCartItemQuantity",
+  async ({ productId, quantity, price }, { getState, dispatch }) => {
+    const state = getState();
+    if (state.cart.isLoggedIn) {
+      try {
+        await axios.put(
+          `/cart/quantity`,
+          { productId, quantity, price },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      dispatch(updateQuantity({ productId, quantity }));
     }
   }
 );
@@ -39,6 +65,14 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    updateQuantity: (state, action) => {
+      const { productId, quantity } = action.payload;
+      const item = state.items.find((i) => i._id === productId);
+      if (item) {
+        item.quantity = quantity;
+        localStorage.setItem("cartItems", JSON.stringify(state.items));
+      }
+    },
     removeFromCart: (state, action) => {
       const itemId = action.payload._id;
       state.items = state.items.filter((item) => item._id !== itemId);
@@ -92,6 +126,7 @@ const cartSlice = createSlice({
 });
 
 export const {
+  updateQuantity,
   removeFromCart,
   clearCart,
   setIsLoggedIn,

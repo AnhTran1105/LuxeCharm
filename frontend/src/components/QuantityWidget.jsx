@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
+import { memo } from "react";
 
-function QuantityWidget({ onChangeValue }) {
-  const [value, setValue] = useState(1);
-
-  useEffect(() => {
-    onChangeValue(value);
-  }, [onChangeValue, value]);
-
+const QuantityWidget = memo(function QuantityWidget({ item, updateQuantity }) {
+  console.log(item);
   return (
     <div className="flex border-border border">
       <button
-        disabled={value === 1}
-        onClick={() => setValue((prev) => prev - 1)}
+        disabled={item.quantity === 1}
+        onClick={() =>
+          updateQuantity(item.productId, item.quantity - 1, item.price)
+        }
         className={`h-6 w-9 text-center leading-6 flex items-center justify-center ${
-          value === 1 ? "opacity-30" : "hover:bg-hoverMini"
+          item.quantity === 1 ? "opacity-30" : "hover:bg-hoverMini"
         }`}
       >
         <svg
@@ -28,10 +25,12 @@ function QuantityWidget({ onChangeValue }) {
         </svg>
       </button>
       <span className="border-x border-border text-center leading-6 h-6 w-9 block text-xs">
-        {value}
+        {item.quantity}
       </span>
       <button
-        onClick={() => setValue((prev) => prev + 1)}
+        onClick={() =>
+          updateQuantity(item.productId, item.quantity + 1, item.price)
+        }
         className="h-6 w-9 text-center leading-6 flex items-center justify-center hover:bg-hoverMini"
       >
         <svg
@@ -46,6 +45,6 @@ function QuantityWidget({ onChangeValue }) {
       </button>
     </div>
   );
-}
+});
 
 export default QuantityWidget;
