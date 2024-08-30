@@ -80,7 +80,7 @@ const cartSlice = createSlice({
       if (!state.isLoggedIn) {
         localStorage.setItem("cartItems", JSON.stringify(state.items));
       } else {
-        axios.delete(`/api/cart/${itemId}`, {
+        axios.delete(`/cart/${itemId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },

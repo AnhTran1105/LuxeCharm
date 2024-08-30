@@ -66,14 +66,13 @@ export const addToCart = async (req, res, next) => {
 };
 
 export const removeFromCart = async (req, res, next) => {
-  const { productId } = req.params;
+  const { id } = req.params;
+
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
 
     if (cart) {
-      cart.items = cart.items.filter(
-        (item) => item.productId.toString() !== productId
-      );
+      cart.items = cart.items.filter((item) => item._id.toString() !== id);
       await cart.save();
       res.status(200).json({ message: "Product removed from cart" });
     } else {
@@ -120,8 +119,6 @@ export const syncCart = async (req, res, next) => {
 
 export const updateCartItemQuantity = async (req, res, next) => {
   const { productId, quantity, price } = req.body;
-
-  console.log(req.body);
 
   try {
     const userId = req.user.id;
