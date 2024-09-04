@@ -17,34 +17,48 @@ function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
   const cartItems = useSelector((state) => state.cart.items);
 
+  const token = useSelector((state) => state.auth.token);
+
   const [cart, setCart] = useState();
 
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get("/cart", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
-        setCart(response);
-        setProducts(
-          response.items.map((item) => ({
-            productId: item.product._id,
-            quantity: item.quantity,
-            price: item.product.price,
-          }))
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
-
-  console.log(cart);
+    if (token) {
+      (async () => {
+        try {
+          const response = await axios.get("/cart", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          });
+          setCart(response);
+          setProducts(
+            response.items.map((item) => ({
+              productId: item.product._id,
+              quantity: item.quantity,
+              price: item.product.price,
+            }))
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    } else {
+      const totalPrice = cartItems.reduce((totalPrice, item) => {
+        return totalPrice + item.product.price;
+      }, 0);
+      setCart({ items: cartItems, totalPrice });
+      setProducts(
+        cartItems.map((item) => ({
+          productId: item.product._id,
+          quantity: item.quantity,
+          price: item.product.price,
+        }))
+      );
+    }
+  }, [token, cartItems]);
 
   const useUpdateQuantity = () => {
     const debouncedUpdate = debounce((productId, quantity, price) => {
@@ -70,6 +84,8 @@ function Cart() {
   };
 
   const updateQuantity = useUpdateQuantity();
+
+  console.log(cart);
 
   return (
     isShow && (
@@ -115,7 +131,7 @@ function Cart() {
               >
                 {cart.items.map((item) => (
                   <li
-                    key={item._id}
+                    key={item.product._id}
                     className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
                   >
                     <div className="w-[90px]">

@@ -1,7 +1,6 @@
 import { memo } from "react";
 
 const QuantityWidget = memo(function QuantityWidget({ item, updateQuantity }) {
-  console.log(item);
   return (
     <div className="flex border-border border">
       <button
