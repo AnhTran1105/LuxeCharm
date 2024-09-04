@@ -4,14 +4,12 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
 import axios from "../utils/axios";
-import { debounce } from "lodash";
-import { updateCartItemQuantity } from "../redux/cart/cartSlice";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -21,7 +19,6 @@ function Cart() {
 
   const [cart, setCart] = useState();
 
-  const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,58 +31,17 @@ function Cart() {
             },
           });
           setCart(response);
-          setProducts(
-            response.items.map((item) => ({
-              productId: item.product._id,
-              quantity: item.quantity,
-              price: item.product.price,
-            }))
-          );
         } catch (error) {
           console.error(error);
         }
       })();
     } else {
       const totalPrice = cartItems.reduce((totalPrice, item) => {
-        return totalPrice + item.product.price;
+        return totalPrice + item.product.price * item.quantity;
       }, 0);
       setCart({ items: cartItems, totalPrice });
-      setProducts(
-        cartItems.map((item) => ({
-          productId: item.product._id,
-          quantity: item.quantity,
-          price: item.product.price,
-        }))
-      );
     }
   }, [token, cartItems]);
-
-  const useUpdateQuantity = () => {
-    const debouncedUpdate = debounce((productId, quantity, price) => {
-      dispatch(updateCartItemQuantity({ productId, quantity, price }));
-    }, 300);
-
-    const updateQuantity = useCallback(
-      (productId, quantity, price) => {
-        setProducts((prevProducts) =>
-          prevProducts.map((product) =>
-            product.productId === productId
-              ? { ...product, quantity, price }
-              : product
-          )
-        );
-
-        debouncedUpdate(productId, quantity, price);
-      },
-      [debouncedUpdate]
-    );
-
-    return updateQuantity;
-  };
-
-  const updateQuantity = useUpdateQuantity();
-
-  console.log(cart);
 
   return (
     isShow && (
@@ -175,13 +131,7 @@ function Cart() {
                       </div>
                       <div className="flex justify-between w-full items-center">
                         <div className="mt-[10px] text-left">
-                          <QuantityWidget
-                            item={products.find(
-                              (product) =>
-                                product.productId === item.product._id
-                            )}
-                            updateQuantity={updateQuantity}
-                          />
+                          <QuantityWidget item={item} />
                         </div>
                         <div className="mt-[5px] text-right text-xs leading-4">
                           ${item.product.price * item.quantity}.00

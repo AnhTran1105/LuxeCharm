@@ -67,7 +67,8 @@ const cartSlice = createSlice({
   reducers: {
     updateQuantity: (state, action) => {
       const { productId, quantity } = action.payload;
-      const item = state.items.find((i) => i._id === productId);
+      const item = state.items.find((i) => i.product._id === productId);
+
       if (item) {
         item.quantity = quantity;
         localStorage.setItem("cartItems", JSON.stringify(state.items));

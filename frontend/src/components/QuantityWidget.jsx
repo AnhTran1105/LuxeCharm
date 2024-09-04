@@ -1,12 +1,20 @@
-import { memo } from "react";
+import { useDispatch } from "react-redux";
+import { updateCartItemQuantity } from "../redux/cart/cartSlice";
 
-const QuantityWidget = memo(function QuantityWidget({ item, updateQuantity }) {
+function QuantityWidget({ item }) {
+  const dispatch = useDispatch();
   return (
     <div className="flex border-border border">
       <button
         disabled={item.quantity === 1}
         onClick={() =>
-          updateQuantity(item.productId, item.quantity - 1, item.price)
+          dispatch(
+            updateCartItemQuantity({
+              productId: item.product._id,
+              quantity: item.quantity - 1,
+              price: item.product.price,
+            })
+          )
         }
         className={`h-6 w-9 text-center leading-6 flex items-center justify-center ${
           item.quantity === 1 ? "opacity-30" : "hover:bg-hoverMini"
@@ -28,7 +36,13 @@ const QuantityWidget = memo(function QuantityWidget({ item, updateQuantity }) {
       </span>
       <button
         onClick={() =>
-          updateQuantity(item.productId, item.quantity + 1, item.price)
+          dispatch(
+            updateCartItemQuantity({
+              productId: item.product._id,
+              quantity: item.quantity + 1,
+              price: item.product.price,
+            })
+          )
         }
         className="h-6 w-9 text-center leading-6 flex items-center justify-center hover:bg-hoverMini"
       >
@@ -44,6 +58,6 @@ const QuantityWidget = memo(function QuantityWidget({ item, updateQuantity }) {
       </button>
     </div>
   );
-});
+}
 
 export default QuantityWidget;
