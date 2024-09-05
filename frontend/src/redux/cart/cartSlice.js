@@ -135,6 +135,7 @@ const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(handleAddToCart.fulfilled, (state, action) => {
       const item = action.payload;
+      console.log(item);
       const existingItem = state.items.find((i) => i._id === item.product._id);
 
       if (existingItem) {

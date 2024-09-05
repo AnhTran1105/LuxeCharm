@@ -6,7 +6,13 @@ export const getCart = async (req, res) => {
     const cart = await Cart.findOne({ userId: req.user.id }).populate(
       "items.product"
     );
+
     if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.items = cart.items.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({ message: error.message });
