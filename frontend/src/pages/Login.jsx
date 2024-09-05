@@ -41,13 +41,12 @@ function Login() {
       dispatch(setToken(access_token));
       dispatch(loginAndMigrateCart());
       dispatch(sendMessage({ message: response.message, type: "success" }));
+      navigate("/");
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
+    } finally {
+      dispatch(stopLoading());
     }
-    //  finally {
-    //   dispatch(stopLoading());
-    //   navigate("/");
-    // }
   };
 
   return (

@@ -21,6 +21,8 @@ function Cart() {
 
   const dispatch = useDispatch();
 
+  const [isRefresh, setRefresh] = useState(false);
+
   useEffect(() => {
     if (token) {
       (async () => {
@@ -42,7 +44,7 @@ function Cart() {
       }, 0);
       setCart({ items: cartItems, totalPrice });
     }
-  }, [token, cartItems, isShow]);
+  }, [token, cartItems, isShow, isRefresh]);
 
   return (
     isShow && (
@@ -101,7 +103,10 @@ function Cart() {
                     </div>
                     <div className="pl-5 w-full relative">
                       <button
-                        onClick={() => dispatch(removeFromCart(item))}
+                        onClick={() => {
+                          dispatch(removeFromCart(item));
+                          setRefresh(!isRefresh);
+                        }}
                         className="absolute top-0 right-0 w-5 h-5 group leading-5 flex justify-center items-center"
                       >
                         <svg

@@ -72,11 +72,16 @@ export const removeFromCart = async (req, res, next) => {
     const cart = await Cart.findOne({ userId: req.user.id });
 
     if (cart) {
-      cart.items = cart.items.filter((item) => item._id.toString() !== id);
+      const deletedItem = cart.items.find((item) => item.id === id);
 
-      const product = await Product.findById(id);
-      console.log(product);
-      cart.totalPrice -= product.price * quantity;
+      const deletedProductId = deletedItem.product.toString();
+
+      const deletedProduct = await Product.findOne({
+        _id: deletedProductId,
+      });
+
+      cart.items = cart.items.filter((item) => item._id.toString() !== id);
+      cart.totalPrice -= deletedProduct.price * deletedItem.quantity;
 
       await cart.save();
       res.status(200).json({ message: "Product removed from cart" });
