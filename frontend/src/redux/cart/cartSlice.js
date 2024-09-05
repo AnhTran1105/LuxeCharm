@@ -9,16 +9,17 @@ const initialState = {
 
 export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
-  async (product, { getState, dispatch }) => {
+  async (item, { getState, dispatch }) => {
     const state = getState();
+
     if (state.cart.isLoggedIn) {
       try {
         await axios.post(
           "/cart",
           {
-            productId: product._id,
-            quantity: product.quantity,
-            price: product.price,
+            productId: item.product._id,
+            quantity: item.quantity,
+            price: item.product.price,
           },
           {
             headers: {
@@ -32,7 +33,7 @@ export const handleAddToCart = createAsyncThunk(
       }
     } else {
       dispatch(showCart());
-      return product;
+      return item;
     }
   }
 );
@@ -58,6 +59,14 @@ export const updateCartItemQuantity = createAsyncThunk(
     } else {
       dispatch(updateQuantity({ productId, quantity }));
     }
+  }
+);
+
+export const loginAndMigrateCart = createAsyncThunk(
+  "cart/loginAndMigrateCart",
+  async (_, { dispatch }) => {
+    dispatch(setIsLoggedIn(true));
+    await dispatch(migrateCartToBackend());
   }
 );
 
@@ -98,20 +107,35 @@ const cartSlice = createSlice({
     migrateCartToBackend: (state) => {
       if (state.isLoggedIn) {
         state.items.forEach(async (item) => {
-          await axios.post("/cart", item, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          });
+          try {
+            const response = await axios.post(
+              "/cart",
+              {
+                productId: item.product._id,
+                quantity: item.quantity,
+                price: item.product.price,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "access_token"
+                  )}`,
+                },
+              }
+            );
+            console.log(response);
+            localStorage.removeItem("cartItems");
+          } catch (error) {
+            console.error(error);
+          }
         });
-        localStorage.removeItem("cartItems");
       }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(handleAddToCart.fulfilled, (state, action) => {
       const item = action.payload;
-      const existingItem = state.items.find((i) => i._id === item._id);
+      const existingItem = state.items.find((i) => i._id === item.product._id);
 
       if (existingItem) {
         existingItem.quantity += 1;

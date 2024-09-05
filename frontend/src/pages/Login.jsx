@@ -8,7 +8,7 @@ import { sendMessage } from "../redux/notification/notificationSlice";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import { migrateCartToBackend, setIsLoggedIn } from "../redux/cart/cartSlice";
+import { loginAndMigrateCart } from "../redux/cart/cartSlice";
 
 const schema = yup
   .object({
@@ -39,15 +39,15 @@ function Login() {
       });
       const { access_token } = response;
       dispatch(setToken(access_token));
-      dispatch(setIsLoggedIn(true));
-      dispatch(migrateCartToBackend());
+      dispatch(loginAndMigrateCart());
       dispatch(sendMessage({ message: response.message, type: "success" }));
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
-    } finally {
-      dispatch(stopLoading());
-      navigate("/");
     }
+    //  finally {
+    //   dispatch(stopLoading());
+    //   navigate("/");
+    // }
   };
 
   return (

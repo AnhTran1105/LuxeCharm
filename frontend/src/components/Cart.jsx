@@ -33,6 +33,7 @@ function Cart() {
           setCart(response);
         } catch (error) {
           console.error(error);
+          setCart({ items: [], totalPrice: 0 });
         }
       })();
     } else {
@@ -41,7 +42,7 @@ function Cart() {
       }, 0);
       setCart({ items: cartItems, totalPrice });
     }
-  }, [token, cartItems]);
+  }, [token, cartItems, isShow]);
 
   return (
     isShow && (
@@ -75,7 +76,7 @@ function Cart() {
                 <path fill="none" d="M0 0h48v48H0z"></path>
               </svg>
             </button>
-            {cart.items.length === 0 ? (
+            {cart && cart.items.length === 0 ? (
               <div className="py-10 px-5 border-b border-border text-center">
                 <div>Your cart is empty!</div>
                 <div>Add your favorite items to your cart.</div>

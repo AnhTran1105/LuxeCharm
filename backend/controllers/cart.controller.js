@@ -73,6 +73,11 @@ export const removeFromCart = async (req, res, next) => {
 
     if (cart) {
       cart.items = cart.items.filter((item) => item._id.toString() !== id);
+
+      const product = await Product.findById(id);
+      console.log(product);
+      cart.totalPrice -= product.price * quantity;
+
       await cart.save();
       res.status(200).json({ message: "Product removed from cart" });
     } else {
