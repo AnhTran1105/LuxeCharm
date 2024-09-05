@@ -3,9 +3,24 @@ import mongoose from "mongoose";
 const cartItemSchema = new mongoose.Schema(
   {
     product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+      category: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      // ...
     },
     quantity: {
       type: Number,
@@ -30,6 +45,18 @@ const cartSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+});
+
+cartSchema.pre("save", function (next) {
+  const cart = this;
+  let total = 0;
+
+  for (const item of cart.items) {
+    total += item.product.price * item.quantity;
+  }
+
+  cart.totalPrice = total;
+  next();
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

@@ -1,5 +1,36 @@
 import mongoose from "mongoose";
 
+const attributeSchema = new mongoose.Schema({
+  key: {
+    type: String,
+    required: true,
+  },
+  value: {
+    type: String,
+    required: true,
+  },
+});
+
+const metalSchema = new mongoose.Schema({
+  metal: {
+    type: String,
+    required: true,
+    enum: [
+      "Gold",
+      "Gold Vermeil",
+      "Mixed Metal",
+      "Rose Gold",
+      "Silver",
+      "Sterling Silver",
+    ],
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+});
+
 const productSchema = mongoose.Schema(
   {
     name: {
@@ -31,39 +62,8 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    metals: {
-      type: [String],
-      required: true,
-      enum: [
-        "Gold",
-        "Gold Vermeil",
-        "Mixed Metal",
-        "Rose Gold",
-        "Silver",
-        "Sterling Silver",
-      ],
-    },
-    quantities: [
-      {
-        metal: {
-          type: String,
-          required: true,
-          enum: [
-            "Gold",
-            "Gold Vermeil",
-            "Mixed Metal",
-            "Rose Gold",
-            "Silver",
-            "Sterling Silver",
-          ],
-        },
-        quantity: {
-          type: Number,
-          required: true,
-          default: 0,
-        },
-      },
-    ],
+    metals: [metalSchema],
+    attributes: [attributeSchema],
     rating: {
       type: Number,
       min: 0,
@@ -76,14 +76,6 @@ const productSchema = mongoose.Schema(
         required: true,
       },
     ],
-    backgroundImage: {
-      type: String,
-      required: true,
-    },
-    hoverImage: {
-      type: String,
-      required: true,
-    },
   },
   { timestamps: true }
 );
