@@ -38,11 +38,11 @@ function Login() {
       const { access_token } = response;
       dispatch(setToken(access_token));
       dispatch(sendMessage({ message: response.message, type: "success" }));
+      navigate("/");
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
     } finally {
       dispatch(stopLoading());
-      navigate("/");
     }
   };
 

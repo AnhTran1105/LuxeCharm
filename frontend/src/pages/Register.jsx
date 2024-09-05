@@ -9,11 +9,11 @@ import { sendMessage } from "../redux/notification/notificationSlice";
 
 const schema = yup
   .object({
-    firstName: yup.string(),
-    lastName: yup.string(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(6),
-    address: yup.string(),
+    address: yup.string().required(),
   })
   .required();
 
@@ -31,9 +31,9 @@ function Register() {
     dispatch(startLoading());
     try {
       const response = await axios.post("auth/register", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        address: formData.address,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        address: formData.address.trim(),
         email: formData.email,
         password: formData.password,
       });
@@ -43,11 +43,11 @@ function Register() {
           type: "success",
         })
       );
+      navigate("/account/login");
     } catch (error) {
       dispatch(sendMessage({ message: error.message, type: "error" }));
     } finally {
       dispatch(stopLoading());
-      navigate("/account/login");
     }
   };
 
@@ -71,7 +71,7 @@ function Register() {
                 {...register("firstName")}
                 className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
               />
-              <label htmlFor="firstName">First name</label>
+              <label htmlFor="firstName">First name*</label>
             </div>
             {errors.firstName && (
               <p className="text-left px-4 pt-2 flex items-center">
@@ -105,7 +105,7 @@ function Register() {
                 {...register("lastName")}
                 className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
               />
-              <label htmlFor="lastName">Last name</label>
+              <label htmlFor="lastName">Last name*</label>
             </div>
             {errors.lastName && (
               <p className="text-left px-4 pt-2 flex items-center">
@@ -139,7 +139,7 @@ function Register() {
                 {...register("address")}
                 className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
               />
-              <label htmlFor="address">Address</label>
+              <label htmlFor="address">Address*</label>
             </div>
             {errors.address && (
               <p className="text-left px-4 pt-2 flex items-center">

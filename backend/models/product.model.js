@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const attributeSchema = new mongoose.Schema({
+const dimensionSchema = new mongoose.Schema({
   key: {
     type: String,
     required: true,
@@ -63,7 +63,11 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     metals: [metalSchema],
-    attributes: [attributeSchema],
+    materials: {
+      type: String,
+      required: true,
+    },
+    dimensions: [dimensionSchema],
     rating: {
       type: Number,
       min: 0,

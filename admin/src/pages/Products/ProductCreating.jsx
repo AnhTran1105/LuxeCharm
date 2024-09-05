@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
@@ -18,40 +18,36 @@ const schema = yup
   .required();
 
 function ProductCreating() {
-  const [variations, setVariations] = useState([]);
+  const [metals, setMetals] = useState([]);
   const [category, setCategory] = useState("");
-  const [backgroundImage, setBackgroundImage] = useState();
-  const [hoverImage, setHoverImage] = useState();
-  const [additionalImages, setAdditionalImages] = useState();
+  const [images, setImages] = useState();
+
   const dispatch = useDispatch();
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "dimensions",
+  });
+
   const onSubmit = (formData) => {
     dispatch(startLoading());
     const data = new FormData();
-    data.append("name", formData.name);
+    data.append("name", formData.name.trim());
     data.append("category", category);
-    data.append("description", formData.description);
+    data.append("description", formData.description.trim());
     data.append("price", formData.price);
-
-    variations.forEach((variation) => {
-      data.append("quantities[]", variation.quantity);
-    });
-    variations.forEach((variation) => {
-      data.append("metals[]", variation.metal);
-    });
-
-    data.append("backgroundImage", backgroundImage);
-    data.append("hoverImage", hoverImage);
-
-    additionalImages.forEach((file) => {
+    data.append("metals", metals);
+    data.append("dimensions", formData.dimensions);
+    images.forEach((file) => {
       data.append("imageUrls", file);
     });
 
@@ -211,10 +207,10 @@ function ProductCreating() {
 
             <div className="mt-5">
               <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Metals of product:
+                Metals:
               </p>
               <CheckboxMenu
-                onValueChange={(value) => setVariations(value)}
+                onValueChange={(value) => setMetals(value)}
                 options={[
                   "Gold",
                   "Gold Vermeil",
@@ -225,53 +221,82 @@ function ProductCreating() {
                 ]}
               />
             </div>
+            <div className="mt-5">
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Dimensions:
+              </p>
+              <ul>
+                {fields.map((item, index) => (
+                  <li
+                    key={item.id}
+                    className="flex items-center gap-4 mb-5 last:mb-0"
+                  >
+                    <div className="field max-w-[25%]">
+                      <input
+                        {...register(`dimensions.${index}.key`)}
+                        placeholder="Key"
+                        className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                      />
+                      <label htmlFor="key">Key*</label>
+                    </div>
+                    <div className="field !mt-0">
+                      <Controller
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            placeholder="Value"
+                            className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                          />
+                        )}
+                        name={`dimensions.${index}.value`}
+                        control={control}
+                      />
+                      <label htmlFor="value">Value*</label>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="flex items-center justify-center group"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 96 96"
+                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                        id="trash"
+                      >
+                        <switch>
+                          <g>
+                            <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
+                          </g>
+                        </switch>
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => append({ key: "", value: "" })}
+                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              >
+                Add dimensions
+              </button>
+            </div>
             <p className="text-left text-base mt-5 font-SofiaBold text-color-foreground">
-              Product images:
+              Images:
             </p>
-            <div className="flex items-center justify-between border mt-4 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label
-                htmlFor="backgroundImage"
-                className="text-base text-left mr-4"
-              >
-                Primary*
-              </label>
-              <input
-                type="file"
-                id="backgroundImage"
-                onChange={(e) => setBackgroundImage(e.target.files[0])}
-                name="backgroundImage"
-                required
-                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
-              />
-            </div>
             <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="hoverImage" className="text-base text-left mr-4">
-                Hovering*
+              <label htmlFor="images" className="text-base text-left mr-4">
+                Images*
               </label>
               <input
                 type="file"
-                id="hoverImage"
-                onChange={(e) => setHoverImage(e.target.files[0])}
-                name="hoverImage"
-                required
-                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
-              />
-            </div>
-            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label
-                htmlFor="additionalImages"
-                className="text-base text-left mr-4"
-              >
-                Others*
-              </label>
-              <input
-                type="file"
-                id="additionalImages"
-                name="additionalImages"
+                id="images"
+                name="images"
                 multiple
-                onChange={(e) =>
-                  setAdditionalImages(Array.from(e.target.files))
-                }
+                onChange={(e) => setImages(Array.from(e.target.files))}
                 required
                 className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
               />
@@ -280,7 +305,7 @@ function ProductCreating() {
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              <span>Create new product</span>
+              <span>Create product</span>
             </button>
           </form>
         </div>

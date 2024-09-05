@@ -8,6 +8,7 @@ import adminRouter from "./routes/admin.route.js";
 import cartRouter from "./routes/cart.route.js";
 import cors from "cors";
 import cloudinary from "cloudinary";
+import { createAdminAccount } from "./controllers/admin.controller.js";
 
 dotenv.config();
 
