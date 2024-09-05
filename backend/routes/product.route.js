@@ -22,11 +22,7 @@ router.get("/products", getAllProducts);
 router.post(
   "/products",
   verifyAdmin,
-  upload.fields([
-    { name: "backgroundImage", maxCount: 1 },
-    { name: "hoverImage", maxCount: 1 },
-    { name: "imageUrls", maxCount: 3 },
-  ]),
+  upload.fields([{ name: "imageUrls", maxCount: 5 }]),
   createProduct
 );
 
@@ -34,11 +30,7 @@ router.delete("/products", verifyAdmin, deleteProducts);
 router.put(
   "/products/:id",
   verifyAdmin,
-  upload.fields([
-    { name: "backgroundImage", maxCount: 1 },
-    { name: "hoverImage", maxCount: 1 },
-    { name: "imageUrls", maxCount: 3 },
-  ]),
+  upload.fields([{ name: "imageUrls", maxCount: 5 }]),
   updateProduct
 );
 

@@ -141,8 +141,9 @@ function Products() {
             <th>Index</th>
             <th>Name</th>
             <th>Category</th>
-            <th>Quantity</th>
+            <th>Quantities</th>
             <th>Price</th>
+            <th>Dimensions</th>
             <th>Rating</th>
             {checkingVisible && <th>Select</th>}
           </tr>
@@ -162,11 +163,16 @@ function Products() {
               <td>{product.name}</td>
               <td>{product.category}</td>
               <td>
-                {product.quantities.map((item) => (
+                {product.metals.map((item) => (
                   <p key={item.metal}>{item.metal + ": " + item.quantity}</p>
                 ))}
               </td>
               <td>${product.price}.00</td>
+              <td>
+                {product.dimensions.map((item) => (
+                  <p key={item.key}>{item.key + ": " + item.value}</p>
+                ))}
+              </td>
               <td>{product.rating}</td>
               {checkingVisible && (
                 <td className="relative">

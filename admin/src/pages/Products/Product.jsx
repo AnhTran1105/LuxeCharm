@@ -5,7 +5,6 @@ import CustomPaging from "../../components/CustomPaging";
 
 function Product() {
   const [product, setProduct] = useState();
-  const [images, setImages] = useState([]);
   const [metal, setMetal] = useState("");
   const { id } = useParams();
 
@@ -14,26 +13,21 @@ function Product() {
       try {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
-        setImages(
-          [
-            ...productResponse.imageUrls,
-            productResponse.hoverImage,
-            productResponse.backgroundImage,
-          ].reverse()
-        );
-        setMetal(productResponse.quantities[0].metal);
+        setMetal(productResponse.metals[0].metal);
       } catch (error) {
         console.error(error);
       }
     })();
   }, [id]);
 
+  console.log(product);
+
   return (
     product && (
       <section className="pt-9 pb-3 px-[50px]">
         <div className="flex">
           <div className="max-w-[55%] w-[55%]">
-            <CustomPaging images={images} />
+            <CustomPaging imageUrls={product.imageUrls} />
           </div>
           <div className="pl-[50px] max-w-[45%] w-[45%] relative">
             <a
@@ -63,7 +57,7 @@ function Product() {
             <div className="my-[15px]">
               <p className="text-[13px] text-foreground75 mb-3">Metal</p>
               <div className="flex gap-4">
-                {product.quantities.map((item) =>
+                {product.metals.map((item) =>
                   item.quantity > 0 ? (
                     <button
                       className={`py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground tracking-[1px] leading-none text-sm ${
@@ -109,10 +103,7 @@ function Product() {
             <div className="my-[15px]">
               <p className="text-[13px] text-foreground75 mb-3">
                 Quantity:{" "}
-                {
-                  product.quantities.find((item) => item.metal === metal)
-                    .quantity
-                }
+                {product.metals.find((item) => item.metal === metal).quantity}
               </p>
             </div>
             <p className="my-[15px] text-xs text-foreground75">

@@ -4,7 +4,7 @@ import cloudinary from "cloudinary";
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find().sort("-lastUpdated");
+    const products = await Product.find().sort("-createdAt");
     res.json(products);
   } catch (error) {
     next(error);
