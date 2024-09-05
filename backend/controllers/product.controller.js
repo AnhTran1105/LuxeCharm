@@ -13,18 +13,6 @@ export const getAllProducts = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
-    const backgroundImage = await cloudinary.v2.uploader.upload(
-      req.files.backgroundImage[0].path,
-      {
-        folder: "products/backgrounds",
-      }
-    );
-    const hoverImage = await cloudinary.v2.uploader.upload(
-      req.files.hoverImage[0].path,
-      {
-        folder: "products/hovers",
-      }
-    );
     const imageUrls = await Promise.all(
       req.files.imageUrls.map(async (file) => {
         const result = await cloudinary.v2.uploader.upload(file.path, {
@@ -34,20 +22,13 @@ export const createProduct = async (req, res, next) => {
       })
     );
 
-    const quantities = req.body.metals.map((metal, index) => ({
-      metal: metal,
-      quantity: req.body.quantities[index],
-    }));
-
     const newProduct = new Product({
       name: req.body.name,
       category: req.body.category,
       description: req.body.description,
       price: req.body.price,
-      metals: req.body.metals,
-      quantities: quantities,
-      backgroundImage: backgroundImage.secure_url,
-      hoverImage: hoverImage.secure_url,
+      metals: JSON.parse(req.body.metals),
+      dimensions: JSON.parse(req.body.dimensions),
       imageUrls,
     });
 

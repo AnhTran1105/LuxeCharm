@@ -41,12 +41,14 @@ function ProductCreating() {
   const onSubmit = (formData) => {
     dispatch(startLoading());
     const data = new FormData();
+
     data.append("name", formData.name.trim());
     data.append("category", category);
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
-    data.append("metals", metals);
-    data.append("dimensions", formData.dimensions);
+    data.append("metals", JSON.stringify(metals));
+    data.append("dimensions", JSON.stringify(formData.dimensions));
+
     images.forEach((file) => {
       data.append("imageUrls", file);
     });

@@ -63,10 +63,6 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     metals: [metalSchema],
-    materials: {
-      type: String,
-      required: true,
-    },
     dimensions: [dimensionSchema],
     rating: {
       type: Number,
