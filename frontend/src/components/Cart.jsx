@@ -64,7 +64,7 @@ function Cart() {
               role="list"
               className="max-h-[calc(100%-165px)] overflow-y-auto"
             >
-              {items.map((item) => (
+              {[...items].reverse().map((item) => (
                 <li
                   key={item.product._id}
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
@@ -80,7 +80,7 @@ function Cart() {
                   <div className="pl-5 w-full relative">
                     <button
                       onClick={() => {
-                        dispatch(removeFromCart(item._id));
+                        dispatch(removeFromCart(item.product._id));
                       }}
                       className="absolute top-0 right-0 w-5 h-5 group leading-5 flex justify-center items-center"
                     >
@@ -107,12 +107,10 @@ function Cart() {
                     >
                       {item.product.name}
                     </a>
-                    <div className="leading-3 text-xs">
-                      {item.product.metal}
-                    </div>
+                    <div className="leading-3 text-xs">{item.metal}</div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">
-                        <QuantityWidget itemId={item._id} />
+                        <QuantityWidget itemId={item.product._id} />
                       </div>
                       <div className="mt-[5px] text-right text-xs leading-4">
                         ${item.product.price * item.quantity}.00

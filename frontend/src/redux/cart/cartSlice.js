@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
 import { showCart } from "../cartModal/cartModalSlice";
 
@@ -22,12 +22,16 @@ export const fetchCart = createAsyncThunk(
       });
       return response;
     } else {
-      return (
-        JSON.parse(localStorage.getItem("cartItems")) || {
-          items: [],
-          totalPrice: 0,
-        }
-      );
+      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || {
+        items: [],
+        totalPrice: 0,
+      };
+
+      if (cartItems.items.length > 0) {
+        return { ...cartItems, items: cartItems.items };
+      }
+
+      return cartItems;
     }
   }
 );
@@ -40,10 +44,38 @@ export const syncCartAfterLogin = createAsyncThunk(
       totalPrice: 0,
     };
 
-    if (localCart.items.length > 0) {
+    const response = await axios.get("/cart", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
+    const backendCart = response;
+
+    if (backendCart.items.length === 0 && localCart.items.length > 0) {
       for (const item of localCart.items) {
-        await dispatch(handleAddToCart(item));
+        await axios.post(
+          "/cart",
+          {
+            product: {
+              _id: item.product._id,
+              name: item.product.name,
+              price: item.product.price,
+              imageUrl: item.product.imageUrl,
+            },
+            metal: item.metal,
+            quantity: item.quantity,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
       }
+
+      localStorage.removeItem("cartItems");
+    } else {
       localStorage.removeItem("cartItems");
     }
 
@@ -55,8 +87,8 @@ export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
   async (item, { getState, dispatch }) => {
     const { cart } = getState();
+
     if (cart.isLoggedIn) {
-      console.log(item);
       try {
         await axios.post(
           "/cart",
@@ -75,16 +107,69 @@ export const handleAddToCart = createAsyncThunk(
             },
           }
         );
+        await dispatch(fetchCart());
       } catch (error) {
         console.error(error);
       }
       dispatch(showCart());
     } else {
+      const existingItemIndex = cart.items.findIndex(
+        (cartItem) => cartItem.product._id === item._id
+      );
+
+      let updatedItems;
+      if (existingItemIndex !== -1) {
+        updatedItems = cart.items.map((cartItem, index) => {
+          if (index === existingItemIndex) {
+            return {
+              ...cartItem,
+              quantity: cartItem.quantity + 1,
+            };
+          }
+          return cartItem;
+        });
+      } else {
+        updatedItems = [
+          ...cart.items,
+          {
+            product: {
+              _id: item._id,
+              name: item.name,
+              price: item.price,
+              imageUrl: item.imageUrls[0],
+            },
+            metal: item.metals[0].metal,
+            quantity: 1,
+          },
+        ];
+      }
+
+      const totalPrice = updatedItems.reduce(
+        (total, item) => total + item.product.price * item.quantity,
+        0
+      );
+
+      localStorage.setItem(
+        "cartItems",
+        JSON.stringify({
+          items: updatedItems,
+          totalPrice,
+        })
+      );
+
+      dispatch(
+        updateCart({
+          items: updatedItems,
+          totalPrice,
+        })
+      );
+
       dispatch(showCart());
     }
-    await dispatch(fetchCart());
   }
 );
+
+export const updateCart = createAction("cart/updateCart");
 
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
@@ -127,6 +212,10 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    updateCart: (state, action) => {
+      state.items = action.payload.items;
+      state.totalPrice = action.payload.totalPrice;
+    },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
@@ -143,51 +232,41 @@ const cartSlice = createSlice({
         state.totalPrice = action.payload.totalPrice;
         state.loading = false;
       })
-      .addCase(handleAddToCart.fulfilled, (state, action) => {
-        const newItem = action.payload;
-        const existingItemIndex = state.items.findIndex(
-          (item) => item._id === newItem._id && item.metal === newItem.metal
-        );
-        if (existingItemIndex !== -1) {
-          state.items[existingItemIndex].quantity += newItem.quantity;
-        } else {
-          state.items.push(newItem);
-        }
-        state.totalPrice = state.items.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0
-        );
+      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
         if (!state.isLoggedIn) {
-          localStorage.setItem(
-            "cartItems",
-            JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
+          const { cartItemId, quantity } = action.payload;
+          const itemIndex = state.items.findIndex(
+            (item) => item.product._id === cartItemId
           );
+
+          if (itemIndex !== -1) {
+            state.items[itemIndex].quantity = quantity;
+
+            state.totalPrice = state.items.reduce(
+              (total, item) => total + item.product.price * item.quantity,
+              0
+            );
+
+            localStorage.setItem(
+              "cartItems",
+              JSON.stringify({
+                items: state.items,
+                totalPrice: state.totalPrice,
+              })
+            );
+          }
         }
       })
-      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
-        const { cartItemId, quantity } = action.payload;
-        const item = state.items.find((item) => item._id === cartItemId);
-        if (item) {
-          item.quantity = quantity;
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        if (!state.isLoggedIn) {
+          state.items = state.items.filter(
+            (item) => item.product._id !== action.payload
+          );
           state.totalPrice = state.items.reduce(
             (total, item) => total + item.product.price * item.quantity,
             0
           );
-        }
-        if (!state.isLoggedIn) {
-          localStorage.setItem(
-            "cartItems",
-            JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
-          );
-        }
-      })
-      .addCase(removeFromCart.fulfilled, (state, action) => {
-        state.items = state.items.filter((item) => item._id !== action.payload);
-        state.totalPrice = state.items.reduce(
-          (total, item) => total + item.product.price * item.quantity,
-          0
-        );
-        if (!state.isLoggedIn) {
+
           localStorage.setItem(
             "cartItems",
             JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
