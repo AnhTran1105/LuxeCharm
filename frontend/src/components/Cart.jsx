@@ -95,7 +95,7 @@ function Cart() {
                   <div className="w-[90px]">
                     <a href={`/products/${item.product._id}`} tabIndex={-1}>
                       <img
-                        src={item.product.backgroundImage}
+                        src={item.product.imageUrl}
                         alt={item.product.name}
                       />
                     </a>
@@ -132,7 +132,7 @@ function Cart() {
                       {item.product.name}
                     </a>
                     <div className="leading-3 text-xs">
-                      {item.product.metals[0]}
+                      {item.product.metal}
                     </div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">

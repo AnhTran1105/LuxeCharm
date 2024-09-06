@@ -9,6 +9,7 @@ import Jewelry from "./pages/Jewelry";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Product from "./pages/Product";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ import { dismissMessage } from "./redux/notification/notificationSlice.js";
 import LoaderPortal from "./components/LoaderPortal.jsx";
 import { HashLoader } from "react-spinners";
 import Cart from "./components/Cart.jsx";
+import Account from "./pages/Account.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -70,6 +72,9 @@ export default function App() {
         <Route path="/collections/bestsellers" element={<BestSellers />} />
         <Route path="/account/login" element={<Login />} />
         <Route path="/account/register" element={<Register />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/account" element={<Account />} />
+        </Route>
       </Routes>
       <Footer />
       <LoaderPortal>

@@ -18,8 +18,6 @@ function Product() {
     })();
   }, [id]);
 
-  // console.log(product);
-
   return (
     product && (
       <section className="pt-9 pb-3 px-[50px]">
@@ -39,7 +37,7 @@ function Product() {
             <div className="my-[15px]">
               <p className="text-[13px] text-foreground75 mb-3">Metal</p>
               <div className="flex gap-4">
-                {product.quantities.map((item) =>
+                {product.metals.map((item) =>
                   item.quantity > 0 ? (
                     <button
                       className="py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground tracking-[1px] leading-none text-sm first:bg-color-foreground first:text-white"

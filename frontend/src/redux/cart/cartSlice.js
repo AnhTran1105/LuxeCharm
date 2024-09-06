@@ -17,9 +17,13 @@ export const handleAddToCart = createAsyncThunk(
         await axios.post(
           "/cart",
           {
-            productId: item.product._id,
-            quantity: item.quantity,
-            price: item.product.price,
+            product: {
+              _id: item._id,
+              name: item.name,
+              price: item.price,
+              imageUrl: item.imageUrls[0],
+            },
+            metal: item.metal,
           },
           {
             headers: {

@@ -12,6 +12,8 @@ function Header() {
   const [isAtTop, setIsAtTop] = useState(true);
   const dispatch = useDispatch();
 
+  const isLoggedIn = !!localStorage.getItem("access_token");
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY === 0) {
@@ -135,7 +137,7 @@ function Header() {
         </h1>
         <div className="col-span-1 justify-self-end flex">
           <a
-            href="/account/login"
+            href={`${isLoggedIn ? "/account" : "/account/login"}`}
             className="h-[44px] w-[44px] flex items-center group cursor-pointer"
           >
             <svg

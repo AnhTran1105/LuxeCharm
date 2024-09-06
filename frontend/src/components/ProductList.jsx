@@ -17,6 +17,8 @@ function ProductList() {
     })();
   }, []);
 
+  console.log(products);
+
   const dispatch = useDispatch();
 
   return (
@@ -34,12 +36,12 @@ function ProductList() {
               <img
                 loading="lazy"
                 alt={product.name}
-                src={product.backgroundImage}
+                src={product.imageUrls[0]}
                 className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
               />
               <img
                 alt={product.name}
-                src={product.hoverImage}
+                src={product.imageUrls[1]}
                 loading="lazy"
                 className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
               ></img>
@@ -69,14 +71,19 @@ function ProductList() {
               </div>
             </div>
           </a>
-          {product.quantities.length > 1 ? (
+          {product.metals.length > 1 ? (
             <button className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]">
               <span>Choose options</span>
             </button>
           ) : (
             <button
               onClick={() =>
-                dispatch(handleAddToCart({ product: product, quantity: 1 }))
+                dispatch(
+                  handleAddToCart({
+                    ...product,
+                    metal: product.metals[0].metal,
+                  })
+                )
               }
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]"
             >
