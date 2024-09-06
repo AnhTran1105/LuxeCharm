@@ -4,47 +4,24 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
-import { removeFromCart } from "../redux/cart/cartSlice";
-import axios from "../utils/axios";
+import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
+import { useEffect } from "react";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
-  const cartItems = useSelector((state) => state.cart.items);
 
-  const token = useSelector((state) => state.auth.token);
-
-  const [cart, setCart] = useState();
+  const { items, totalPrice } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
 
-  const [isRefresh, setRefresh] = useState(false);
-
   useEffect(() => {
-    if (token) {
-      (async () => {
-        try {
-          const response = await axios.get("/cart", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          });
-          setCart(response);
-        } catch (error) {
-          console.error(error);
-          setCart({ items: [], totalPrice: 0 });
-        }
-      })();
-    } else {
-      const totalPrice = cartItems.reduce((totalPrice, item) => {
-        return totalPrice + item.product.price * item.quantity;
-      }, 0);
-      setCart({ items: cartItems, totalPrice });
+    if (isShow) {
+      dispatch(fetchCart());
     }
-  }, [token, cartItems, isShow, isRefresh]);
+  }, [isShow, dispatch]);
 
   return (
     isShow && (
@@ -77,7 +54,7 @@ function Cart() {
               <path fill="none" d="M0 0h48v48H0z"></path>
             </svg>
           </button>
-          {cart && cart.items.length === 0 ? (
+          {items.length === 0 ? (
             <div className="py-10 px-5 border-b border-border text-center">
               <div>Your cart is empty!</div>
               <div>Add your favorite items to your cart.</div>
@@ -87,7 +64,7 @@ function Cart() {
               role="list"
               className="max-h-[calc(100%-165px)] overflow-y-auto"
             >
-              {cart.items.map((item) => (
+              {items.map((item) => (
                 <li
                   key={item.product._id}
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
@@ -103,8 +80,7 @@ function Cart() {
                   <div className="pl-5 w-full relative">
                     <button
                       onClick={() => {
-                        dispatch(removeFromCart(item));
-                        setRefresh(!isRefresh);
+                        dispatch(removeFromCart(item._id));
                       }}
                       className="absolute top-0 right-0 w-5 h-5 group leading-5 flex justify-center items-center"
                     >
@@ -136,7 +112,7 @@ function Cart() {
                     </div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">
-                        <QuantityWidget item={item} />
+                        <QuantityWidget itemId={item._id} />
                       </div>
                       <div className="mt-[5px] text-right text-xs leading-4">
                         ${item.product.price * item.quantity}.00
@@ -151,12 +127,12 @@ function Cart() {
           <div className="border-t border-border p-5 z-20 absolute bottom-0 right-0 left-0">
             <div className="flex justify-between font-SofiaBold mb-3">
               <div>
-                {`Subtotal (${cart.items.reduce((total, item) => {
+                {`Subtotal (${items.reduce((total, item) => {
                   return total + item.quantity;
-                }, 0)} ${cart.items.length > 1 ? "items" : "item"})`}
+                }, 0)} ${items.length > 1 ? "items" : "item"})`}
                 :
               </div>
-              <div>${cart.totalPrice}.00</div>
+              <div>${totalPrice}.00</div>
             </div>
             <button className="w-full border-f border border-solid p-2 hover:bg-hover hover:text-white">
               Check out

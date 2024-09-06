@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showCart } from "../redux/cartModal/cartModalSlice";
 
 function Header() {
@@ -12,7 +12,7 @@ function Header() {
   const [isAtTop, setIsAtTop] = useState(true);
   const dispatch = useDispatch();
 
-  const isLoggedIn = !!localStorage.getItem("access_token");
+  const isLoggedIn = !!useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const handleScroll = () => {

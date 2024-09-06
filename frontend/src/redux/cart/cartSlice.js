@@ -3,16 +3,60 @@ import axios from "../../utils/axios";
 import { showCart } from "../cartModal/cartModalSlice";
 
 const initialState = {
-  items: JSON.parse(localStorage.getItem("cartItems")) || [],
+  items: [],
+  totalPrice: 0,
   isLoggedIn: !!localStorage.getItem("access_token"),
+  loading: false,
+  error: null,
 };
+
+export const fetchCart = createAsyncThunk(
+  "cart/fetchCart",
+  async (_, { getState }) => {
+    const { cart } = getState();
+    if (cart.isLoggedIn) {
+      const response = await axios.get("/cart", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      return response;
+    } else {
+      return (
+        JSON.parse(localStorage.getItem("cartItems")) || {
+          items: [],
+          totalPrice: 0,
+        }
+      );
+    }
+  }
+);
+
+export const syncCartAfterLogin = createAsyncThunk(
+  "cart/syncCartAfterLogin",
+  async (_, { dispatch }) => {
+    const localCart = JSON.parse(localStorage.getItem("cartItems")) || {
+      items: [],
+      totalPrice: 0,
+    };
+
+    if (localCart.items.length > 0) {
+      for (const item of localCart.items) {
+        await dispatch(handleAddToCart(item));
+      }
+      localStorage.removeItem("cartItems");
+    }
+
+    return await dispatch(fetchCart()).unwrap();
+  }
+);
 
 export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
   async (item, { getState, dispatch }) => {
-    const state = getState();
-
-    if (state.cart.isLoggedIn) {
+    const { cart } = getState();
+    if (cart.isLoggedIn) {
+      console.log(item);
       try {
         await axios.post(
           "/cart",
@@ -23,7 +67,7 @@ export const handleAddToCart = createAsyncThunk(
               price: item.price,
               imageUrl: item.imageUrls[0],
             },
-            metal: item.metal,
+            metal: item.metals[0].metal,
           },
           {
             headers: {
@@ -31,46 +75,51 @@ export const handleAddToCart = createAsyncThunk(
             },
           }
         );
-        dispatch(showCart());
       } catch (error) {
         console.error(error);
       }
+      dispatch(showCart());
     } else {
       dispatch(showCart());
-      return item;
     }
+    await dispatch(fetchCart());
   }
 );
 
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
-  async ({ productId, quantity, price }, { getState, dispatch }) => {
-    const state = getState();
-    if (state.cart.isLoggedIn) {
-      try {
-        await axios.put(
-          `/cart/quantity`,
-          { productId, quantity, price },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      dispatch(updateQuantity({ productId, quantity }));
+  async ({ cartItemId, quantity }, { getState, dispatch }) => {
+    const { cart } = getState();
+    if (cart.isLoggedIn) {
+      await axios.put(
+        `/cart/quantity`,
+        { cartItemId, quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
     }
+
+    await dispatch(fetchCart());
+    return { cartItemId, quantity };
   }
 );
 
-export const loginAndMigrateCart = createAsyncThunk(
-  "cart/loginAndMigrateCart",
-  async (_, { dispatch }) => {
-    dispatch(setIsLoggedIn(true));
-    await dispatch(migrateCartToBackend());
+export const removeFromCart = createAsyncThunk(
+  "cart/removeFromCart",
+  async (cartItemId, { getState, dispatch }) => {
+    const { cart } = getState();
+    if (cart.isLoggedIn) {
+      await axios.delete(`/cart/${cartItemId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+    }
+    await dispatch(fetchCart());
+    return cartItemId;
   }
 );
 
@@ -78,88 +127,94 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    updateQuantity: (state, action) => {
-      const { productId, quantity } = action.payload;
-      const item = state.items.find((i) => i.product._id === productId);
-
-      if (item) {
-        item.quantity = quantity;
-        localStorage.setItem("cartItems", JSON.stringify(state.items));
-      }
-    },
-    removeFromCart: (state, action) => {
-      const itemId = action.payload._id;
-      state.items = state.items.filter((item) => item._id !== itemId);
-
-      if (!state.isLoggedIn) {
-        localStorage.setItem("cartItems", JSON.stringify(state.items));
-      } else {
-        axios.delete(`/cart/${itemId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
-      }
-    },
-    clearCart: (state) => {
-      state.items = [];
-      localStorage.removeItem("cartItems");
-    },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
-    migrateCartToBackend: (state) => {
-      if (state.isLoggedIn) {
-        state.items.forEach(async (item) => {
-          try {
-            const response = await axios.post(
-              "/cart",
-              {
-                productId: item.product._id,
-                quantity: item.quantity,
-                price: item.product.price,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(
-                    "access_token"
-                  )}`,
-                },
-              }
-            );
-            console.log(response);
-            localStorage.removeItem("cartItems");
-          } catch (error) {
-            console.error(error);
-          }
-        });
-      }
+    clearCart: (state) => {
+      state.items = [];
+      state.totalPrice = 0;
+      localStorage.removeItem("cartItems");
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(handleAddToCart.fulfilled, (state, action) => {
-      const item = action.payload;
-      console.log(item);
-      const existingItem = state.items.find((i) => i._id === item.product._id);
-
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        state.items.push(item);
-      }
-
-      if (!state.isLoggedIn) {
-        localStorage.setItem("cartItems", JSON.stringify(state.items));
-      }
-    });
+    builder
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.items = action.payload.items;
+        state.totalPrice = action.payload.totalPrice;
+        state.loading = false;
+      })
+      .addCase(handleAddToCart.fulfilled, (state, action) => {
+        const newItem = action.payload;
+        const existingItemIndex = state.items.findIndex(
+          (item) => item._id === newItem._id && item.metal === newItem.metal
+        );
+        if (existingItemIndex !== -1) {
+          state.items[existingItemIndex].quantity += newItem.quantity;
+        } else {
+          state.items.push(newItem);
+        }
+        state.totalPrice = state.items.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        );
+        if (!state.isLoggedIn) {
+          localStorage.setItem(
+            "cartItems",
+            JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
+          );
+        }
+      })
+      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
+        const { cartItemId, quantity } = action.payload;
+        const item = state.items.find((item) => item._id === cartItemId);
+        if (item) {
+          item.quantity = quantity;
+          state.totalPrice = state.items.reduce(
+            (total, item) => total + item.product.price * item.quantity,
+            0
+          );
+        }
+        if (!state.isLoggedIn) {
+          localStorage.setItem(
+            "cartItems",
+            JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
+          );
+        }
+      })
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        state.items = state.items.filter((item) => item._id !== action.payload);
+        state.totalPrice = state.items.reduce(
+          (total, item) => total + item.product.price * item.quantity,
+          0
+        );
+        if (!state.isLoggedIn) {
+          localStorage.setItem(
+            "cartItems",
+            JSON.stringify({ items: state.items, totalPrice: state.totalPrice })
+          );
+        }
+      })
+      .addCase(syncCartAfterLogin.fulfilled, (state, action) => {
+        state.items = action.payload.items;
+        state.totalPrice = action.payload.totalPrice;
+        state.loading = false;
+      })
+      .addMatcher(
+        (action) => action.type.endsWith("/pending"),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.loading = false;
+          state.error = action.error.message;
+        }
+      );
   },
 });
 
-export const {
-  updateQuantity,
-  removeFromCart,
-  clearCart,
-  setIsLoggedIn,
-  migrateCartToBackend,
-} = cartSlice.actions;
+export const { setIsLoggedIn, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

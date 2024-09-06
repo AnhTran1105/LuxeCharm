@@ -1,21 +1,23 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateCartItemQuantity } from "../redux/cart/cartSlice";
 
-function QuantityWidget({ item }) {
+function QuantityWidget({ itemId }) {
   const dispatch = useDispatch();
+  const { items } = useSelector((state) => state.cart);
+
+  const item = items.find((item) => item._id === itemId);
+
+  const handleUpdateQuantity = (newQuantity) => {
+    dispatch(
+      updateCartItemQuantity({ cartItemId: item._id, quantity: newQuantity })
+    );
+  };
+
   return (
     <div className="flex border-border border">
       <button
         disabled={item.quantity === 1}
-        onClick={() =>
-          dispatch(
-            updateCartItemQuantity({
-              productId: item.product._id,
-              quantity: item.quantity - 1,
-              price: item.product.price,
-            })
-          )
-        }
+        onClick={() => handleUpdateQuantity(item.quantity - 1)}
         className={`h-6 w-9 text-center leading-6 flex items-center justify-center ${
           item.quantity === 1 ? "opacity-30" : "hover:bg-hoverMini"
         }`}
@@ -35,15 +37,7 @@ function QuantityWidget({ item }) {
         {item.quantity}
       </span>
       <button
-        onClick={() =>
-          dispatch(
-            updateCartItemQuantity({
-              productId: item.product._id,
-              quantity: item.quantity + 1,
-              price: item.product.price,
-            })
-          )
-        }
+        onClick={() => handleUpdateQuantity(item.quantity + 1)}
         className="h-6 w-9 text-center leading-6 flex items-center justify-center hover:bg-hoverMini"
       >
         <svg
