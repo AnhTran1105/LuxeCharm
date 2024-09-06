@@ -233,7 +233,7 @@ function ProductCreating() {
                     key={item.id}
                     className="flex items-center gap-4 mb-5 last:mb-0"
                   >
-                    <div className="field max-w-[25%]">
+                    <div className="field max-w-[40%]">
                       <input
                         {...register(`dimensions.${index}.key`)}
                         placeholder="Key"

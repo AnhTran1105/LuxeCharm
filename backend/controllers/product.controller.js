@@ -33,7 +33,7 @@ export const createProduct = async (req, res, next) => {
     });
 
     await newProduct.save();
-    res.status(201).json("Product created successfully!");
+    res.status(201).json({ message: "Product created successfully!" });
   } catch (error) {
     next(error);
   }
@@ -76,8 +76,6 @@ export const deleteProducts = async (req, res, next) => {
 };
 
 export const updateProduct = async (req, res, next) => {
-  console.log(req.body);
-
   try {
     const productId = req.params.id;
     const product = await Product.findById(productId);
@@ -109,33 +107,12 @@ export const updateProduct = async (req, res, next) => {
       product.imageUrls.push(...newImageUrls);
     }
 
-    const quantities = req.body.metals.map((metal, index) => ({
-      metal: metal,
-      quantity: req.body.quantities[index],
-    }));
-
     product.name = req.body.name || product.name;
     product.category = req.body.category || product.category;
     product.description = req.body.description || product.description;
     product.price = req.body.price || product.price;
-    product.quantities = quantities || product.quantities;
-    product.metals = req.body.metals || product.metals;
-
-    if (req.files && req.files.backgroundImage) {
-      product.backgroundImage = (
-        await cloudinary.v2.uploader.upload(req.files.backgroundImage[0].path, {
-          folder: "products/backgrounds",
-        })
-      ).secure_url;
-    }
-
-    if (req.files && req.files.hoverImage) {
-      product.hoverImage = (
-        await cloudinary.v2.uploader.upload(req.files.hoverImage[0].path, {
-          folder: "products/hovers",
-        })
-      ).secure_url;
-    }
+    product.metals = JSON.parse(req.body.metals) || product.metals;
+    product.dimensions = JSON.parse(req.body.dimensions) || product.dimensions;
 
     await product.save();
     res.status(200).json({ message: "Product updated successfully!" });
