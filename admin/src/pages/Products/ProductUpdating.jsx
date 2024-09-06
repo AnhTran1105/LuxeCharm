@@ -357,7 +357,7 @@ function ProductUpdating() {
                 id="imageUrls"
                 multiple
                 onChange={handleImageAdd}
-                disabled={newImages.length + imageUrls.length === 3}
+                disabled={newImages.length + imageUrls.length === 5}
                 className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
               />
             </div>

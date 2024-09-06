@@ -12,6 +12,7 @@ export const getAllProducts = async (req, res, next) => {
 };
 
 export const createProduct = async (req, res, next) => {
+  console.log(req.body);
   try {
     const imageUrls = await Promise.all(
       req.files.imageUrls.map(async (file) => {

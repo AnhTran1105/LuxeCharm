@@ -3,8 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../../utils/axios";
 import DropdownMenu from "../../components/DropdownMenu";
-import { useState } from "react";
-import CheckboxMenu from "../../components/CheckboxMenu";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
@@ -14,29 +13,71 @@ const schema = yup
     name: yup.string().required(),
     description: yup.string().required(),
     price: yup.number().positive().required().default(0),
+    metals: yup.array().of(
+      yup.object().shape({
+        metal: yup.string().required(),
+        quantity: yup.number().positive().required(),
+        material: yup.string().required(),
+        images: yup.array().of(yup.mixed()).required(),
+      })
+    ),
   })
   .required();
 
 function ProductCreating() {
-  const [metals, setMetals] = useState([]);
   const [category, setCategory] = useState("");
-  const [images, setImages] = useState();
-
   const dispatch = useDispatch();
 
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      dimensions: [{ key: "", value: "" }],
+      instructions: [{ key: "", value: "" }],
+      metals: [],
+    },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: dimensionFields,
+    append: appendDimension,
+    remove: removeDimension,
+  } = useFieldArray({
     control,
     name: "dimensions",
   });
+
+  const {
+    fields: instructionFields,
+    append: appendInstruction,
+    remove: removeInstruction,
+  } = useFieldArray({
+    control,
+    name: "instructions",
+  });
+
+  const {
+    fields: metalFields,
+    append: appendMetal,
+    remove: removeMetal,
+  } = useFieldArray({
+    control,
+    name: "metals",
+  });
+
+  const watchMetals = watch("metals");
+
+  useEffect(() => {
+    if (watchMetals.length === 0) {
+      appendMetal({ metal: "", quantity: 0, material: "", images: [] });
+    }
+  }, [watchMetals, appendMetal]);
 
   const onSubmit = (formData) => {
     dispatch(startLoading());
@@ -46,11 +87,16 @@ function ProductCreating() {
     data.append("category", category);
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
-    data.append("metals", JSON.stringify(metals));
     data.append("dimensions", JSON.stringify(formData.dimensions));
+    data.append("instructions", JSON.stringify(formData.instructions));
 
-    images.forEach((file) => {
-      data.append("imageUrls", file);
+    formData.metals.forEach((metal, index) => {
+      data.append(`metals[${index}][metal]`, metal.metal);
+      data.append(`metals[${index}][quantity]`, metal.quantity);
+      data.append(`metals[${index}][material]`, metal.material);
+      metal.images.forEach((image) => {
+        data.append(`metals[${index}][images]`, image);
+      });
     });
 
     (async () => {
@@ -206,29 +252,12 @@ function ProductCreating() {
                 </span>
               </p>
             )}
-
-            <div className="mt-5">
-              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Metals:
-              </p>
-              <CheckboxMenu
-                onValueChange={(value) => setMetals(value)}
-                options={[
-                  "Gold",
-                  "Gold Vermeil",
-                  "Mixed Metal",
-                  "Rose Gold",
-                  "Silver",
-                  "Sterling Silver",
-                ]}
-              />
-            </div>
             <div className="mt-5">
               <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
                 Dimensions:
               </p>
               <ul>
-                {fields.map((item, index) => (
+                {dimensionFields.map((item, index) => (
                   <li
                     key={item.id}
                     className="flex items-center gap-4 mb-5 last:mb-0"
@@ -257,7 +286,7 @@ function ProductCreating() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => remove(index)}
+                      onClick={() => removeDimension(index)}
                       className="flex items-center justify-center group"
                     >
                       <svg
@@ -280,28 +309,161 @@ function ProductCreating() {
               </ul>
               <button
                 type="button"
-                onClick={() => append({ key: "", value: "" })}
+                onClick={() => appendDimension({ key: "", value: "" })}
                 className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
               >
                 Add dimensions
               </button>
             </div>
-            <p className="text-left text-base mt-5 font-SofiaBold text-color-foreground">
-              Images:
-            </p>
-            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="images" className="text-base text-left mr-4">
-                Images*
-              </label>
-              <input
-                type="file"
-                id="images"
-                name="images"
-                multiple
-                onChange={(e) => setImages(Array.from(e.target.files))}
-                required
-                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
-              />
+            <div className="mt-5">
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Care Instructions:
+              </p>
+              <ul>
+                {instructionFields.map((item, index) => (
+                  <li
+                    key={item.id}
+                    className="flex items-center gap-4 mb-5 last:mb-0"
+                  >
+                    <div className="field max-w-[40%]">
+                      <input
+                        {...register(`instructions.${index}.key`)}
+                        placeholder="Key"
+                        className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                      />
+                      <label htmlFor="key">Key*</label>
+                    </div>
+                    <div className="field !mt-0">
+                      <Controller
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            placeholder="Value"
+                            className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                          />
+                        )}
+                        name={`instructions.${index}.value`}
+                        control={control}
+                      />
+                      <label htmlFor="value">Value*</label>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeInstruction(index)}
+                      className="flex items-center justify-center group"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 96 96"
+                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                        id="trash"
+                      >
+                        <switch>
+                          <g>
+                            <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
+                          </g>
+                        </switch>
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => appendInstruction({ key: "", value: "" })}
+                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              >
+                Add instructions
+              </button>
+            </div>
+            <div className="mt-5">
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Metals, Materials, and Images:
+              </p>
+              {metalFields.map((field, index) => (
+                <div key={field.id} className="mb-5 p-4 border rounded">
+                  <div className="field">
+                    <Controller
+                      name={`metals.${index}.metal`}
+                      control={control}
+                      render={({ field }) => (
+                        <select {...field} className="w-full h-[45px] p-[15px]">
+                          <option value="">Select Metal</option>
+                          <option value="Gold">Gold</option>
+                          <option value="Gold Vermeil">Gold Vermeil</option>
+                          <option value="Mixed Metal">Mixed Metal</option>
+                          <option value="Rose Gold">Rose Gold</option>
+                          <option value="Silver">Silver</option>
+                          <option value="Sterling Silver">
+                            Sterling Silver
+                          </option>
+                        </select>
+                      )}
+                    />
+                    <label>Metal*</label>
+                  </div>
+
+                  <div className="field mt-3">
+                    <input
+                      type="number"
+                      {...register(`metals.${index}.quantity`)}
+                      placeholder="Quantity"
+                      className="w-full h-[45px] p-[15px]"
+                    />
+                    <label>Quantity*</label>
+                  </div>
+
+                  <div className="field mt-3">
+                    <input
+                      {...register(`metals.${index}.material`)}
+                      placeholder="Material"
+                      className="w-full h-[45px] p-[15px]"
+                    />
+                    <label>Material*</label>
+                  </div>
+
+                  <div className="mt-3">
+                    <input
+                      type="file"
+                      multiple
+                      {...register(`metals.${index}.images`, {
+                        onChange: (e) => {
+                          const filesArray = Array.from(e.target.files);
+                          setValue(`metals.${index}.images`, filesArray);
+                        },
+                      })}
+                      className="w-full p-[15px]"
+                    />
+                    <label>Images for this metal*</label>
+                  </div>
+
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeMetal(index)}
+                      className="mt-3 p-2 bg-red-500 text-white rounded"
+                    >
+                      Remove Metal
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  appendMetal({
+                    metal: "",
+                    quantity: 0,
+                    material: "",
+                    images: [],
+                  })
+                }
+                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              >
+                Add Another Metal
+              </button>
             </div>
             <button
               type="submit"
