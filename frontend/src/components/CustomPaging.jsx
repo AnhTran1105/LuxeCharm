@@ -2,13 +2,13 @@ import Slider from "react-slick";
 import ArrowNext from "./ArrowNext";
 import ArrowPrev from "./ArrowPrev";
 
-function CustomPaging({ otherImages }) {
+function CustomPaging({ imageUrls }) {
   const settings = {
     customPaging: function (i) {
       return (
         <a>
           <img
-            src={otherImages[i]}
+            src={imageUrls[i]}
             alt={`thumb-${i}`}
             className="aspect-square"
           />
@@ -27,7 +27,7 @@ function CustomPaging({ otherImages }) {
   return (
     <div className="slider-container custom-paging">
       <Slider {...settings}>
-        {otherImages.map((url) => (
+        {imageUrls.map((url) => (
           <div key={url} className="!flex justify-center">
             <img src={url} className="w-[375px] aspect-[3/4]" />
           </div>

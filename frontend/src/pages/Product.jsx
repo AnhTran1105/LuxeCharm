@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { useParams } from "react-router-dom";
 import CustomPaging from "../components/CustomPaging";
+import InfoDisclosure from "../components/InfoDisclosure";
 
 function Product() {
   const [product, setProduct] = useState();
+  const [metal, setMetal] = useState({});
   const { id } = useParams();
 
   useEffect(() => {
@@ -12,20 +14,23 @@ function Product() {
       try {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
+        setMetal(productResponse.metals[0].metal);
       } catch (error) {
         console.error(error);
       }
     })();
   }, [id]);
 
-  console.log(product);
-
   return (
     product && (
       <section className="pt-9 pb-3 px-[50px]">
         <div className="flex">
           <div className="max-w-[55%] w-[55%]">
-            <CustomPaging otherImages={product.imageUrls} />
+            <CustomPaging
+              imageUrls={
+                product.metals.find((item) => item.metal === metal).imageUrls
+              }
+            />
           </div>
           <div className="pl-[50px] max-w-[45%] w-[45%]">
             <div className="mb-[15px]">
@@ -39,20 +44,17 @@ function Product() {
             <div className="my-[15px]">
               <p className="text-[13px] text-foreground75 mb-3">Metal</p>
               <div className="flex gap-2">
-                {product.metals.map((item) =>
-                  item.quantity > 0 ? (
-                    <button
-                      className="py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground tracking-[1px] leading-none text-sm first:bg-color-foreground first:text-white"
-                      key={item.metal}
-                    >
-                      {item.metal}
-                    </button>
-                  ) : (
-                    <button disabled key={item.metal} className="border">
-                      {item.metal}
-                    </button>
-                  )
-                )}
+                {product.metals.map((item) => (
+                  <button
+                    className={`py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground transition-[border] duration-100 tracking-[1px] leading-none text-sm ${
+                      item.metal === metal && "bg-color-foreground text-white"
+                    }`}
+                    key={item.metal}
+                    onClick={() => setMetal(item.metal)}
+                  >
+                    {item.metal}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="my-[15px]">
@@ -130,9 +132,32 @@ function Product() {
                 Add to cart
               </button>
             </div>
-            <p className="my-[25px] text-xs text-foreground75">
-              {product.description}
-            </p>
+            <div className="border-b border-color-foreground/8">
+              <p className="my-[25px] text-xs text-foreground75">
+                {product.description}
+              </p>
+            </div>
+            <InfoDisclosure
+              title="Materials"
+              content={product.metals.map((item) => ({
+                key: item.metal,
+                value: item.material,
+              }))}
+            />
+            <InfoDisclosure
+              title="Dimensions"
+              content={product.dimensions.map((item) => ({
+                key: item.key,
+                value: item.value,
+              }))}
+            />
+            <InfoDisclosure
+              title="Care Instructions"
+              content={product.instructions.map((item) => ({
+                key: item.key,
+                value: item.value,
+              }))}
+            />
           </div>
         </div>
       </section>

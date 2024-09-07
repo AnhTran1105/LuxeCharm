@@ -34,12 +34,12 @@ function ProductList() {
               <img
                 loading="lazy"
                 alt={product.name}
-                src={product.imageUrls[0]}
+                src={product.metals[0].imageUrls[0]}
                 className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
               />
               <img
                 alt={product.name}
-                src={product.imageUrls[1]}
+                src={product.metals[0].imageUrls[1]}
                 loading="lazy"
                 className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
               ></img>
