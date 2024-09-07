@@ -6,6 +6,7 @@ import authRouter from "./routes/auth.route.js";
 import productRouter from "./routes/product.route.js";
 import adminRouter from "./routes/admin.route.js";
 import cartRouter from "./routes/cart.route.js";
+import reviewRouter from "./routes/review.route.js";
 import cors from "cors";
 import cloudinary from "cloudinary";
 import { createAdminAccount } from "./controllers/admin.controller.js";
@@ -54,6 +55,7 @@ app.use("/api/auth", authRouter);
 app.use("/api", productRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api", reviewRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

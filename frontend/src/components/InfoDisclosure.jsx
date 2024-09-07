@@ -5,7 +5,6 @@ import {
 } from "@headlessui/react";
 
 function InfoDisclosure({ title, content }) {
-  console.log(content);
   return (
     <div className="border-b border-color-foreground/8">
       <Disclosure as="div" className="w-full text-foreground75">

@@ -102,10 +102,16 @@ const productSchema = new mongoose.Schema(
     dimensions: [dimensionSchema],
     instructions: [instructionSchema],
     rating: {
-      type: Number,
-      min: 0,
-      max: 5,
-      default: 0,
+      avgRating: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0,
+      },
+      count: {
+        type: Number,
+        default: 0,
+      },
     },
   },
   { timestamps: true }
