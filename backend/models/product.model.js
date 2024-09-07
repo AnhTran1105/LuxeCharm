@@ -50,6 +50,11 @@ const metalSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  material: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 });
 
 const productSchema = new mongoose.Schema(
@@ -94,16 +99,6 @@ const productSchema = new mongoose.Schema(
         message: "At least one metal must be specified",
       },
     },
-    materials: {
-      type: Map,
-      of: String,
-      validate: {
-        validator: function (materials) {
-          return this.metals.length === materials.size;
-        },
-        message: "Number of materials must match number of metals",
-      },
-    },
     dimensions: [dimensionSchema],
     instructions: [instructionSchema],
     rating: {
@@ -115,24 +110,6 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-productSchema.pre("save", function (next) {
-  const metalTypes = this.metals.map((metal) => metal.metal);
-  const materialKeys = Array.from(this.materials.keys());
-
-  const missingMaterials = metalTypes.filter(
-    (type) => !materialKeys.includes(type)
-  );
-  const extraMaterials = materialKeys.filter(
-    (key) => !metalTypes.includes(key)
-  );
-
-  if (missingMaterials.length > 0 || extraMaterials.length > 0) {
-    next(new Error("Materials must exactly match the metal types"));
-  } else {
-    next();
-  }
-});
 
 const Product = mongoose.model("Product", productSchema);
 

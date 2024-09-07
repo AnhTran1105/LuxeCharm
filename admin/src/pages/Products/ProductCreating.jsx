@@ -18,7 +18,6 @@ const schema = yup
         metal: yup.string().required(),
         quantity: yup.number().positive().required(),
         material: yup.string().required(),
-        images: yup.array().of(yup.mixed()).required(),
       })
     ),
   })
@@ -31,7 +30,6 @@ function ProductCreating() {
   const {
     register,
     handleSubmit,
-    setValue,
     control,
     formState: { errors },
     watch,
@@ -91,12 +89,14 @@ function ProductCreating() {
     data.append("instructions", JSON.stringify(formData.instructions));
 
     formData.metals.forEach((metal, index) => {
-      data.append(`metals[${index}][metal]`, metal.metal);
-      data.append(`metals[${index}][quantity]`, metal.quantity);
-      data.append(`metals[${index}][material]`, metal.material);
-      metal.images.forEach((image) => {
-        data.append(`metals[${index}][images]`, image);
-      });
+      data.append(`metals.${index}.metal`, metal.metal);
+      data.append(`metals.${index}.quantity`, metal.quantity);
+      data.append(`metals.${index}.material`, metal.material);
+      if (metal.images) {
+        for (let i = 0; i < metal.images.length; i++) {
+          data.append(`metals.${index}.images`, metal.images[i]);
+        }
+      }
     });
 
     (async () => {
@@ -428,12 +428,7 @@ function ProductCreating() {
                     <input
                       type="file"
                       multiple
-                      {...register(`metals.${index}.images`, {
-                        onChange: (e) => {
-                          const filesArray = Array.from(e.target.files);
-                          setValue(`metals.${index}.images`, filesArray);
-                        },
-                      })}
+                      {...register(`metals.${index}.images`)}
                       className="w-full p-[15px]"
                     />
                     <label>Images for this metal*</label>

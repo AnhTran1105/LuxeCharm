@@ -19,10 +19,15 @@ router.get(
 );
 router.get("/products", getAllProducts);
 
+const metalFields = Array.from({ length: 10 }, (_, index) => ({
+  name: `metals.${index}.images`,
+  maxCount: 5,
+}));
+
 router.post(
   "/products",
   verifyAdmin,
-  upload.fields([{ name: "imageUrls", maxCount: 5 }]),
+  upload.fields(metalFields),
   createProduct
 );
 

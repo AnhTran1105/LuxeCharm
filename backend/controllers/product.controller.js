@@ -12,25 +12,53 @@ export const getAllProducts = async (req, res, next) => {
 };
 
 export const createProduct = async (req, res, next) => {
-  console.log(req.body);
   try {
-    const imageUrls = await Promise.all(
-      req.files.imageUrls.map(async (file) => {
-        const result = await cloudinary.v2.uploader.upload(file.path, {
-          folder: "products/images",
-        });
-        return result.secure_url;
-      })
-    );
+    const metals = [];
+
+    for (const key in req.body) {
+      const match = key.match(/metals\.(\d+)\.(\w+)/);
+      if (match) {
+        const index = match[1];
+        const field = match[2];
+
+        if (!metals[index]) {
+          metals[index] = {
+            metal: "",
+            quantity: 0,
+            material: "",
+          };
+        }
+
+        metals[index][field] = req.body[key];
+      }
+    }
+
+    const dimensions = JSON.parse(req.body.dimensions);
+    const instructions = JSON.parse(req.body.instructions);
+
+    for (let i = 0; i < metals.length; i++) {
+      const metal = metals[i];
+      if (req.files[`metals.${i}.images`]) {
+        const imageUrls = await Promise.all(
+          req.files[`metals.${i}.images`].map(async (file) => {
+            const result = await cloudinary.v2.uploader.upload(file.path, {
+              folder: "products/images",
+            });
+            return result.secure_url;
+          })
+        );
+        metal.imageUrls = imageUrls;
+      }
+    }
 
     const newProduct = new Product({
       name: req.body.name,
       category: req.body.category,
       description: req.body.description,
       price: req.body.price,
-      metals: JSON.parse(req.body.metals),
-      dimensions: JSON.parse(req.body.dimensions),
-      imageUrls,
+      metals: metals,
+      dimensions: dimensions,
+      instructions: instructions,
     });
 
     await newProduct.save();
