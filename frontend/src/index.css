@@ -282,6 +282,46 @@ input::placeholder {
   color: transparent;
 }
 
+.field textarea:focus,
+.field textarea:not(:placeholder-shown),
+.field textarea:-webkit-autofill {
+  box-shadow: 0 0 0 2px var(--color-foreground);
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.field textarea:not(:focus) {
+  box-shadow: 0 0 0 2px rgba(18, 18, 18, 0);
+}
+
+.field textarea:focus ~ label,
+.field textarea:not(:placeholder-shown) ~ label,
+.field textarea:-webkit-autofill ~ label {
+  font-size: 10px;
+  letter-spacing: 0.64px;
+  top: 4px;
+}
+
+textarea::-webkit-textarea-placeholder {
+  color: transparent;
+}
+
+textarea:-ms-textarea-placeholder {
+  color: transparent;
+}
+
+textarea::-ms-textarea-placeholder {
+  color: transparent;
+}
+
+textarea::-moz-placeholder {
+  color: transparent;
+}
+
+textarea::placeholder {
+  color: transparent;
+}
+
 .quantity {
   color: rgba(var(--color-foreground));
   position: relative;

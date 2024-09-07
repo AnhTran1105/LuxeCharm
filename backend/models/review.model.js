@@ -2,20 +2,10 @@ import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema(
   {
-    user: {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,13 +16,10 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    title: {
-      type: String,
-      required: true,
-    },
     content: {
       type: String,
       required: true,
+      trim: true,
     },
     likes: {
       type: Number,

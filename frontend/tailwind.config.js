@@ -4,6 +4,7 @@ export default {
   theme: {
     colors: {
       "color-foreground": "rgb(18,18,18)",
+      primary: "#a16854",
       hover: "#a16854",
       "badge-background": "rgb(236,218,218)",
       white: "#fff",

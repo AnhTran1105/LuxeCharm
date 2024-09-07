@@ -7,6 +7,7 @@ export const getReviewsByProductId = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
   const productId = req.params.productId;
+  console.log(productId);
 
   try {
     const reviews = await Review.findById(productId).sort("likes");
@@ -17,16 +18,17 @@ export const getReviewsByProductId = async (req, res, next) => {
 };
 
 export const postReview = async (req, res, next) => {
-  console.log(req.body);
   try {
-    const { user, rating, content, title } = req.body;
+    const { rating, content } = req.body;
+    const userId = req.user.id;
+
     const { productId } = req.params;
+
     const newReview = new Review({
-      user,
+      userId,
       rating,
       productId,
       content,
-      title,
     });
     await newReview.save();
     res.status(200).json({ message: "Review posted successfully!" });

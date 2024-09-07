@@ -31,7 +31,11 @@ function Reviews({ productId }) {
                 <div></div>
               </div>
               <Button onClick={() => setOpened(true)} title="Post A Review" />
-              <ReviewModal isOpened={isOpened} setOpened={setOpened} />
+              <ReviewModal
+                isOpened={isOpened}
+                setOpened={setOpened}
+                productId={productId}
+              />
             </div>
           </div>
         </div>
