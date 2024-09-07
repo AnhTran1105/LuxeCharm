@@ -9,6 +9,7 @@ import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
+import Button from "./Button";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -132,9 +133,7 @@ function Cart() {
               </div>
               <div>${totalPrice}.00</div>
             </div>
-            <button className="w-full border-f border border-solid p-2 hover:bg-hover hover:text-white">
-              Check out
-            </button>
+            <Button title="Check out" className="h-auto py-2" />
           </div>
         </DialogPanel>
       </Dialog>

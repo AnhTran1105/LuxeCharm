@@ -3,6 +3,7 @@ import axios from "../utils/axios";
 import { useParams } from "react-router-dom";
 import CustomPaging from "../components/CustomPaging";
 import InfoDisclosure from "../components/InfoDisclosure";
+import Button from "../components/Button";
 
 function Product() {
   const [product, setProduct] = useState();
@@ -128,9 +129,7 @@ function Product() {
               </div>
             </div>
             <div className="my-[15px] max-w-[440px]">
-              <button className="text-center w-full border border-solid px-[30px] h-[45px] text-[15px]">
-                Add to cart
-              </button>
+              <Button title="Add to cart" />
             </div>
             <div className="border-b border-color-foreground/8">
               <p className="my-[25px] text-xs text-foreground75">

@@ -155,7 +155,7 @@ function Footer() {
         <div className="px-[50px] mx-auto flex justify-center">
           <div className="text-center mt-[15px] flex items-center">
             <small className="text-[11px] text-color-foreground/75">
-              © 2024,{" "}
+              © {new Date().getFullYear()},{" "}
               <a
                 className="hover:text-black hover:underline hover:underline-offset-3px"
                 href="/"

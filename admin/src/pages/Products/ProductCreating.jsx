@@ -383,7 +383,7 @@ function ProductCreating() {
                 Metals, Materials, and Images:
               </p>
               {metalFields.map((field, index) => (
-                <div key={field.id} className="mb-5 p-4 border rounded">
+                <div key={field.id} className="mb-5 p-4 border rounded-xl">
                   <div className="field">
                     <Controller
                       name={`metals.${index}.metal`}
@@ -402,7 +402,7 @@ function ProductCreating() {
                         </select>
                       )}
                     />
-                    <label>Metal*</label>
+                    {/* <label>Metal*</label> */}
                   </div>
 
                   <div className="field mt-3">
@@ -431,14 +431,13 @@ function ProductCreating() {
                       {...register(`metals.${index}.images`)}
                       className="w-full p-[15px]"
                     />
-                    <label>Images for this metal*</label>
                   </div>
 
                   {index > 0 && (
                     <button
                       type="button"
                       onClick={() => removeMetal(index)}
-                      className="mt-3 p-2 bg-red-500 text-white rounded"
+                      className="mt-3 p-2 bg-red-500 text-black rounded"
                     >
                       Remove Metal
                     </button>

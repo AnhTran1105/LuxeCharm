@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
+import Button from "./Button";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -70,16 +71,12 @@ function ProductList() {
             </div>
           </a>
           {product.metals.length > 1 ? (
-            <button className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]">
-              <span>Choose options</span>
-            </button>
+            <Button title="Choose options" />
           ) : (
-            <button
+            <Button
+              title="Add to cart"
               onClick={() => dispatch(handleAddToCart(product))}
-              className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 text-[15px]"
-            >
-              <span>Add to cart</span>
-            </button>
+            />
           )}
         </li>
       ))}
