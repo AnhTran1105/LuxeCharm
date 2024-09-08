@@ -55,7 +55,19 @@ function Product() {
                   {product.rating.count > 1 ? "Reviews" : "Review"}
                 </div>
               </div>
-              <div className="my-[15px] text-lg">${product.price}.00</div>
+              {product.salePrice ? (
+                <div className="my-[15px] text-lg flex items-center">
+                  <span className="text-foreground75 line-through mr-4">
+                    ${product.price}.00
+                  </span>
+                  <span className="mr-2">${product.salePrice}.00</span>
+                  <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
+                    Sale
+                  </span>
+                </div>
+              ) : (
+                <div className="my-[15px] text-lg">${product.price}.00</div>
+              )}
               <div className="my-[15px]">
                 <p className="text-[13px] text-foreground75 mb-3">Metal</p>
                 <div className="flex gap-2">

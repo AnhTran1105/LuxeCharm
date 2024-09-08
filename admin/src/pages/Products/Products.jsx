@@ -173,7 +173,7 @@ function Products() {
                   <p key={item.key}>{item.key + ": " + item.value}</p>
                 ))}
               </td>
-              <td>{product.rating}</td>
+              <td>{Math.round(product.rating.avgRating * 10) / 10}</td>
               {checkingVisible && (
                 <td className="relative">
                   <div

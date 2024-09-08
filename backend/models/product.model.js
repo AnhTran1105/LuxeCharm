@@ -90,6 +90,16 @@ const productSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    salePrice: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: function (value) {
+          return value == null || value < this.price;
+        },
+        message: "Sale price must be lower than the original price",
+      },
+    },
     metals: {
       type: [metalSchema],
       validate: {

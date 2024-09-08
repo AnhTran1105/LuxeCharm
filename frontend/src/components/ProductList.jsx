@@ -45,15 +45,16 @@ function ProductList() {
                 className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
               ></img>
             </div>
-            {/* {isOff && (
-                <div className="absolute top-0 left-0">
-                  <div className="p-[10px]">
-                    <div className="bg-badge-background pt-[5px] pb-[6px] px-[12px] flex justify-center items-center border border-badge-background rounded-full text-xs leading-[1]">
-                      <span className="mb-[-3px]">27% Off</span>
-                    </div>
-                  </div>
-                </div>
-              )} */}
+            {product.salePrice && (
+              <div className="absolute top-3 left-3">
+                <span className="bg-primary w-fit px-3 py-2 rounded-full text-xs text-white">
+                  {Math.ceil(
+                    ((product.price - product.salePrice) / product.price) * 100
+                  )}
+                  % Off
+                </span>
+              </div>
+            )}
             <div className="py-[10px] pb-[17px] text-center text-sm">
               <h3>
                 <a
@@ -64,9 +65,16 @@ function ProductList() {
                 </a>
               </h3>
               <div>
-                <div className="mt-[7px]">
-                  <span>${product.price}.00</span>
-                </div>
+                {product.salePrice ? (
+                  <div className="mt-2">
+                    <span className="text-foreground75 line-through mr-4">
+                      ${product.price}.00
+                    </span>
+                    <span className="mr-2">${product.salePrice}.00</span>
+                  </div>
+                ) : (
+                  <div className="mt-2">${product.price}.00</div>
+                )}
               </div>
             </div>
           </a>

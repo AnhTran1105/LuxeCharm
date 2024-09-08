@@ -56,6 +56,7 @@ export const createProduct = async (req, res, next) => {
       category: req.body.category,
       description: req.body.description,
       price: req.body.price,
+      salePrice: req.body.salePrice,
       metals: metals,
       dimensions: dimensions,
       instructions: instructions,
