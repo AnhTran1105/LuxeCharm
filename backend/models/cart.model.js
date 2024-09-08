@@ -16,6 +16,16 @@ const cartItemSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
+      salePrice: {
+        type: Number,
+        default: null,
+        validate: {
+          validator: function (value) {
+            return value == null || value < this.price;
+          },
+          message: "Sale price must be lower than the original price",
+        },
+      },
       imageUrl: {
         type: String,
         required: true,

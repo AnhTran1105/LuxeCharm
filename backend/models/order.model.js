@@ -42,18 +42,20 @@ const cartItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
-    user: {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
-      address: { type: String, required: true },
-      phoneNumber: { type: String, required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     cartItems: [cartItemSchema],
+    notes: {
+      type: String,
+      trim: true,
+    },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    address: { type: String, required: true, trim: true },
+    phoneNumber: { type: String, required: true },
   },
   {
     timestamps: true,

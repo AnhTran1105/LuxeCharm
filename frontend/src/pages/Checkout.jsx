@@ -4,9 +4,13 @@ import * as yup from "yup";
 import axios from "../utils/axios";
 import ComboBox from "../components/ComboBox";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
+import { fetchCart } from "../redux/cart/cartSlice";
+import QuantityWidget from "../components/QuantityWidget";
+import { removeFromCart } from "../redux/cart/cartSlice";
+import Button from "../components/Button";
 
 const schema = yup
   .object({
@@ -15,13 +19,15 @@ const schema = yup
     lastName: yup.string().required(),
     address: yup.string().required(),
     phoneNumber: yup.number().required(),
+    notes: yup.string(),
   })
   .required();
 
 function Checkout() {
   const [country, setCountry] = useState();
   const dispatch = useDispatch();
-  const [userInfo, setUserInfo] = useState();
+
+  const { items, totalPrice } = useSelector((state) => state.cart);
 
   const {
     register,
@@ -40,7 +46,6 @@ function Checkout() {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setUserInfo(response);
         setValue("email", response.email);
         setValue("firstName", response.firstName);
         setValue("lastName", response.lastName);
@@ -51,14 +56,19 @@ function Checkout() {
     })();
   }, [setValue]);
 
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
   const onSubmit = (formData) => {
     dispatch(startLoading());
     const data = new FormData();
 
-    data.append("name", formData.name.trim());
-    data.append("country", country);
-    data.append("description", formData.description.trim());
-    data.append("price", formData.price);
+    data.append("firstName", formData.firstName);
+    data.append("lastName", formData.lastName);
+    data.append("address", formData.address);
+    data.append("phoneNumber", formData.phoneNumber);
+    data.append("notes", formData.notes);
 
     (async () => {
       try {
@@ -78,9 +88,9 @@ function Checkout() {
 
   return (
     <div className="flex justify-center items-center py-10 px-[50px]">
-      <div className="mx-auto w-4/5 grid grid-cols-2 gap-6">
-        <div>
-          <h1 className="text-[40px]">Delivery Information</h1>
+      <div className="mx-auto w-4/5 grid grid-cols-2 gap-12">
+        <div className="text-center">
+          <h1 className="text-[40px]">Billing Details</h1>
           <div>
             <form
               onSubmit={handleSubmit(onSubmit)}
@@ -99,7 +109,7 @@ function Checkout() {
                   {...register("email")}
                   className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
                 />
-                <label htmlFor="email">Email*</label>
+                <label htmlFor="email">Your account</label>
               </div>
               {errors.email && (
                 <p className="text-left px-4 pt-2 flex items-center">
@@ -277,17 +287,48 @@ function Checkout() {
                   </span>
                 </p>
               )}
-              <button
-                type="submit"
-                className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
-              >
-                <span>Create product</span>
-              </button>
+              <div className="field">
+                <textarea
+                  rows="4"
+                  id="notes"
+                  autoComplete="notes"
+                  required
+                  autoCapitalize="off"
+                  placeholder="notes"
+                  autoCorrect="off"
+                  {...register("notes")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                />
+                <label htmlFor="notes">Order notes</label>
+              </div>
+              {errors.notes && (
+                <p className="text-left px-4 pt-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    enableBackground="new 0 0 24 24"
+                    className="fill-red mr-2"
+                    width={20}
+                    height={20}
+                    viewBox="0 0 24 24"
+                    id="exclamation-mark"
+                  >
+                    <path
+                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                    ></path>
+                  </svg>
+
+                  <span className="first-letter:capitalize">
+                    {errors.notes?.message}
+                  </span>
+                </p>
+              )}
+              <Button title="Proceed to payment" className="mt-6" />
             </form>
           </div>
         </div>
-        {/* <div>
-          <ul role="list" className="max-h-[calc(100%-165px)] overflow-y-auto">
+        <div className="text-center">
+          <ul role="list" className="p-4 border border-border">
             {[...items].reverse().map((item) => (
               <li
                 key={item.product._id}
@@ -320,14 +361,21 @@ function Checkout() {
                       </switch>
                     </svg>
                   </button>
-                  <a
-                    href={`/products/${item.product._id}`}
-                    alt={item.product.name}
-                    className="mr-[30px] font-SofiaBold text-sm leading-5"
-                    tabIndex={0}
-                  >
-                    {item.product.name}
-                  </a>
+                  <div>
+                    <a
+                      href={`/products/${item.product._id}`}
+                      alt={item.product.name}
+                      className="mr-2 font-SofiaBold text-sm leading-5"
+                      tabIndex={0}
+                    >
+                      {item.product.name}
+                    </a>
+                    {item.salePrice && (
+                      <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
+                        Sale
+                      </span>
+                    )}
+                  </div>
                   <div className="leading-3 text-xs">{item.metal}</div>
                   <div className="flex justify-between w-full items-center">
                     <div className="mt-[10px] text-left">
@@ -341,7 +389,7 @@ function Checkout() {
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </div>
     </div>
   );

@@ -100,14 +100,21 @@ function Cart() {
                         </switch>
                       </svg>
                     </button>
-                    <a
-                      href={`/products/${item.product._id}`}
-                      alt={item.product.name}
-                      className="mr-[30px] font-SofiaBold text-sm leading-5"
-                      tabIndex={0}
-                    >
-                      {item.product.name}
-                    </a>
+                    <div>
+                      <a
+                        href={`/products/${item.product._id}`}
+                        alt={item.product.name}
+                        className="mr-2 font-SofiaBold text-sm leading-5"
+                        tabIndex={0}
+                      >
+                        {item.product.name}
+                      </a>
+                      {item.salePrice && (
+                        <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
+                          Sale
+                        </span>
+                      )}
+                    </div>
                     <div className="leading-3 text-xs">{item.metal}</div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">
