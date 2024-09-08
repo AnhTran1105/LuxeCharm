@@ -40,13 +40,21 @@ reviewSchema.post("save", async function () {
   try {
     const reviews = await Review.find({ productId: this.productId });
 
-    const averageRating =
-      reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+    const count = reviews.length;
 
-    await Product.findByIdAndUpdate(this.productId, {
-      ...this.rating,
-      avgRating: averageRating,
-    });
+    const averageRating =
+      reviews.reduce((sum, review) => sum + review.rating, 0) / count;
+
+    await Product.findByIdAndUpdate(
+      this.productId,
+      {
+        $set: {
+          "rating.avgRating": averageRating,
+          "rating.count": count,
+        },
+      },
+      { new: true }
+    );
   } catch (error) {
     console.error("Error updating product rating:", error);
   }

@@ -5,6 +5,7 @@ import CustomPaging from "../components/CustomPaging";
 import InfoDisclosure from "../components/InfoDisclosure";
 import Button from "../components/Button";
 import Reviews from "../components/Reviews";
+import { Rating } from "react-simple-star-rating";
 
 function Product() {
   const [product, setProduct] = useState();
@@ -39,9 +40,20 @@ function Product() {
               <div className="mb-[15px]">
                 <h1 className="text-[22px]">{product.name}</h1>
               </div>
-              <div className="my-[15px]">
-                <div></div>
-                <div>0 Reviews</div>
+              <div className="my-[15px] flex items-center gap-3">
+                <Rating
+                  transition={true}
+                  size={20}
+                  initialValue={Math.round(product.rating.avgRating * 10) / 10}
+                  fillColor="#a16854"
+                  SVGclassName={`inline-block`}
+                  readonly={true}
+                  allowFraction={true}
+                />
+                <div className="mt-1">
+                  {product.rating.count}{" "}
+                  {product.rating.count > 1 ? "Reviews" : "Review"}
+                </div>
               </div>
               <div className="my-[15px] text-lg">${product.price}.00</div>
               <div className="my-[15px]">
@@ -162,7 +174,7 @@ function Product() {
             </div>
           </div>
         </section>
-        <Reviews productId={product._id} />
+        <Reviews productId={product._id} avgRating={product.rating.avgRating} />
       </>
     )
   );

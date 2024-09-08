@@ -20,6 +20,8 @@ const schema = yup
     content: yup.string().required(),
   })
   .required();
+const tooltipArray = ["Terrible", "Bad", "Average", "Great", "Awesome"];
+
 function ReviewModal({ isOpened, setOpened, productId }) {
   const [rating, setRating] = useState(0);
   const handleRating = (rate) => {
@@ -97,6 +99,10 @@ function ReviewModal({ isOpened, setOpened, productId }) {
               initialValue={rating}
               fillColor="#a16854"
               SVGclassName={`inline-block`}
+              showTooltip
+              tooltipArray={tooltipArray}
+              tooltipDefaultText=""
+              tooltipClassName="!bg-white !text-color-foreground !p-0 mt-1"
             />
           </div>
           <div className="field">

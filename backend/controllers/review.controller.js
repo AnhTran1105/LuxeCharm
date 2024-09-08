@@ -7,10 +7,13 @@ export const getReviewsByProductId = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
   const productId = req.params.productId;
-  console.log(productId);
 
   try {
-    const reviews = await Review.findById(productId).sort("likes");
+    const reviews = await Review.find({ productId }).sort("likes").populate({
+      path: "userId",
+      select: "firstName lastName",
+    });
+
     res.json(reviews);
   } catch (error) {
     next(error);
