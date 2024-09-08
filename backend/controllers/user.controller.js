@@ -23,3 +23,22 @@ export const getUserById = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserInfo = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const id = req.user.id;
+  try {
+    const user = await User.findById(id);
+    res.json({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      address: user.address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

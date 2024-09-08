@@ -133,7 +133,11 @@ function Cart() {
               </div>
               <div>${totalPrice}.00</div>
             </div>
-            <Button title="Check out" className="h-auto py-2" />
+            <Button
+              title="Check out"
+              className="h-auto py-2"
+              onClick={() => (window.location.href = "/checkout")}
+            />
           </div>
         </DialogPanel>
       </Dialog>

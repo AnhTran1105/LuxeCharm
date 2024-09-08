@@ -18,6 +18,7 @@ import LoaderPortal from "./components/LoaderPortal.jsx";
 import { HashLoader } from "react-spinners";
 import Cart from "./components/Cart.jsx";
 import Account from "./pages/Account.jsx";
+import Checkout from "./pages/Checkout.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -74,6 +75,7 @@ export default function App() {
         <Route path="/account/register" element={<Register />} />
         <Route element={<PrivateRoute />}>
           <Route path="/account" element={<Account />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
       </Routes>
       <Footer />
