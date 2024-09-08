@@ -1,12 +1,13 @@
 import Stripe from "stripe";
+import Cart from "../models/cart.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const placeOrder = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const userId = req.user.id;
 
-    const cart = await Cart.findOne({ userId }).populate("items.product");
+    const cart = await Cart.findOne({ userId });
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
@@ -28,8 +29,8 @@ export const placeOrder = async (req, res, next) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL}/cart`,
+      success_url: `${process.env.CLIENT_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/checkout`,
     });
 
     res.json({ sessionId: session.id });
