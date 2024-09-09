@@ -1,29 +1,15 @@
-import { useStripe } from "@stripe/react-stripe-js";
 import axios from "../utils/axios";
 
-const CheckoutButton = () => {
-  const stripe = useStripe();
-
+const CheckoutButton = ({ formData }) => {
   const handleCheckout = async () => {
     try {
-      const response = await axios.post(
-        "/order",
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        }
-      );
-
-      const { sessionId } = response.data;
-
-      const result = await stripe.redirectToCheckout({
-        sessionId: sessionId,
+      const response = await axios.post("/order", formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       });
-
-      if (result.error) {
-        console.error(result.error.message);
+      if (response.url) {
+        window.location.href = response.url;
       }
     } catch (error) {
       console.error("Error during checkout:", error);

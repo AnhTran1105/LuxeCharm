@@ -2,17 +2,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../utils/axios";
-import ComboBox from "../components/ComboBox";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { fetchCart } from "../redux/cart/cartSlice";
 import QuantityWidget from "../components/QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
-import CheckoutButton from "../components/CheckoutButton";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import Button from "../components/Button";
+
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = yup
   .object({
@@ -20,25 +20,20 @@ const schema = yup
     firstName: yup.string().required(),
     lastName: yup.string().required(),
     address: yup.string().required(),
-    phoneNumber: yup.number().required(),
+    phoneNumber: yup.string().matches(phoneRegExp, "Phone number is not valid"),
     notes: yup.string(),
   })
   .required();
 
-// const stripePromise = loadStripe(
-//   "pk_test_51Pwgo805rrXwoRm1F8wWEzZYZsYHAgrK5jAwKWpAo9ggfqbn52Yis0QAlcgAWghvD9J8NqaHuXs7Bl5ypKmonSjB003g1LqDXC"
-// );
-
 function Checkout() {
-  const [country, setCountry] = useState();
   const dispatch = useDispatch();
 
   const { items, totalPrice } = useSelector((state) => state.cart);
 
   const {
     register,
-    handleSubmit,
     setValue,
+    handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -69,7 +64,7 @@ function Checkout() {
   const onSubmit = (formData) => {
     dispatch(startLoading());
     const data = new FormData();
-    console.log(data);
+
     data.append("firstName", formData.firstName);
     data.append("lastName", formData.lastName);
     data.append("address", formData.address);
@@ -78,17 +73,19 @@ function Checkout() {
 
     (async () => {
       try {
-        const response = await axios.post("order", data, {
+        const response = await axios.post("/order", data, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        console.log(response);
-        dispatch(stopLoading());
-        dispatch(sendMessage({ message: response.message, type: "success" }));
+        if (response.url) {
+          window.location.href = response.url;
+        }
       } catch (error) {
-        dispatch(stopLoading());
         dispatch(sendMessage({ message: error.message, type: "error" }));
+        console.error("Error during checkout:", error);
+      } finally {
+        dispatch(stopLoading());
       }
     })();
   };
@@ -210,20 +207,6 @@ function Checkout() {
                     </span>
                   </p>
                 )}
-              </div>
-              <div className="mt-5">
-                <ComboBox
-                  defaultOption="Choose country"
-                  options={[
-                    "Viet Nam",
-                    "United States",
-                    "United Kingdom",
-                    "Germany",
-                    "France",
-                    "Australia",
-                  ]}
-                  onValueChange={(newValue) => setCountry(newValue)}
-                />
               </div>
               <div className="field">
                 <input
@@ -407,8 +390,8 @@ function Checkout() {
               ))}
             </ul>
             <div className="border-t border-border p-5">
-              <div className="flex justify-between mb-3">
-                <div>
+              <div className="flex font-SofiaBold justify-between mb-3">
+                <div className="">
                   {`Subtotal (${items.reduce((total, item) => {
                     return total + item.quantity;
                   }, 0)} ${items.length > 1 ? "items" : "item"})`}
@@ -416,18 +399,12 @@ function Checkout() {
                 </div>
                 <div>${totalPrice}.00</div>
               </div>
-              <div className="flex justify-between font-SofiaBold mb-3">
-                <div>Total:</div>
-                <div>USD ${totalPrice}.00</div>
-              </div>
-              <Elements stripe={stripePromise}>
-                <CheckoutButton />
-              </Elements>
-              {/* <Button
-                title="Proceed to payment"
+
+              <Button
+                title="Pay with Stripe"
                 className="h-auto py-2"
                 onClick={handleSubmit(onSubmit)}
-              /> */}
+              />
             </div>
           </div>
         </div>
