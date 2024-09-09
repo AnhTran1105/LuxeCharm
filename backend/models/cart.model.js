@@ -68,7 +68,7 @@ const cartSchema = new mongoose.Schema({
   },
 });
 
-cartSchema.pre("save", function (next) {
+cartSchema.pre("save", async function (next) {
   const cart = this;
   let total = 0;
 

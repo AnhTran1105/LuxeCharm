@@ -47,8 +47,8 @@ export const placeOrder = async (req, res, next) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${order._id}`,
-      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`,
+      success_url: `${process.env.CLIENT_URL}/checkout/verify?success=true&orderId=${order._id}`,
+      cancel_url: `${process.env.CLIENT_URL}/checkout/verify?success=false&orderId=${order._id}`,
       shipping_options: [{ shipping_rate: "shr_1Pwyhr05rrXwoRm13RgF8iqz" }],
     });
 
@@ -68,8 +68,18 @@ export const verifyOrder = async (req, res, next) => {
         { userId, status: "pending" },
         { status: "paid" }
       );
-      await Cart.findOneAndUpdate({ userId }, { $set: { items: [] } });
-      res.json({ success: false, message: "Paid" });
+      const cart = await Cart.findOneAndUpdate(
+        { userId },
+        { $set: { items: [] } },
+        { new: true }
+      );
+
+      if (cart) {
+        cart.totalPrice = 0;
+        await cart.save();
+      }
+
+      res.json({ success: true, message: "Paid" });
     } else {
       await Order.findByIdAndDelete(orderId);
       res.json({ success: false, message: "Not paid" });

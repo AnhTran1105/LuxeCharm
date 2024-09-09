@@ -21,11 +21,11 @@ function VerifyOrder() {
           },
         }
       );
+
       if (response.success) {
-        console.log("Verified order");
-        // navigate("/account");
+        window.location.href = "/checkout/success";
       } else {
-        navigate("/");
+        window.location.href = "/checkout/error";
       }
     } catch (error) {
       console.error(error);

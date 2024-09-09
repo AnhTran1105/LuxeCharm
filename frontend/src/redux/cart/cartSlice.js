@@ -97,7 +97,7 @@ export const handleAddToCart = createAsyncThunk(
               _id: item._id,
               name: item.name,
               price: item.price,
-              imageUrl: item.imageUrls[0],
+              imageUrl: item.metals[0].imageUrls[0],
             },
             metal: item.metals[0].metal,
           },

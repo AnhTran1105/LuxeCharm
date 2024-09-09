@@ -20,6 +20,7 @@ import Cart from "./components/Cart.jsx";
 import Account from "./pages/Account.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import VerifyOrder from "./pages/VerifyOrder.jsx";
+import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -77,7 +78,9 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/account" element={<Account />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/verify" element={<VerifyOrder />} />
+          <Route path="/checkout/verify" element={<VerifyOrder />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
+          <Route path="/checkout/error" element={<CheckoutSuccess />} />
         </Route>
       </Routes>
       <Footer />
