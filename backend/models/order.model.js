@@ -56,6 +56,7 @@ const orderSchema = new mongoose.Schema(
     lastName: { type: String, required: true, trim: true },
     address: { type: String, required: true, trim: true },
     phoneNumber: { type: String, required: true },
+    status: { type: String, default: "pending" },
   },
   {
     timestamps: true,

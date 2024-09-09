@@ -47,12 +47,33 @@ export const placeOrder = async (req, res, next) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/checkout/success`,
-      cancel_url: `${process.env.CLIENT_URL}/checkout`,
+      success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${order._id}`,
+      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`,
       shipping_options: [{ shipping_rate: "shr_1Pwyhr05rrXwoRm13RgF8iqz" }],
     });
 
     res.json(session);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyOrder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { orderId, success } = req.body;
+
+    if (success) {
+      await Order.findOneAndUpdate(
+        { userId, status: "pending" },
+        { status: "paid" }
+      );
+      await Cart.findOneAndUpdate({ userId }, { $set: { items: [] } });
+      res.json({ success: false, message: "Paid" });
+    } else {
+      await Order.findByIdAndDelete(orderId);
+      res.json({ success: false, message: "Not paid" });
+    }
   } catch (error) {
     next(error);
   }
