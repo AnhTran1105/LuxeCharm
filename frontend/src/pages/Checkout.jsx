@@ -390,7 +390,7 @@ function Checkout() {
               ))}
             </ul>
             <div className="border-t border-border p-5">
-              <div className="flex font-SofiaBold justify-between mb-3">
+              <div className="flex justify-between mb-3">
                 <div className="">
                   {`Subtotal (${items.reduce((total, item) => {
                     return total + item.quantity;
@@ -399,7 +399,14 @@ function Checkout() {
                 </div>
                 <div>${totalPrice}.00</div>
               </div>
-
+              <div className="flex justify-between mb-3">
+                <div className="">Shipping fee:</div>
+                <div>$0.00</div>
+              </div>
+              <div className="flex font-SofiaBold justify-between mb-3">
+                <div className="">Total:</div>
+                <div>${totalPrice}.00</div>
+              </div>
               <Button
                 title="Pay with Stripe"
                 className="h-auto py-2"

@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+const counterSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  seq: { type: Number, default: 0 },
+});
+
+const Counter = mongoose.model("Counter", counterSchema);
+
 const cartItemSchema = new mongoose.Schema({
   product: {
     _id: {
@@ -57,11 +64,33 @@ const orderSchema = new mongoose.Schema(
     address: { type: String, required: true, trim: true },
     phoneNumber: { type: String, required: true },
     status: { type: String, default: "pending" },
+    orderNumber: { type: Number, unique: true },
   },
   {
     timestamps: true,
   }
 );
+
+orderSchema.pre("save", async function (next) {
+  const order = this;
+
+  if (order.orderNumber) {
+    return next();
+  }
+
+  try {
+    const counter = await Counter.findOneAndUpdate(
+      { name: "order" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    order.orderNumber = counter.seq;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 const Order = mongoose.model("Order", orderSchema);
 

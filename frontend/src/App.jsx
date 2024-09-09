@@ -21,6 +21,7 @@ import Account from "./pages/Account.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import VerifyOrder from "./pages/VerifyOrder.jsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
+import CheckoutError from "./pages/CheckoutError.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -79,8 +80,11 @@ export default function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/verify" element={<VerifyOrder />} />
-          <Route path="/checkout/success" element={<CheckoutSuccess />} />
-          <Route path="/checkout/error" element={<CheckoutSuccess />} />
+          <Route
+            path="/checkout/success/:orderId"
+            element={<CheckoutSuccess />}
+          />
+          <Route path="/checkout/error" element={<CheckoutError />} />
         </Route>
       </Routes>
       <Footer />

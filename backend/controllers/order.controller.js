@@ -49,10 +49,26 @@ export const placeOrder = async (req, res, next) => {
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/checkout/verify?success=true&orderId=${order._id}`,
       cancel_url: `${process.env.CLIENT_URL}/checkout/verify?success=false&orderId=${order._id}`,
-      shipping_options: [{ shipping_rate: "shr_1Pwyhr05rrXwoRm13RgF8iqz" }],
+      shipping_options: [{ shipping_rate: "shr_1Px3sN05rrXwoRm1sw910yXz" }],
     });
 
     res.json(session);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrderById = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json(order);
   } catch (error) {
     next(error);
   }

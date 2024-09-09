@@ -1,14 +1,12 @@
 import { useSearchParams } from "react-router-dom";
 import axios from "../utils/axios";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function VerifyOrder() {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const success = searchParams.get("success");
   const orderId = searchParams.get("orderId");
-
-  const navigate = useNavigate();
 
   const verifyOrder = async () => {
     try {
@@ -23,7 +21,7 @@ function VerifyOrder() {
       );
 
       if (response.success) {
-        window.location.href = "/checkout/success";
+        window.location.href = `/checkout/success/${orderId}`;
       } else {
         window.location.href = "/checkout/error";
       }
