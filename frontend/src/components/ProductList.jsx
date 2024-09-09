@@ -3,6 +3,7 @@ import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import Button from "./Button";
+import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -79,7 +80,10 @@ function ProductList() {
             </div>
           </a>
           {product.metals.length > 1 ? (
-            <Button title="Choose options" />
+            <Button
+              title="Choose options"
+              onClick={() => dispatch(openOptionsModal(product._id))}
+            />
           ) : (
             <Button
               title="Add to cart"

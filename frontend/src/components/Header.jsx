@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
 import { useDispatch, useSelector } from "react-redux";
 import { showCart } from "../redux/cartModal/cartModalSlice";
+import { fetchCart } from "../redux/cart/cartSlice";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -13,6 +14,9 @@ function Header() {
   const dispatch = useDispatch();
 
   const isLoggedIn = !!useSelector((state) => state.auth.token);
+  const { items } = useSelector((item) => item.cart);
+
+  console.log(items);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +44,10 @@ function Header() {
       setLastScrollY(window.scrollY);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -168,7 +176,7 @@ function Header() {
           </a>
           <button
             onClick={() => dispatch(showCart())}
-            className="h-[44px] w-[44px] flex items-center group cursor-pointer"
+            className="h-[44px] w-[44px] flex items-center group cursor-pointer relative"
           >
             <svg
               className="group-hover:scale-[1.07]"
@@ -247,6 +255,15 @@ function Header() {
                 ></line>
               </g>
             </svg>
+            {items.length > 0 && (
+              <div className="absolute top-5 right-4 bg-[#f7f4f4] rounded-full text-color-foreground w-4 h-4 flex justify-center items-center text-[10px]">
+                <span>
+                  {items.reduce((total, item) => {
+                    return total + item.quantity;
+                  }, 0)}
+                </span>
+              </div>
+            )}
           </button>
         </div>
         <nav className="col-span-2 col-start-2 mt-[10.5px]">

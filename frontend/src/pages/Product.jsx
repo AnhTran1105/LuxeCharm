@@ -241,7 +241,7 @@ function Product() {
                       ></path>
                     </svg>
                   }
-                  className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1]"
+                  className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:!bg-[#5762c1]"
                 />
               </div>
               <div className="border-b border-color-foreground/8">
