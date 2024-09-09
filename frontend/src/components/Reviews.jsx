@@ -53,11 +53,13 @@ function Reviews({ productId, avgRating }) {
                         </div>
                       </div>
                     </div>
-                    <Button
-                      onClick={() => setOpened(true)}
-                      title="Write a review"
-                      className="ml-10 w-36 rounded-full text-sm h-9"
-                    />
+                    <div>
+                      <Button
+                        onClick={() => setOpened(true)}
+                        title="Write a review"
+                        className="ml-10 w-36 rounded-full text-sm h-9"
+                      />
+                    </div>
                     <ReviewModal
                       isOpened={isOpened}
                       setOpened={setOpened}
@@ -298,11 +300,13 @@ function Reviews({ productId, avgRating }) {
                       We’re looking for feedback!
                     </div>
                     <div className="mt-4">Let us know what you think</div>
-                    <Button
-                      title="Be the first to write a review!"
-                      onClick={() => setOpened(true)}
-                      className="w-72 px-4 rounded-full text-sm h-9 mt-4"
-                    />
+                    <div>
+                      <Button
+                        title="Be the first to write a review!"
+                        onClick={() => setOpened(true)}
+                        className="w-64 px-4 rounded-full text-sm h-9 mt-4"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

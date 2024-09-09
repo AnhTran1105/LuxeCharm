@@ -100,6 +100,7 @@ export const handleAddToCart = createAsyncThunk(
               imageUrl: item.metals[0].imageUrls[0],
             },
             metal: item.metals[0].metal,
+            quantity: item.quantity,
           },
           {
             headers: {
@@ -123,7 +124,7 @@ export const handleAddToCart = createAsyncThunk(
           if (index === existingItemIndex) {
             return {
               ...cartItem,
-              quantity: cartItem.quantity + 1,
+              quantity: cartItem.quantity + item.quantity,
             };
           }
           return cartItem;
@@ -139,7 +140,7 @@ export const handleAddToCart = createAsyncThunk(
               imageUrl: item.imageUrls[0],
             },
             metal: item.metals[0].metal,
-            quantity: 1,
+            quantity: item.quantity,
           },
         ];
       }

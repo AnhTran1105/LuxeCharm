@@ -14,7 +14,7 @@ export const getCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res, next) => {
-  const { product, metal } = req.body;
+  const { product, metal, quantity } = req.body;
 
   try {
     const userId = req.user.id;
@@ -26,11 +26,11 @@ export const addToCart = async (req, res, next) => {
     );
 
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += 1;
+      cart.items[itemIndex].quantity += quantity;
     } else {
       cart.items.push({
         product,
-        quantity: 1,
+        quantity,
         metal,
       });
     }
