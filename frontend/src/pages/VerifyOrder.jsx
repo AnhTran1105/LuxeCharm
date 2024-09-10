@@ -11,7 +11,7 @@ function VerifyOrder() {
   const verifyOrder = async () => {
     try {
       const response = await axios.post(
-        "/order/verify-order",
+        "/orders/verify-order",
         { success, orderId },
         {
           headers: {

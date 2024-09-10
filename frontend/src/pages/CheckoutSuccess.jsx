@@ -10,7 +10,7 @@ function CheckoutSuccess() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get(`/order/${orderId}`, {
+        const response = await axios.get(`/orders/${orderId}`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },

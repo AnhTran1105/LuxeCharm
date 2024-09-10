@@ -57,7 +57,7 @@ app.use("/api", productRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api", reviewRouter);
-app.use("/api/order", orderRouter);
+app.use("/api/orders", orderRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

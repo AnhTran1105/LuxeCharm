@@ -82,8 +82,8 @@ export const verifyOrder = async (req, res, next) => {
 
     if (success) {
       await Order.findOneAndUpdate(
-        { userId, status: "pending" },
-        { status: "paid" }
+        { userId, status: "Pending" },
+        { status: "Paid" }
       );
       const cart = await Cart.findOneAndUpdate(
         { userId },
@@ -101,6 +101,22 @@ export const verifyOrder = async (req, res, next) => {
       await Order.findByIdAndDelete(orderId);
       res.json({ success: false, message: "Not paid" });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrdersByUserId = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const orders = await Order.find({ userId });
+
+    if (!orders) {
+      res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json(orders);
   } catch (error) {
     next(error);
   }

@@ -3,7 +3,7 @@ import axios from "../utils/axios";
 const CheckoutButton = ({ formData }) => {
   const handleCheckout = async () => {
     try {
-      const response = await axios.post("/order", formData, {
+      const response = await axios.post("/orders", formData, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("access_token"),
         },

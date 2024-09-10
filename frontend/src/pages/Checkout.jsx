@@ -74,7 +74,7 @@ function Checkout() {
 
     (async () => {
       try {
-        const response = await axios.post("/order", data, {
+        const response = await axios.post("/orders", data, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
