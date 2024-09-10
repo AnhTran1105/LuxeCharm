@@ -93,13 +93,13 @@ export const handleAddToCart = createAsyncThunk(
         await axios.post(
           "/cart",
           {
-            product: {
-              _id: item._id,
-              name: item.name,
-              price: item.price,
-              imageUrl: item.metals[0].imageUrls[0],
-            },
-            metal: item.metals[0].metal,
+            productId: item._id,
+            name: item.name,
+            price: item.price,
+            salePrice: item.salePrice,
+            imageUrl: item.metals.find((metal) => metal.metal === item.metal)
+              .imageUrls[0],
+            metal: item.metal,
             quantity: item.quantity,
           },
           {
@@ -115,7 +115,7 @@ export const handleAddToCart = createAsyncThunk(
       dispatch(showCart());
     } else {
       const existingItemIndex = cart.items.findIndex(
-        (cartItem) => cartItem.product._id === item._id
+        (cartItem) => cartItem._id === item._id
       );
 
       let updatedItems;
@@ -133,22 +133,23 @@ export const handleAddToCart = createAsyncThunk(
         updatedItems = [
           ...cart.items,
           {
-            product: {
-              _id: item._id,
-              name: item.name,
-              price: item.price,
-              imageUrl: item.imageUrls[0],
-            },
-            metal: item.metals[0].metal,
+            productId: item._id,
+            name: item.name,
+            price: item.price,
+            salePrice: item.salePrice,
+            imageUrl: item.metals.find((metal) => metal.metal === item.metal)
+              .imageUrls[0],
+            metal: item.metal,
             quantity: item.quantity,
           },
         ];
       }
 
-      const totalPrice = updatedItems.reduce(
-        (total, item) => total + item.product.price * item.quantity,
-        0
-      );
+      let totalPrice = 0;
+
+      for (const item of cart.items) {
+        totalPrice += (item.salePrice || item.price) * item.quantity;
+      }
 
       localStorage.setItem(
         "cartItems",
@@ -237,14 +238,15 @@ const cartSlice = createSlice({
         if (!state.isLoggedIn) {
           const { cartItemId, quantity } = action.payload;
           const itemIndex = state.items.findIndex(
-            (item) => item.product._id === cartItemId
+            (item) => item._id === cartItemId
           );
 
           if (itemIndex !== -1) {
             state.items[itemIndex].quantity = quantity;
 
             state.totalPrice = state.items.reduce(
-              (total, item) => total + item.product.price * item.quantity,
+              (total, item) =>
+                total + (item.salePrice || item.price) * item.quantity,
               0
             );
 
@@ -261,10 +263,11 @@ const cartSlice = createSlice({
       .addCase(removeFromCart.fulfilled, (state, action) => {
         if (!state.isLoggedIn) {
           state.items = state.items.filter(
-            (item) => item.product._id !== action.payload
+            (item) => item._id !== action.payload
           );
           state.totalPrice = state.items.reduce(
-            (total, item) => total + item.product.price * item.quantity,
+            (total, item) =>
+              total + (item.salePrice || item.price) * item.quantity,
             0
           );
 

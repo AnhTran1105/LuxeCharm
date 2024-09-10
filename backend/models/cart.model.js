@@ -1,57 +1,52 @@
 import mongoose from "mongoose";
 
-const cartItemSchema = new mongoose.Schema(
-  {
-    product: {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
+const cartItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  salePrice: {
+    type: Number,
+    default: null,
+    validate: {
+      validator: function (value) {
+        return value == null || value < this.price;
       },
-      name: {
-        type: String,
-        required: true,
-      },
-      price: {
-        type: Number,
-        required: true,
-      },
-      salePrice: {
-        type: Number,
-        default: null,
-        validate: {
-          validator: function (value) {
-            return value == null || value < this.price;
-          },
-          message: "Sale price must be lower than the original price",
-        },
-      },
-      imageUrl: {
-        type: String,
-        required: true,
-      },
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1,
-      default: 1,
-    },
-    metal: {
-      type: String,
-      required: true,
-      enum: [
-        "Gold",
-        "Gold Vermeil",
-        "Mixed Metal",
-        "Rose Gold",
-        "Silver",
-        "Sterling Silver",
-      ],
+      message: "Sale price must be lower than the original price",
     },
   },
-  { timestamps: true }
-);
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1,
+    default: 1,
+  },
+  metal: {
+    type: String,
+    required: true,
+    enum: [
+      "Gold",
+      "Gold Vermeil",
+      "Mixed Metal",
+      "Rose Gold",
+      "Silver",
+      "Sterling Silver",
+    ],
+  },
+});
 
 const cartSchema = new mongoose.Schema({
   userId: {
@@ -73,7 +68,7 @@ cartSchema.pre("save", async function (next) {
   let total = 0;
 
   for (const item of cart.items) {
-    total += item.product.price * item.quantity;
+    total += (item.salePrice || item.price) * item.quantity;
   }
 
   cart.totalPrice = total;

@@ -326,21 +326,18 @@ function Checkout() {
             <ul role="list" className="">
               {[...items].reverse().map((item) => (
                 <li
-                  key={item.product._id}
+                  key={item._id}
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
                 >
                   <div className="w-[90px]">
-                    <a href={`/products/${item.product._id}`} tabIndex={-1}>
-                      <img
-                        src={item.product.imageUrl}
-                        alt={item.product.name}
-                      />
+                    <a href={`/products/${item._id}`} tabIndex={-1}>
+                      <img src={item.imageUrl} alt={item.name} />
                     </a>
                   </div>
                   <div className="pl-5 w-full relative">
                     <button
                       onClick={() => {
-                        dispatch(removeFromCart(item.product._id));
+                        dispatch(removeFromCart(item._id));
                       }}
                       className="absolute top-0 right-0 w-5 h-5 group leading-5 flex justify-center items-center"
                     >
@@ -361,12 +358,12 @@ function Checkout() {
                     </button>
                     <div className="text-left">
                       <a
-                        href={`/products/${item.product._id}`}
-                        alt={item.product.name}
+                        href={`/products/${item._id}`}
+                        alt={item.name}
                         className="mr-2 font-SofiaBold text-sm leading-5"
                         tabIndex={0}
                       >
-                        {item.product.name}
+                        {item.name}
                       </a>
                       {item.salePrice && (
                         <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
@@ -379,10 +376,10 @@ function Checkout() {
                     </div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">
-                        <QuantityWidget itemId={item.product._id} />
+                        <QuantityWidget itemId={item._id} />
                       </div>
                       <div className="mt-[5px] text-right text-xs leading-4">
-                        ${item.product.price * item.quantity}.00
+                        ${item.price * item.quantity}.00
                       </div>
                     </div>
                   </div>

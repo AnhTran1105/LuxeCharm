@@ -5,7 +5,7 @@ function QuantityWidget({ itemId }) {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.cart);
 
-  const item = items.find((item) => item.product._id === itemId);
+  const item = items.find((item) => item._id === itemId);
 
   const handleUpdateQuantity = (newQuantity) => {
     dispatch(

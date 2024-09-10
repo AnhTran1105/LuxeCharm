@@ -304,7 +304,7 @@ function Reviews({ productId, avgRating }) {
                       <Button
                         title="Be the first to write a review!"
                         onClick={() => setOpened(true)}
-                        className="w-64 px-4 rounded-full text-sm h-9 mt-4"
+                        className="!w-64 px-4 rounded-full text-sm h-9 mt-4"
                       />
                     </div>
                   </div>

@@ -217,7 +217,7 @@ function Product() {
                 <Button
                   title="Add to cart"
                   onClick={() =>
-                    dispatch(handleAddToCart({ ...product, quantity }))
+                    dispatch(handleAddToCart({ ...product, metal, quantity }))
                   }
                 />
               </div>

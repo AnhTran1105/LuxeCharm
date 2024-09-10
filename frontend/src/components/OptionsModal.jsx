@@ -252,7 +252,9 @@ function OptionsModal() {
                   <Button
                     title="Add to cart"
                     onClick={() =>
-                      dispatch(handleAddToCart({ ...product, quantity }))
+                      dispatch(
+                        handleAddToCart({ ...product, metal: metal, quantity })
+                      )
                     }
                   />
                 </div>
