@@ -21,10 +21,9 @@ import { handleAddToCart } from "../redux/cart/cartSlice";
 function OptionsModal() {
   const { isOpened, productId } = useSelector((state) => state.optionsModal);
 
-  console.log(productId);
   const dispatch = useDispatch();
   const [product, setProduct] = useState();
-  const [metal, setMetal] = useState({});
+  const [metal, setMetal] = useState();
 
   const [quantity, setQuantity] = useState(1);
 
@@ -50,19 +49,22 @@ function OptionsModal() {
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const productResponse = await axios.get(`/products/${productId}`);
-        setProduct(productResponse);
-        setMetal(productResponse.metals[0].metal);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    if (productId) {
+      (async () => {
+        try {
+          const productResponse = await axios.get(`/products/${productId}`);
+          setProduct(productResponse);
+          setMetal(productResponse.metals[0].metal);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
   }, [productId]);
 
   return (
-    isOpened && (
+    isOpened &&
+    product && (
       <Dialog
         open={isOpened}
         onClose={() => dispatch(closeOptionsModal())}
@@ -72,7 +74,7 @@ function OptionsModal() {
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
             transition
-            className="w-[500px] space-y-4 bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+            className="w-[70%] h-[calc(100%-200px)] overflow-y-scroll bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
           >
             <DialogTitle className="font-bold text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
               <button
@@ -92,35 +94,19 @@ function OptionsModal() {
                 </svg>
               </button>
             </DialogTitle>
-            <div className="flex">
-              <div className="max-w-[55%] w-[55%]">
-                {/* <CustomPaging
-                  imageUrls={
+            <div className="flex h-full overflow-hidden">
+              <div className="max-w-[46%]">
+                <img
+                  src={
                     product.metals.find((item) => item.metal === metal)
-                      .imageUrls
+                      .imageUrls[0]
                   }
-                /> */}
+                  alt={product.name}
+                />
               </div>
-              <div className="pl-[50px] max-w-[45%] w-[45%]">
+              <div className="pl-[50px] max-w-[54%] w-[54%]">
                 <div className="mb-[15px]">
                   <h1 className="text-[22px]">{product.name}</h1>
-                </div>
-                <div className="my-[15px] flex items-center gap-3">
-                  <Rating
-                    transition={true}
-                    size={20}
-                    initialValue={
-                      Math.round(product.rating.avgRating * 10) / 10
-                    }
-                    fillColor="#a16854"
-                    SVGclassName={`inline-block`}
-                    readonly={true}
-                    allowFraction={true}
-                  />
-                  <div className="mt-1">
-                    {product.rating.count}{" "}
-                    {product.rating.count > 1 ? "Reviews" : "Review"}
-                  </div>
                 </div>
                 {product.salePrice ? (
                   <div className="my-[15px] text-lg flex items-center">
@@ -262,7 +248,7 @@ function OptionsModal() {
                     </button>
                   </div>
                 </div>
-                <div className="my-[15px] max-w-[440px]">
+                <div className="my-[15px]">
                   <Button
                     title="Add to cart"
                     onClick={() =>
@@ -270,7 +256,7 @@ function OptionsModal() {
                     }
                   />
                 </div>
-                <div className="my-[15px] max-w-[440px]">
+                <div className="my-[15px]">
                   <Button
                     title="Buy with"
                     onClick={() =>
@@ -292,6 +278,31 @@ function OptionsModal() {
                     }
                     className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:!bg-[#5762c1]"
                   />
+                </div>
+                <div className="my-[15px]">
+                  <a
+                    href={`/products/${product._id}`}
+                    className="gap-3 items-center !text-sm link !flex"
+                  >
+                    View full details
+                    <svg
+                      viewBox="0 0 14 10"
+                      fill="none"
+                      className="ml-1"
+                      aria-hidden="true"
+                      width={12}
+                      height={12}
+                      focusable="false"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>

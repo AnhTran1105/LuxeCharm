@@ -22,6 +22,8 @@ import Checkout from "./pages/Checkout.jsx";
 import VerifyOrder from "./pages/VerifyOrder.jsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
 import CheckoutError from "./pages/CheckoutError.jsx";
+import { fetchCart } from "./redux/cart/cartSlice.js";
+import OptionsModal from "./components/OptionsModal.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -66,6 +68,10 @@ export default function App() {
     dispatch(dismissMessage());
   }, [message, type, showToast, dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Header />
@@ -101,6 +107,7 @@ export default function App() {
         )}
       </LoaderPortal>
       <Cart />
+      <OptionsModal />
       {/* <div className="fixed w-[235px] bottom-[20px] left-[15px] z-[999] bg-[#666] flex justify-center items-center px-3 py-2">
         <button className="rounded-[2px] mr-3 mt-[3px] text-lg tracking-[1.2px] text-white uppercase flex justify-center items-center">
           Unlock 20% Off

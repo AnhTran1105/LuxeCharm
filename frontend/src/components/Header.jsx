@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from "react";
 import Logo from "../assets/images/LuxuryCharming.png";
 import { useDispatch, useSelector } from "react-redux";
 import { showCart } from "../redux/cartModal/cartModalSlice";
-import { fetchCart } from "../redux/cart/cartSlice";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -15,8 +14,6 @@ function Header() {
 
   const isLoggedIn = !!useSelector((state) => state.auth.token);
   const { items } = useSelector((item) => item.cart);
-
-  console.log(items);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,10 +41,6 @@ function Header() {
       setLastScrollY(window.scrollY);
     }
   };
-
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {

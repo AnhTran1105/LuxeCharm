@@ -11,7 +11,7 @@ import { handleAddToCart } from "../redux/cart/cartSlice";
 
 function Product() {
   const [product, setProduct] = useState();
-  const [metal, setMetal] = useState({});
+  const [metal, setMetal] = useState();
   const { id } = useParams();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
