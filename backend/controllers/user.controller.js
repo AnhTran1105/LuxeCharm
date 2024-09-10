@@ -37,6 +37,7 @@ export const getUserInfo = async (req, res, next) => {
       lastName: user.lastName,
       email: user.email,
       address: user.address,
+      phoneNumber: user.phoneNumber,
     });
   } catch (error) {
     next(error);

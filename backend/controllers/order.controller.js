@@ -25,6 +25,7 @@ export const placeOrder = async (req, res, next) => {
       firstName,
       lastName,
       notes,
+      total: cart.totalPrice,
       cartItems: cart.items,
     });
 
@@ -34,11 +35,11 @@ export const placeOrder = async (req, res, next) => {
       price_data: {
         currency: "usd",
         product_data: {
-          name: item.product.name,
-          images: [item.product.imageUrl],
+          name: item.name,
+          images: [item.imageUrl],
           description: item.metal,
         },
-        unit_amount: item.product.price * 100,
+        unit_amount: (item.salePrice || item.price) * 100,
       },
       quantity: item.quantity,
     }));

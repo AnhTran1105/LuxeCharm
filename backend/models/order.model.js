@@ -8,24 +8,32 @@ const counterSchema = new mongoose.Schema({
 const Counter = mongoose.model("Counter", counterSchema);
 
 const cartItemSchema = new mongoose.Schema({
-  product: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  salePrice: {
+    type: Number,
+    default: null,
+    validate: {
+      validator: function (value) {
+        return value == null || value < this.price;
+      },
+      message: "Sale price must be lower than the original price",
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
+  },
+  imageUrl: {
+    type: String,
+    required: true,
   },
   quantity: {
     type: Number,
@@ -65,6 +73,7 @@ const orderSchema = new mongoose.Schema(
     phoneNumber: { type: String, required: true },
     status: { type: String, default: "pending" },
     orderNumber: { type: Number, unique: true },
+    total: { type: Number, required: true },
   },
   {
     timestamps: true,

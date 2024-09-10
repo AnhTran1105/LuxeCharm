@@ -51,6 +51,7 @@ function Checkout() {
         setValue("firstName", response.firstName);
         setValue("lastName", response.lastName);
         setValue("address", response.address);
+        setValue("phoneNumber", response.phoneNumber);
       } catch (error) {
         console.error(error);
       }
@@ -379,7 +380,16 @@ function Checkout() {
                         <QuantityWidget itemId={item._id} />
                       </div>
                       <div className="mt-[5px] text-right text-xs leading-4">
-                        ${item.price * item.quantity}.00
+                        {item.salePrice ? (
+                          <>
+                            <span className="text-foreground75 line-through mr-2">
+                              ${item.price}.00
+                            </span>
+                            <span className="">${item.salePrice}.00</span>
+                          </>
+                        ) : (
+                          <span> ${item.price}.00</span>
+                        )}
                       </div>
                     </div>
                   </div>
