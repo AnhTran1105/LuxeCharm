@@ -5,14 +5,8 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import Button from "./Button";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
-import { sendMessage } from "../redux/notification/notificationSlice";
-import { Rating } from "react-simple-star-rating";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { closeOptionsModal } from "../redux/optionsModal/optionsModalSlice";
