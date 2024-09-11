@@ -44,12 +44,22 @@ const metalSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
-  imageUrls: [
-    {
+  images: {
+    primary: {
       type: String,
       required: true,
     },
-  ],
+    secondary: {
+      type: String,
+      required: true,
+    },
+    others: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+  },
   material: {
     type: String,
     required: true,

@@ -49,6 +49,8 @@ function Product() {
     })();
   }, [id]);
 
+  console.log(product);
+
   return (
     product && (
       <>
@@ -265,9 +267,9 @@ function Product() {
               />
               <InfoDisclosure
                 title="Care Instructions"
-                content={product.instructions.map((item) => ({
-                  key: item.key,
-                  value: item.value,
+                content={product.careInstructions.map((item) => ({
+                  key: item.key || item.type,
+                  value: item.value || item.content,
                 }))}
               />
             </div>

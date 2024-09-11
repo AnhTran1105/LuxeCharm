@@ -18,7 +18,7 @@ export const createProduct = async (req, res, next) => {
     for (const key in req.body) {
       const match = key.match(/metals\.(\d+)\.(\w+)/);
       if (match) {
-        const index = match[1];
+        const index = parseInt(match[1]);
         const field = match[2];
 
         if (!metals[index]) {
@@ -26,7 +26,11 @@ export const createProduct = async (req, res, next) => {
             metal: "",
             quantity: 0,
             material: "",
-            dimension: "",
+            images: {
+              primary: "",
+              secondary: "",
+              others: [],
+            },
           };
         }
 
@@ -35,12 +39,12 @@ export const createProduct = async (req, res, next) => {
     }
 
     const careInstructions = [];
-    const instructions = JSON.parse(req.body.instructions);
+    const dimensions = JSON.parse(req.body.dimensions);
 
     for (const key in req.body) {
       const match = key.match(/careInstructions\.(\d+)\.(\w+)/);
       if (match) {
-        const index = match[1];
+        const index = parseInt(match[1]);
         const field = match[2];
 
         if (!careInstructions[index]) {
@@ -56,16 +60,40 @@ export const createProduct = async (req, res, next) => {
 
     for (let i = 0; i < metals.length; i++) {
       const metal = metals[i];
-      if (req.files[`metals.${i}.images`]) {
-        const imageUrls = await Promise.all(
-          req.files[`metals.${i}.images`].map(async (file) => {
-            const result = await cloudinary.v2.uploader.upload(file.path, {
-              folder: "products/images",
-            });
-            return result.secure_url;
+
+      const primaryFile = req.files[`metals.${i}.images.primary`];
+      const secondaryFile = req.files[`metals.${i}.images.secondary`];
+      const otherFiles = req.files[`metals.${i}.images.others`];
+
+      if (primaryFile) {
+        const primaryResult = await cloudinary.v2.uploader.upload(
+          primaryFile[0].path,
+          {
+            folder: "products/images",
+          }
+        );
+        metal.images.primary = primaryResult.secure_url;
+      }
+
+      if (secondaryFile) {
+        const secondaryResult = await cloudinary.v2.uploader.upload(
+          secondaryFile[0].path,
+          {
+            folder: "products/images",
+          }
+        );
+        metal.images.secondary = secondaryResult.secure_url;
+      }
+
+      if (otherFiles && otherFiles.length > 0) {
+        const otherImagePromises = otherFiles.map((file) =>
+          cloudinary.v2.uploader.upload(file.path, {
+            folder: "products/images",
           })
         );
-        metal.imageUrls = imageUrls;
+
+        const otherResults = await Promise.all(otherImagePromises);
+        metal.images.others = otherResults.map((result) => result.secure_url);
       }
     }
 

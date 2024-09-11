@@ -8,27 +8,25 @@ import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
 
-const schema = yup
-  .object({
-    name: yup.string().required(),
-    description: yup.string().required(),
-    price: yup.number().positive().required().default(0),
-    salePrice: yup.number().positive().default(null),
-    careInstructions: yup.array().of(
-      yup.object().shape({
-        type: yup.string().required(),
-        content: yup.string().required(),
-      })
-    ),
-    metals: yup.array().of(
-      yup.object().shape({
-        metal: yup.string().required(),
-        quantity: yup.number().positive().required(),
-        material: yup.string().required(),
-      })
-    ),
-  })
-  .required();
+const schema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  price: yup.number().positive().required().default(0),
+  salePrice: yup.number().positive().default(null),
+  careInstructions: yup.array().of(
+    yup.object().shape({
+      type: yup.string().required(),
+      content: yup.string().required(),
+    })
+  ),
+  metals: yup.array().of(
+    yup.object().shape({
+      metal: yup.string().required(),
+      quantity: yup.number().positive().required(),
+      material: yup.string().required(),
+    })
+  ),
+});
 
 function ProductCreating() {
   const [category, setCategory] = useState("");
@@ -96,7 +94,11 @@ function ProductCreating() {
         metal: "",
         quantity: 0,
         material: "",
-        images: [],
+        images: {
+          primary: null,
+          secondary: null,
+          others: [],
+        },
       });
     }
 
@@ -127,9 +129,16 @@ function ProductCreating() {
       data.append(`metals.${index}.metal`, metal.metal);
       data.append(`metals.${index}.quantity`, metal.quantity);
       data.append(`metals.${index}.material`, metal.material);
+
       if (metal.images) {
-        for (let i = 0; i < metal.images.length; i++) {
-          data.append(`metals.${index}.images`, metal.images[i]);
+        data.append(`metals.${index}.images.primary`, metal.images.primary[0]);
+        data.append(
+          `metals.${index}.images.secondary`,
+          metal.images.secondary[0]
+        );
+
+        for (let i = 0; i < metal.images.others.length; i++) {
+          data.append(`metals.${index}.images.others`, metal.images.others[i]);
         }
       }
     });
@@ -482,8 +491,23 @@ function ProductCreating() {
                 <div className="mt-3">
                   <input
                     type="file"
+                    {...register(`metals.${index}.images.primary`)}
+                    className="w-full p-[15px]"
+                  />
+                </div>
+                <div className="mt-3">
+                  <label></label>
+                  <input
+                    type="file"
+                    {...register(`metals.${index}.images.secondary`)}
+                    className="w-full p-[15px]"
+                  />
+                </div>
+                <div className="mt-3">
+                  <input
+                    type="file"
                     multiple
-                    {...register(`metals.${index}.images`)}
+                    {...register(`metals.${index}.images.others`)}
                     className="w-full p-[15px]"
                   />
                 </div>
