@@ -14,6 +14,12 @@ const schema = yup
     description: yup.string().required(),
     price: yup.number().positive().required().default(0),
     salePrice: yup.number().positive().default(null),
+    careInstructions: yup.array().of(
+      yup.object().shape({
+        type: yup.string().required(),
+        content: yup.string().required(),
+      })
+    ),
     metals: yup.array().of(
       yup.object().shape({
         metal: yup.string().required(),
@@ -38,7 +44,18 @@ function ProductCreating() {
     resolver: yupResolver(schema),
     defaultValues: {
       dimensions: [{ key: "", value: "" }],
-      instructions: [{ key: "", value: "" }],
+      careInstructions: [
+        {
+          type: "Daily Care",
+          content:
+            "Protect your jewelry and its plating by removing it while swimming, showering, exercising, washing your hands, or applying any products such as perfumes, lotions, or hair products. We pride ourselves on the quality of our product; however, if your jewelry should be exposed to any of the above products, tarnishing may occur. Tarnishing may also be caused by the skin's natural pH levels.",
+        },
+        {
+          type: "Cleaning Instructions",
+          content:
+            "To keep your jewelry clean, wipe it with a soft cloth. Do not use jewelry cleaner.",
+        },
+      ],
       metals: [],
     },
   });
@@ -53,12 +70,12 @@ function ProductCreating() {
   });
 
   const {
-    fields: instructionFields,
-    append: appendInstruction,
-    remove: removeInstruction,
+    fields: careInstructionFields,
+    append: appendCareInstruction,
+    remove: removeCareInstruction,
   } = useFieldArray({
     control,
-    name: "instructions",
+    name: "careInstructions",
   });
 
   const {
@@ -71,12 +88,25 @@ function ProductCreating() {
   });
 
   const watchMetals = watch("metals");
+  const watchCareInstructions = watch("careInstructions");
 
   useEffect(() => {
     if (watchMetals.length === 0) {
-      appendMetal({ metal: "", quantity: 0, material: "", images: [] });
+      appendMetal({
+        metal: "",
+        quantity: 0,
+        material: "",
+        images: [],
+      });
     }
-  }, [watchMetals, appendMetal]);
+
+    if (watchCareInstructions.length === 0) {
+      appendCareInstruction({
+        type: "",
+        content: "",
+      });
+    }
+  }, [watchMetals, appendMetal, watchCareInstructions, appendCareInstruction]);
 
   const onSubmit = (formData) => {
     dispatch(startLoading());
@@ -86,11 +116,12 @@ function ProductCreating() {
     data.append("category", category);
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
-
     data.append("salePrice", formData.salePrice);
-
     data.append("dimensions", JSON.stringify(formData.dimensions));
-    data.append("instructions", JSON.stringify(formData.instructions));
+    formData.careInstructions.forEach((careInstruction, index) => {
+      data.append(`careInstructions.${index}.type`, careInstruction.type);
+      data.append(`careInstructions.${index}.content`, careInstruction.content);
+    });
 
     formData.metals.forEach((metal, index) => {
       data.append(`metals.${index}.metal`, metal.metal);
@@ -121,14 +152,14 @@ function ProductCreating() {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="max-w-[478px] py-9 px-[15px] text-center">
+      <div className="w-[572px] py-9 px-[15px] text-center">
         <h1 className="text-[40px]">Create Product</h1>
-        <div>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="mt-10 text-sm text-color-foreground/75"
-          >
-            <p className="my-[10px]">* indicates a required field</p>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mt-10 text-sm text-color-foreground/75"
+        >
+          <p className="my-[10px]">* indicates a required field</p>
+          <div className="grid grid-cols-2 gap-4">
             <div className="field">
               <input
                 id="name"
@@ -155,7 +186,7 @@ function ProductCreating() {
                 >
                   <path
                     d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
                   ></path>
                 </svg>
 
@@ -164,61 +195,62 @@ function ProductCreating() {
                 </span>
               </p>
             )}
-            <div className="mt-5">
-              <DropdownMenu
-                defaultOption="Choose category"
-                title="Category"
-                options={[
-                  "Anklets",
-                  "Body Chains",
-                  "Bracelets",
-                  "Charms",
-                  "Earrings",
-                  "Gift Bundles",
-                  "Mystery",
-                  "Necklaces",
-                  "Rings",
-                ]}
-                onValueChange={(newValue) => setCategory(newValue)}
-              />
-            </div>
-            <div className="field">
-              <textarea
-                rows="8"
-                id="description"
-                autoComplete="description"
-                required
-                autoCapitalize="off"
-                placeholder="description"
-                autoCorrect="off"
-                {...register("description")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-              />
-              <label htmlFor="description">Description*</label>
-            </div>
-            {errors.description && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  enableBackground="new 0 0 24 24"
-                  className="fill-red mr-2"
-                  width={20}
-                  height={20}
-                  viewBox="0 0 24 24"
-                  id="exclamation-mark"
-                >
-                  <path
-                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                  ></path>
-                </svg>
+            <DropdownMenu
+              defaultOption="Choose category"
+              title="Category"
+              options={[
+                "Anklets",
+                "Body Chains",
+                "Bracelets",
+                "Charms",
+                "Earrings",
+                "Gift Bundles",
+                "Mystery",
+                "Necklaces",
+                "Rings",
+              ]}
+              onValueChange={(newValue) => setCategory(newValue)}
+            />
+          </div>
 
-                <span className="first-letter:capitalize">
-                  {errors.description?.message}
-                </span>
-              </p>
-            )}
-            <div className="field">
+          <div className="field">
+            <textarea
+              rows="6"
+              id="description"
+              autoComplete="description"
+              required
+              autoCapitalize="off"
+              placeholder="description"
+              autoCorrect="off"
+              {...register("description")}
+              className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+            />
+            <label htmlFor="description">Description*</label>
+          </div>
+          {errors.description && (
+            <p className="text-left px-4 pt-2 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                enableBackground="new 0 0 24 24"
+                className="fill-red mr-2"
+                width={20}
+                height={20}
+                viewBox="0 0 24 24"
+                id="exclamation-mark"
+              >
+                <path
+                  d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                ></path>
+              </svg>
+
+              <span className="first-letter:capitalize">
+                {errors.description?.message}
+              </span>
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="field first:mt-5">
               <input
                 id="price"
                 autoComplete="price"
@@ -246,7 +278,7 @@ function ProductCreating() {
                 >
                   <path
                     d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
                   ></path>
                 </svg>
 
@@ -283,7 +315,7 @@ function ProductCreating() {
                 >
                   <path
                     d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
                   ></path>
                 </svg>
 
@@ -292,145 +324,131 @@ function ProductCreating() {
                 </span>
               </p>
             )}
-            <div className="mt-5">
-              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Dimensions:
-              </p>
-              <ul>
-                {dimensionFields.map((item, index) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center gap-4 mb-5 last:mb-0"
+          </div>
+          <div className="mt-5">
+            <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+              Dimensions:
+            </p>
+            <ul>
+              {dimensionFields.map((item, index) => (
+                <li
+                  key={item.id}
+                  className="flex items-center gap-4 mb-5 last:mb-0"
+                >
+                  <div className="field max-w-[40%]">
+                    <input
+                      {...register(`dimensions.${index}.key`)}
+                      placeholder="Key"
+                      className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                    />
+                    <label htmlFor="key">Key*</label>
+                  </div>
+                  <div className="field !mt-0">
+                    <Controller
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          placeholder="Value"
+                          className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                        />
+                      )}
+                      name={`dimensions.${index}.value`}
+                      control={control}
+                    />
+                    <label htmlFor="value">Value*</label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeDimension(index)}
+                    className="flex items-center justify-center group"
                   >
-                    <div className="field max-w-[40%]">
-                      <input
-                        {...register(`dimensions.${index}.key`)}
-                        placeholder="Key"
-                        className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                      />
-                      <label htmlFor="key">Key*</label>
-                    </div>
-                    <div className="field !mt-0">
-                      <Controller
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            placeholder="Value"
-                            className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                          />
-                        )}
-                        name={`dimensions.${index}.value`}
-                        control={control}
-                      />
-                      <label htmlFor="value">Value*</label>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeDimension(index)}
-                      className="flex items-center justify-center group"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 96 96"
+                      className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                      id="trash"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 96 96"
-                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                        id="trash"
-                      >
-                        <switch>
-                          <g>
-                            <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
-                          </g>
-                        </switch>
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => appendDimension({ key: "", value: "" })}
-                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
-              >
-                Add dimensions
-              </button>
-            </div>
-            <div className="mt-5">
-              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Care Instructions:
-              </p>
-              <ul>
-                {instructionFields.map((item, index) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center gap-4 mb-5 last:mb-0"
+                      <switch>
+                        <g>
+                          <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
+                        </g>
+                      </switch>
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => appendDimension({ key: "", value: "" })}
+              className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+            >
+              Add dimensions
+            </button>
+          </div>
+          <div className="mt-5">
+            <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+              Care Instructions:
+            </p>
+            {careInstructionFields.map((field, index) => (
+              <div key={field.id} className="mb-5 p-4 border rounded-xl">
+                <div className="field">
+                  <input
+                    {...register(`careInstructions.${index}.type`)}
+                    placeholder="type"
+                    className="w-full h-[45px] p-[15px]"
+                  />
+                  <label>Type*</label>
+                </div>
+                <div className="field mt-3">
+                  <textarea
+                    rows={8}
+                    {...register(`careInstructions.${index}.content`)}
+                    placeholder="content"
+                    className="w-full p-[15px]"
+                  />
+                  <label>Content*</label>
+                </div>
+                {index > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeCareInstruction(index)}
+                    className="mt-3 p-2 bg-red-500 text-black rounded"
                   >
-                    <div className="field max-w-[40%]">
-                      <input
-                        {...register(`instructions.${index}.key`)}
-                        placeholder="Key"
-                        className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                      />
-                      <label htmlFor="key">Key*</label>
-                    </div>
-                    <div className="field !mt-0">
-                      <Controller
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            placeholder="Value"
-                            className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-                          />
-                        )}
-                        name={`instructions.${index}.value`}
-                        control={control}
-                      />
-                      <label htmlFor="value">Value*</label>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeInstruction(index)}
-                      className="flex items-center justify-center group"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 96 96"
-                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                        id="trash"
-                      >
-                        <switch>
-                          <g>
-                            <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
-                          </g>
-                        </switch>
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => appendInstruction({ key: "", value: "" })}
-                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
-              >
-                Add instructions
-              </button>
-            </div>
-            <div className="mt-5">
-              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Metals, Materials, and Images:
-              </p>
-              {metalFields.map((field, index) => (
-                <div key={field.id} className="mb-5 p-4 border rounded-xl">
-                  <div className="field">
+                    Remove instruction
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() =>
+                appendCareInstruction({
+                  type: "",
+                  content: "",
+                })
+              }
+              className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+            >
+              Add another instruction
+            </button>
+          </div>
+          <div className="mt-5">
+            <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+              Metals:
+            </p>
+            {metalFields.map((field, index) => (
+              <div key={field.id} className="mb-5 p-4 border rounded-xl">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="field first:mt-5">
                     <Controller
                       name={`metals.${index}.metal`}
                       control={control}
                       render={({ field }) => (
                         <select {...field} className="w-full h-[45px] p-[15px]">
-                          <option value="">Select Metal</option>
+                          <option value="">Select metal</option>
                           <option value="Gold">Gold</option>
                           <option value="Gold Vermeil">Gold Vermeil</option>
                           <option value="Mixed Metal">Mixed Metal</option>
@@ -442,9 +460,7 @@ function ProductCreating() {
                         </select>
                       )}
                     />
-                    {/* <label>Metal*</label> */}
                   </div>
-
                   <div className="field mt-3">
                     <input
                       type="number"
@@ -454,59 +470,56 @@ function ProductCreating() {
                     />
                     <label>Quantity*</label>
                   </div>
-
-                  <div className="field mt-3">
-                    <input
-                      {...register(`metals.${index}.material`)}
-                      placeholder="Material"
-                      className="w-full h-[45px] p-[15px]"
-                    />
-                    <label>Material*</label>
-                  </div>
-
-                  <div className="mt-3">
-                    <input
-                      type="file"
-                      multiple
-                      {...register(`metals.${index}.images`)}
-                      className="w-full p-[15px]"
-                    />
-                  </div>
-
-                  {index > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => removeMetal(index)}
-                      className="mt-3 p-2 bg-red-500 text-black rounded"
-                    >
-                      Remove Metal
-                    </button>
-                  )}
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={() =>
-                  appendMetal({
-                    metal: "",
-                    quantity: 0,
-                    material: "",
-                    images: [],
-                  })
-                }
-                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
-              >
-                Add Another Metal
-              </button>
-            </div>
+                <div className="field mt-3">
+                  <input
+                    {...register(`metals.${index}.material`)}
+                    placeholder="Material"
+                    className="w-full h-[45px] p-[15px]"
+                  />
+                  <label>Material*</label>
+                </div>
+                <div className="mt-3">
+                  <input
+                    type="file"
+                    multiple
+                    {...register(`metals.${index}.images`)}
+                    className="w-full p-[15px]"
+                  />
+                </div>
+                {index > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeMetal(index)}
+                    className="mt-3 p-2 bg-red-500 text-black rounded"
+                  >
+                    Remove metal
+                  </button>
+                )}
+              </div>
+            ))}
             <button
-              type="submit"
-              className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              type="button"
+              onClick={() =>
+                appendMetal({
+                  metal: "",
+                  quantity: 0,
+                  material: "",
+                  images: [],
+                })
+              }
+              className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              <span>Create product</span>
+              Add another metal
             </button>
-          </form>
-        </div>
+          </div>
+          <button
+            type="submit"
+            className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+          >
+            <span>Create product</span>
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -1,28 +1,28 @@
 import mongoose from "mongoose";
 
-const dimensionSchema = new mongoose.Schema({
-  key: {
+const careInstructionSchema = new mongoose.Schema({
+  type: {
     type: String,
-    required: true,
     trim: true,
+    required: true,
   },
-  value: {
+  content: {
     type: String,
-    required: true,
     trim: true,
+    required: true,
   },
 });
 
-const instructionSchema = new mongoose.Schema({
+const dimensionSchema = new mongoose.Schema({
   key: {
     type: String,
-    required: true,
     trim: true,
+    required: true,
   },
   value: {
     type: String,
-    required: true,
     trim: true,
+    required: true,
   },
 });
 
@@ -109,8 +109,8 @@ const productSchema = new mongoose.Schema(
         message: "At least one metal must be specified",
       },
     },
+    careInstructions: [careInstructionSchema],
     dimensions: [dimensionSchema],
-    instructions: [instructionSchema],
     rating: {
       avgRating: {
         type: Number,

@@ -26,6 +26,7 @@ export const createProduct = async (req, res, next) => {
             metal: "",
             quantity: 0,
             material: "",
+            dimension: "",
           };
         }
 
@@ -33,8 +34,25 @@ export const createProduct = async (req, res, next) => {
       }
     }
 
-    const dimensions = JSON.parse(req.body.dimensions);
+    const careInstructions = [];
     const instructions = JSON.parse(req.body.instructions);
+
+    for (const key in req.body) {
+      const match = key.match(/careInstructions\.(\d+)\.(\w+)/);
+      if (match) {
+        const index = match[1];
+        const field = match[2];
+
+        if (!careInstructions[index]) {
+          careInstructions[index] = {
+            type: "",
+            content: "",
+          };
+        }
+
+        careInstructions[index][field] = req.body[key];
+      }
+    }
 
     for (let i = 0; i < metals.length; i++) {
       const metal = metals[i];
@@ -59,7 +77,7 @@ export const createProduct = async (req, res, next) => {
       salePrice: req.body.salePrice,
       metals: metals,
       dimensions: dimensions,
-      instructions: instructions,
+      careInstructions: careInstructions,
     });
 
     await newProduct.save();

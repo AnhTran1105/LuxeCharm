@@ -65,10 +65,10 @@ function OptionsModal() {
         className="relative z-[9999]"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/70 duration-100 ease-out data-[closed]:opacity-0" />
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <div className="fixed inset-0 my-[100px] flex w-screen items-center justify-center p-4">
           <DialogPanel
             transition
-            className="w-[70%] h-[calc(100%-200px)] overflow-y-scroll bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+            className="w-[70%] h-full overflow-y-scroll bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
           >
             <DialogTitle className="font-bold text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
               <button
@@ -88,13 +88,14 @@ function OptionsModal() {
                 </svg>
               </button>
             </DialogTitle>
-            <div className="flex h-full overflow-hidden">
-              <div className="max-w-[46%]">
+            <div className="flex h-full">
+              <div className="w-[46%] h-full overflow-hidden flex justify-center">
                 <img
                   src={
                     product.metals.find((item) => item.metal === metal)
                       .imageUrls[0]
                   }
+                  className="w-full"
                   alt={product.name}
                 />
               </div>

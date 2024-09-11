@@ -57,7 +57,7 @@ function DropdownMenu({
           }}
           ref={defaultOptionRef}
         >
-          <div className="flex justify-between items-center p-[15px] default-option w-full h-[45px]">
+          <div className="flex justify-between items-center p-[15px] default-option w-full h-[47px]">
             <span className="text-base">
               {value ? (
                 <span className="text-color-foreground">
