@@ -98,7 +98,7 @@ export const handleAddToCart = createAsyncThunk(
             price: item.price,
             salePrice: item.salePrice,
             imageUrl: item.metals.find((metal) => metal.metal === item.metal)
-              .imageUrls[0],
+              .images.primary,
             metal: item.metal,
             quantity: item.quantity,
           },
@@ -138,7 +138,7 @@ export const handleAddToCart = createAsyncThunk(
             price: item.price,
             salePrice: item.salePrice,
             imageUrl: item.metals.find((metal) => metal.metal === item.metal)
-              .imageUrls[0],
+              .images.primary,
             metal: item.metal,
             quantity: item.quantity,
           },

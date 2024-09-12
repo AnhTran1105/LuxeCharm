@@ -12,7 +12,21 @@ const schema = yup.object({
   name: yup.string().required(),
   description: yup.string().required(),
   price: yup.number().positive().required().default(0),
-  salePrice: yup.number().positive().default(null),
+  salePrice: yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value;
+    })
+    .notRequired()
+    .test(
+      "is-lower-than-price",
+      "Sale price must be lower than the original price",
+      function (value) {
+        const { price } = this.parent;
+        return value === null || (value > 0 && value < price);
+      }
+    ),
   careInstructions: yup.array().of(
     yup.object().shape({
       type: yup.string().required(),
@@ -118,7 +132,9 @@ function ProductCreating() {
     data.append("category", category);
     data.append("description", formData.description.trim());
     data.append("price", formData.price);
-    data.append("salePrice", formData.salePrice);
+    if (formData.salePrice !== null && formData.salePrice !== "") {
+      data.append("salePrice", formData.salePrice);
+    }
     data.append("dimensions", JSON.stringify(formData.dimensions));
     formData.careInstructions.forEach((careInstruction, index) => {
       data.append(`careInstructions.${index}.type`, careInstruction.type);
@@ -300,7 +316,6 @@ function ProductCreating() {
               <input
                 id="salePrice"
                 autoComplete="salePrice"
-                required
                 autoCapitalize="off"
                 placeholder="salePrice"
                 type="number"
@@ -488,27 +503,31 @@ function ProductCreating() {
                   />
                   <label>Material*</label>
                 </div>
-                <div className="mt-3">
+                <div className="mt-5 flex gap-5 justify-between items-center">
+                  <label>Primary image:</label>
                   <input
                     type="file"
+                    required
                     {...register(`metals.${index}.images.primary`)}
-                    className="w-full p-[15px]"
+                    className=""
                   />
                 </div>
-                <div className="mt-3">
-                  <label></label>
+                <div className="mt-5 flex gap-5 justify-between items-center">
+                  <label>Secondary image:</label>
                   <input
                     type="file"
+                    required
                     {...register(`metals.${index}.images.secondary`)}
-                    className="w-full p-[15px]"
+                    className=""
                   />
                 </div>
-                <div className="mt-3">
+                <div className="mt-5  flex gap-5 justify-between items-center">
+                  <label>Other images:</label>
                   <input
                     type="file"
                     multiple
                     {...register(`metals.${index}.images.others`)}
-                    className="w-full p-[15px]"
+                    className=""
                   />
                 </div>
                 {index > 0 && (

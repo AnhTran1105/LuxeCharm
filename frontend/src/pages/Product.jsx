@@ -12,6 +12,7 @@ import { handleAddToCart } from "../redux/cart/cartSlice";
 function Product() {
   const [product, setProduct] = useState();
   const [metal, setMetal] = useState();
+  const [metalImages, setMetalImages] = useState({});
   const { id } = useParams();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
@@ -43,13 +44,24 @@ function Product() {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
         setMetal(productResponse.metals[0].metal);
+        setMetalImages(
+          productResponse.metals.find(
+            (item) => item.metal === productResponse.metals[0].metal
+          ).images
+        );
       } catch (error) {
         console.error(error);
       }
     })();
   }, [id]);
 
-  console.log(product);
+  useEffect(() => {
+    if (metal) {
+      setMetalImages(
+        product.metals.find((item) => item.metal === metal).images
+      );
+    }
+  }, [metal, product]);
 
   return (
     product && (
@@ -58,9 +70,11 @@ function Product() {
           <div className="flex">
             <div className="max-w-[55%] w-[55%]">
               <CustomPaging
-                imageUrls={
-                  product.metals.find((item) => item.metal === metal).imageUrls
-                }
+                imageUrls={[
+                  metalImages.primary,
+                  metalImages.secondary,
+                  ...metalImages.others,
+                ]}
               />
             </div>
             <div className="pl-[50px] max-w-[45%] w-[45%]">

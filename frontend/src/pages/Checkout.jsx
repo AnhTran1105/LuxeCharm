@@ -96,8 +96,8 @@ function Checkout() {
       <h1 className="text-[40px]">Checkout</h1>
       <div className="mx-auto w-4/5 grid grid-cols-2 gap-12 mt-10">
         <div className="">
-          <div className="text-center border border-border rounded-2xl">
-            <div className="font-bold border-b border-border py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+          <div className="text-center border border-color-foreground rounded-2xl">
+            <div className="font-bold border-b border-color-foreground py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
               Delivery Information
             </div>
             <form className="p-5 text-sm text-color-foreground/75">
@@ -320,8 +320,8 @@ function Checkout() {
           </div>
         </div>
         <div className="">
-          <div className="text-center border border-border rounded-2xl">
-            <div className="font-bold border-b border-border py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+          <div className="text-center border border-color-foreground rounded-2xl">
+            <div className="font-bold border-b border-color-foreground py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
               Your cart
             </div>
             <ul role="list" className="">
@@ -431,7 +431,7 @@ function Checkout() {
                     ></path>
                   </svg>
                 }
-                className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 h-10 hover:!bg-[#5762c1] mt-4"
+                className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 h-9 hover:!bg-[#5762c1] mt-4"
               />
             </div>
           </div>
