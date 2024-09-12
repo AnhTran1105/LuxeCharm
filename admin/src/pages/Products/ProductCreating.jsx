@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object({
   name: yup.string().required(),
@@ -45,6 +46,7 @@ const schema = yup.object({
 function ProductCreating() {
   const [category, setCategory] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -128,9 +130,9 @@ function ProductCreating() {
     dispatch(startLoading());
     const data = new FormData();
 
-    data.append("name", formData.name.trim());
+    data.append("name", formData.name);
     data.append("category", category);
-    data.append("description", formData.description.trim());
+    data.append("description", formData.description);
     data.append("price", formData.price);
     if (formData.salePrice !== null && formData.salePrice !== "") {
       data.append("salePrice", formData.salePrice);
@@ -168,6 +170,7 @@ function ProductCreating() {
         });
         dispatch(stopLoading());
         dispatch(sendMessage({ message: response.message, type: "success" }));
+        navigate(0);
       } catch (error) {
         dispatch(stopLoading());
         dispatch(sendMessage({ message: error.message, type: "error" }));

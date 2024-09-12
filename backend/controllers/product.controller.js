@@ -154,41 +154,141 @@ export const deleteProducts = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
-    const product = await Product.findById(productId);
 
+    const deletedImages = JSON.parse(req.body.deletedImages);
+    const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    if (
-      req.body.imagesToDelete &&
-      Array.isArray(JSON.parse(req.body.imagesToDelete))
-    ) {
-      const imagesToDelete = JSON.parse(req.body.imagesToDelete);
-      for (const imageUrl of imagesToDelete) {
-        await cloudinary.v2.uploader.destroy(imageUrl);
-        product.imageUrls = product.imageUrls.filter((url) => url !== imageUrl);
+    for (let i = 0; i < product.metals.length; i++) {
+      const metal = product.metals[i];
+
+      for (const imageUrl of deletedImages) {
+        if (metal.images.others.includes(imageUrl)) {
+          const publicId = imageUrl.split("/").pop().split(".")[0];
+          await cloudinary.v2.uploader.destroy(`products/images/${publicId}`);
+          metal.images.others = metal.images.others.filter(
+            (url) => url !== imageUrl
+          );
+        }
       }
     }
 
-    if (req.files && req.files.imageUrls) {
-      const newImageUrls = await Promise.all(
-        req.files.imageUrls.map(async (file) => {
-          const result = await cloudinary.v2.uploader.upload(file.path, {
-            folder: "products/images",
-          });
-          return result.secure_url;
-        })
-      );
-      product.imageUrls.push(...newImageUrls);
+    const metals = [];
+    for (const key in req.body) {
+      const match = key.match(/metals\.(\d+)\.(\w+)/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const field = match[2];
+
+        if (!metals[index]) {
+          metals[index] = {
+            metal: "",
+            quantity: 0,
+            material: "",
+            images: {
+              primary: product.metals[index]?.images.primary || "",
+              secondary: product.metals[index]?.images.secondary || "",
+              others: [...(product.metals[index]?.images.others || [])],
+            },
+          };
+        }
+
+        if (field === "images") {
+          const imagesMatch = key.match(/metals\.(\d+)\.images\.(\w+)/);
+          if (imagesMatch) {
+            const imageField = imagesMatch[2];
+            if (imageField === "others") {
+              metals[index].images.others =
+                product.metals[index]?.images.others || [];
+            } else {
+              metals[index].images[imageField] =
+                product.metals[index]?.images[imageField] || "";
+            }
+          }
+        } else {
+          metals[index][field] = req.body[key];
+        }
+      }
     }
 
+    console.log(metals);
+
+    const updatedMetals = await Promise.all(
+      metals.map(async (metal, index) => {
+        if (req.files[`metals.${index}.images.primary`]) {
+          if (product.metals[index].images.primary) {
+            const publicId = product.metals[index].images.primary
+              .split("/")
+              .pop()
+              .split(".")[0];
+            await cloudinary.v2.uploader.destroy(`products/images/${publicId}`);
+          }
+          const primaryResult = await cloudinary.v2.uploader.upload(
+            req.files[`metals.${index}.images.primary`][0].path,
+            { folder: "products/images" }
+          );
+          metal.images.primary = primaryResult.secure_url;
+        } else {
+          metal.images.primary = product.metals[index].images.primary;
+        }
+
+        if (req.files[`metals.${index}.images.secondary`]) {
+          if (product.metals[index].images.secondary) {
+            const publicId = product.metals[index].images.secondary
+              .split("/")
+              .pop()
+              .split(".")[0];
+            await cloudinary.v2.uploader.destroy(`products/images/${publicId}`);
+          }
+          const secondaryResult = await cloudinary.v2.uploader.upload(
+            req.files[`metals.${index}.images.secondary`][0].path,
+            { folder: "products/images" }
+          );
+          metal.images.secondary = secondaryResult.secure_url;
+        } else {
+          metal.images.secondary = product.metals[index].images.secondary;
+        }
+
+        if (req.files[`metals.${index}.images.others`]) {
+          const otherFiles = req.files[`metals.${index}.images.others`];
+          const otherImagePromises = otherFiles.map((file) =>
+            cloudinary.v2.uploader.upload(file.path, {
+              folder: "products/images",
+            })
+          );
+          const otherResults = await Promise.all(otherImagePromises);
+          metal.images.others.push(
+            ...otherResults.map((result) => result.secure_url)
+          );
+        }
+        return metal;
+      })
+    );
+
+    product.metals = updatedMetals;
     product.name = req.body.name || product.name;
     product.category = req.body.category || product.category;
     product.description = req.body.description || product.description;
     product.price = req.body.price || product.price;
-    product.metals = JSON.parse(req.body.metals) || product.metals;
-    product.dimensions = JSON.parse(req.body.dimensions) || product.dimensions;
+    product.salePrice =
+      req.body.salePrice !== undefined ? req.body.salePrice : product.salePrice;
+    product.dimensions = JSON.parse(req.body.dimensions);
+
+    const careInstructions = [];
+    for (const key in req.body) {
+      const match = key.match(/careInstructions\.(\d+)\.(\w+)/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const field = match[2];
+        if (!careInstructions[index]) {
+          careInstructions[index] = { type: "", content: "" };
+        }
+        careInstructions[index][field] = req.body[key];
+      }
+    }
+    product.careInstructions = careInstructions;
 
     await product.save();
     res.status(200).json({ message: "Product updated successfully!" });

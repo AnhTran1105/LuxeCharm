@@ -5,27 +5,53 @@ import axios from "../../utils/axios";
 import DropdownMenu from "../../components/DropdownMenu";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CheckboxMenu from "../../components/CheckboxMenu";
 import { useDispatch } from "react-redux";
 import { sendMessage } from "../../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../../redux/loading/loadingSlice";
+import { useNavigate } from "react-router-dom";
 
-const schema = yup
-  .object({
-    name: yup.string().required(),
-    description: yup.string().required(),
-    price: yup.number().positive().required().default(0),
-  })
-  .required();
+const schema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  price: yup.number().positive().required().default(0),
+  salePrice: yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value;
+    })
+    .notRequired()
+    .test(
+      "is-lower-than-price",
+      "Sale price must be lower than the original price",
+      function (value) {
+        const { price } = this.parent;
+        return value === null || (value > 0 && value < price);
+      }
+    ),
+  careInstructions: yup.array().of(
+    yup.object().shape({
+      type: yup.string().required(),
+      content: yup.string().required(),
+    })
+  ),
+  metals: yup.array().of(
+    yup.object().shape({
+      metal: yup.string().required(),
+      quantity: yup.number().positive().required(),
+      material: yup.string().required(),
+    })
+  ),
+});
 
 function ProductUpdating() {
   const [product, setProduct] = useState();
   const [metals, setMetals] = useState([]);
   const [category, setCategory] = useState("");
-  const [imageUrls, setImageUrls] = useState([]);
-  const [newImages, setNewImages] = useState([]);
-  const [imagesToDelete, setImagesToDelete] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [deletedImages, setDeletedImages] = useState([]);
+  const [deletedPrimaryImage, setDeletedPrimaryImage] = useState("");
+  const [deletedSecondaryImage, setDeletedSecondaryImage] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -36,14 +62,78 @@ function ProductUpdating() {
     setValue,
     control,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      dimensions: [{ key: "", value: "" }],
+      careInstructions: [
+        {
+          type: "Daily Care",
+          content:
+            "Protect your jewelry and its plating by removing it while swimming, showering, exercising, washing your hands, or applying any products such as perfumes, lotions, or hair products. We pride ourselves on the quality of our product; however, if your jewelry should be exposed to any of the above products, tarnishing may occur. Tarnishing may also be caused by the skin's natural pH levels.",
+        },
+        {
+          type: "Cleaning Instructions",
+          content:
+            "To keep your jewelry clean, wipe it with a soft cloth. Do not use jewelry cleaner.",
+        },
+      ],
+      metals: [],
+    },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: dimensionFields,
+    append: appendDimension,
+    remove: removeDimension,
+  } = useFieldArray({
     control,
     name: "dimensions",
   });
+
+  const {
+    fields: careInstructionFields,
+    append: appendCareInstruction,
+    remove: removeCareInstruction,
+  } = useFieldArray({
+    control,
+    name: "careInstructions",
+  });
+
+  const {
+    fields: metalFields,
+    append: appendMetal,
+    remove: removeMetal,
+  } = useFieldArray({
+    control,
+    name: "metals",
+  });
+
+  const watchMetals = watch("metals");
+  const watchCareInstructions = watch("careInstructions");
+
+  useEffect(() => {
+    if (watchMetals.length === 0) {
+      appendMetal({
+        metal: "",
+        quantity: 0,
+        material: "",
+        images: {
+          primary: null,
+          secondary: null,
+          others: [],
+        },
+      });
+    }
+
+    if (watchCareInstructions.length === 0) {
+      appendCareInstruction({
+        type: "",
+        content: "",
+      });
+    }
+  }, [watchMetals, appendMetal, watchCareInstructions, appendCareInstruction]);
 
   const onSubmit = async (formData) => {
     dispatch(startLoading());
@@ -53,15 +143,34 @@ function ProductUpdating() {
     data.append("category", category);
     data.append("description", formData.description);
     data.append("price", formData.price);
-    data.append("metals", JSON.stringify(metals));
+    if (formData.salePrice !== null && formData.salePrice !== "") {
+      data.append("salePrice", formData.salePrice);
+    }
     data.append("dimensions", JSON.stringify(formData.dimensions));
-    newImages.forEach((file) => {
-      data.append("imageUrls", file);
+    formData.careInstructions.forEach((careInstruction, index) => {
+      data.append(`careInstructions.${index}.type`, careInstruction.type);
+      data.append(`careInstructions.${index}.content`, careInstruction.content);
     });
 
-    if (imagesToDelete.length > 0) {
-      data.append("imagesToDelete[]", JSON.stringify(imagesToDelete));
-    }
+    formData.metals.forEach((metal, index) => {
+      data.append(`metals.${index}.metal`, metal.metal);
+      data.append(`metals.${index}.quantity`, metal.quantity);
+      data.append(`metals.${index}.material`, metal.material);
+
+      if (metal.images) {
+        data.append(`metals.${index}.images.primary`, metal.images.primary[0]);
+        data.append(
+          `metals.${index}.images.secondary`,
+          metal.images.secondary[0]
+        );
+
+        for (let i = 0; i < metal.images.others.length; i++) {
+          data.append(`metals.${index}.images.others`, metal.images.others[i]);
+        }
+      }
+    });
+
+    data.append("deletedImages", JSON.stringify(deletedImages));
 
     try {
       const response = await axios.put(`/products/${id}`, data, {
@@ -69,12 +178,11 @@ function ProductUpdating() {
           "Content-Type": "multipart/form-data",
         },
       });
+      navigate(0);
       dispatch(sendMessage({ message: response.message, type: "success" }));
-      setRefresh(!refresh);
     } catch (error) {
-      dispatch(sendMessage({ message: error.message, type: "error" }));
-    } finally {
       dispatch(stopLoading());
+      dispatch(sendMessage({ message: error.message, type: "error" }));
     }
   };
 
@@ -85,7 +193,7 @@ function ProductUpdating() {
         setProduct(productResponse);
         setCategory(productResponse.category);
         setMetals(productResponse.metals);
-        setImageUrls(productResponse.imageUrls);
+        setValue("metals", productResponse.metals);
         setValue("name", productResponse.name);
         setValue("description", productResponse.description);
         setValue("price", productResponse.price);
@@ -94,16 +202,7 @@ function ProductUpdating() {
         console.error(error);
       }
     })();
-  }, [id, setValue, refresh]);
-
-  const handleImageDelete = (imageUrl) => {
-    setImagesToDelete((prev) => [...prev, imageUrl]);
-    setImageUrls((prev) => prev.filter((url) => url !== imageUrl));
-  };
-
-  const handleImageAdd = (event) => {
-    setNewImages((prev) => [...prev, ...event.target.files]);
-  };
+  }, [id, setValue]);
 
   return (
     product && (
@@ -115,43 +214,42 @@ function ProductUpdating() {
             className="mt-10 text-sm text-color-foreground/75"
           >
             <p className="my-[10px]">* indicates a required field</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="field">
+                <input
+                  id="name"
+                  autoComplete="name"
+                  required
+                  autoCapitalize="off"
+                  placeholder="name"
+                  autoCorrect="off"
+                  {...register("name")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                />
+                <label htmlFor="name">Name*</label>
+              </div>
+              {errors.name && (
+                <p className="text-left px-4 pt-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    enableBackground="new 0 0 24 24"
+                    className="fill-red mr-2"
+                    width={20}
+                    height={20}
+                    viewBox="0 0 24 24"
+                    id="exclamation-mark"
+                  >
+                    <path
+                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                    ></path>
+                  </svg>
 
-            <div className="field">
-              <input
-                id="name"
-                autoComplete="name"
-                required
-                autoCapitalize="off"
-                placeholder="name"
-                {...register("name")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-              />
-              <label htmlFor="name">Name*</label>
-            </div>
-            {errors.name && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  enableBackground="new 0 0 24 24"
-                  className="fill-red mr-2"
-                  width={20}
-                  height={20}
-                  viewBox="0 0 24 24"
-                  id="exclamation-mark"
-                >
-                  <path
-                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                  ></path>
-                </svg>
-
-                <span className="first-letter:capitalize">
-                  {errors.name?.message}
-                </span>
-              </p>
-            )}
-
-            <div className="mt-5">
+                  <span className="first-letter:capitalize">
+                    {errors.name?.message}
+                  </span>
+                </p>
+              )}
               <DropdownMenu
                 defaultOption="Choose category"
                 title="Category"
@@ -167,16 +265,18 @@ function ProductUpdating() {
                   "Rings",
                 ]}
                 onValueChange={(newValue) => setCategory(newValue)}
-                value={category}
               />
             </div>
+
             <div className="field">
               <textarea
-                rows="8"
+                rows="6"
                 id="description"
+                autoComplete="description"
                 required
                 autoCapitalize="off"
                 placeholder="description"
+                autoCorrect="off"
                 {...register("description")}
                 className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
               />
@@ -204,64 +304,87 @@ function ProductUpdating() {
                 </span>
               </p>
             )}
-            <div className="field">
-              <input
-                id="price"
-                required
-                type="number"
-                min={0}
-                placeholder="price"
-                {...register("price")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-              />
-              <label htmlFor="price">Price*</label>
-            </div>
-            {errors.price && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  enableBackground="new 0 0 24 24"
-                  className="fill-red mr-2"
-                  width={20}
-                  height={20}
-                  viewBox="0 0 24 24"
-                  id="exclamation-mark"
-                >
-                  <path
-                    d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                  ></path>
-                </svg>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="field first:mt-5">
+                <input
+                  id="price"
+                  autoComplete="price"
+                  required
+                  autoCapitalize="off"
+                  placeholder="price"
+                  type="number"
+                  min={0}
+                  autoCorrect="off"
+                  {...register("price")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                />
+                <label htmlFor="price">Price*</label>
+              </div>
+              {errors.price && (
+                <p className="text-left px-4 pt-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    enableBackground="new 0 0 24 24"
+                    className="fill-red mr-2"
+                    width={20}
+                    height={20}
+                    viewBox="0 0 24 24"
+                    id="exclamation-mark"
+                  >
+                    <path
+                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                    ></path>
+                  </svg>
 
-                <span className="first-letter:capitalize">
-                  {errors.price?.message}
-                </span>
-              </p>
-            )}
+                  <span className="first-letter:capitalize">
+                    {errors.price?.message}
+                  </span>
+                </p>
+              )}
+              <div className="field">
+                <input
+                  id="salePrice"
+                  autoComplete="salePrice"
+                  autoCapitalize="off"
+                  placeholder="salePrice"
+                  type="number"
+                  min={0}
+                  autoCorrect="off"
+                  {...register("salePrice")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                />
+                <label htmlFor="salePrice">Sale price</label>
+              </div>
+              {errors.salePrice && (
+                <p className="text-left px-4 pt-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    enableBackground="new 0 0 24 24"
+                    className="fill-red mr-2"
+                    width={20}
+                    height={20}
+                    viewBox="0 0 24 24"
+                    id="exclamation-mark"
+                  >
+                    <path
+                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
+  	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
+                    ></path>
+                  </svg>
 
-            <div className="mt-5">
-              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
-                Metals of product:
-              </p>
-              <CheckboxMenu
-                onValueChange={(value) => setMetals(value)}
-                options={[
-                  "Gold",
-                  "Gold Vermeil",
-                  "Mixed Metal",
-                  "Rose Gold",
-                  "Silver",
-                  "Sterling Silver",
-                ]}
-                values={metals}
-              />
+                  <span className="first-letter:capitalize">
+                    {errors.salePrice?.message}
+                  </span>
+                </p>
+              )}
             </div>
             <div className="mt-5">
               <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
                 Dimensions:
               </p>
               <ul>
-                {fields.map((item, index) => (
+                {dimensionFields.map((item, index) => (
                   <li
                     key={item.id}
                     className="flex items-center gap-4 mb-5 last:mb-0"
@@ -290,7 +413,7 @@ function ProductUpdating() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => remove(index)}
+                      onClick={() => removeDimension(index)}
                       className="flex items-center justify-center group"
                     >
                       <svg
@@ -313,59 +436,316 @@ function ProductUpdating() {
               </ul>
               <button
                 type="button"
-                onClick={() => append({ key: "", value: "" })}
+                onClick={() => appendDimension({ key: "", value: "" })}
                 className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
               >
                 Add dimensions
               </button>
             </div>
-            <p className="text-left text-base mt-5 font-SofiaBold text-color-foreground">
-              Product images:
-            </p>
-            {imageUrls.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mt-5">
-                {imageUrls.map((url, index) => (
-                  <div key={index} className="relative">
-                    <img src={url} alt={`image-${index}`} />
+            <div className="mt-5">
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Care Instructions:
+              </p>
+              {careInstructionFields.map((field, index) => (
+                <div key={field.id} className="mb-5 p-4 border rounded-xl">
+                  <div className="field">
+                    <input
+                      {...register(`careInstructions.${index}.type`)}
+                      placeholder="type"
+                      className="w-full h-[45px] p-[15px]"
+                    />
+                    <label>Type*</label>
+                  </div>
+                  <div className="field mt-3">
+                    <textarea
+                      rows={8}
+                      {...register(`careInstructions.${index}.content`)}
+                      placeholder="content"
+                      className="w-full p-[15px]"
+                    />
+                    <label>Content*</label>
+                  </div>
+                  {index > 0 && (
                     <button
                       type="button"
-                      onClick={() => handleImageDelete(url)}
-                      className="absolute top-2 right-2 group"
+                      onClick={() => removeCareInstruction(index)}
+                      className="mt-3 p-2 bg-red-500 text-black rounded"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 48 48"
-                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                        id="close"
-                      >
-                        <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                        <path fill="none" d="M0 0h48v48H0z"></path>
-                      </svg>
+                      Remove instruction
                     </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  appendCareInstruction({
+                    type: "",
+                    content: "",
+                  })
+                }
+                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              >
+                Add another instruction
+              </button>
+            </div>
+            <div className="mt-5">
+              <p className="text-left text-base mb-4 font-SofiaBold text-color-foreground">
+                Metals:
+              </p>
+              {metalFields.map((field, index) => (
+                <div key={field.id} className="mb-5 p-4 border rounded-xl">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="field first:mt-5">
+                      <Controller
+                        name={`metals.${index}.metal`}
+                        control={control}
+                        render={({ field }) => (
+                          <select
+                            {...field}
+                            className="w-full h-[45px] p-[15px]"
+                          >
+                            <option value="">Select metal</option>
+                            <option value="Gold">Gold</option>
+                            <option value="Gold Vermeil">Gold Vermeil</option>
+                            <option value="Mixed Metal">Mixed Metal</option>
+                            <option value="Rose Gold">Rose Gold</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Sterling Silver">
+                              Sterling Silver
+                            </option>
+                          </select>
+                        )}
+                      />
+                    </div>
+                    <div className="field mt-3">
+                      <input
+                        type="number"
+                        {...register(`metals.${index}.quantity`)}
+                        placeholder="Quantity"
+                        className="w-full h-[45px] p-[15px]"
+                      />
+                      <label>Quantity*</label>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-            <div className="flex items-center justify-between border mt-5 px-[15px] h-[45px] hover-border hover:border-no-color">
-              <label htmlFor="imageUrls" className="text-base text-left mr-4">
-                Images*
-              </label>
-              <input
-                type="file"
-                id="imageUrls"
-                multiple
-                onChange={handleImageAdd}
-                disabled={newImages.length + imageUrls.length === 5}
-                className="appearance-none m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
-              />
+                  <div className="field mt-3">
+                    <input
+                      {...register(`metals.${index}.material`)}
+                      placeholder="Material"
+                      className="w-full h-[45px] p-[15px]"
+                    />
+                    <label>Material*</label>
+                  </div>
+                  {metals[index]?.images ? (
+                    <>
+                      <div className="mt-5">
+                        {deletedPrimaryImage === "" && (
+                          <div className="relative">
+                            <img src={metals[index].images.primary} />
+                            <button
+                              type="button"
+                              className="absolute top-2 right-2 group"
+                              onClick={() => {
+                                setDeletedPrimaryImage(
+                                  metals[index].images.primary
+                                );
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 48 48"
+                                className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                                id="close"
+                              >
+                                <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
+                                <path fill="none" d="M0 0h48v48H0z"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                        <div className="flex mt-5 gap-5 justify-between items-center">
+                          <label>Primary image:</label>
+                          <input
+                            type="file"
+                            disabled={deletedPrimaryImage === ""}
+                            {...register(`metals.${index}.images.primary`)}
+                            className=""
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-5">
+                        {deletedSecondaryImage === "" && (
+                          <div className="relative">
+                            <img src={metals[index].images.secondary} />
+                            <button
+                              type="button"
+                              className="absolute top-2 right-2 group"
+                              onClick={() => {
+                                setDeletedPrimaryImage(
+                                  metals[index].images.secondary
+                                );
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 48 48"
+                                className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                                id="close"
+                              >
+                                <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
+                                <path fill="none" d="M0 0h48v48H0z"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                        <div className="flex mt-5 gap-5 justify-between items-center">
+                          <label>Secondary image:</label>
+                          <input
+                            type="file"
+                            disabled={deletedSecondaryImage === ""}
+                            {...register(`metals.${index}.images.secondary`)}
+                            className=""
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mt-5">
+                        {metals[index].images.others
+                          .filter((url) => !deletedImages.includes(url))
+                          .map((url) => (
+                            <div key={url} className="relative">
+                              <img src={url} className="" />
+                              <button
+                                type="button"
+                                className="absolute top-1 right-1 group"
+                                onClick={() => {
+                                  setDeletedImages([...deletedImages, url]);
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 48 48"
+                                  className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                                  id="close"
+                                >
+                                  <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
+                                  <path fill="none" d="M0 0h48v48H0z"></path>
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+                      <div className="mt-5  flex gap-5 justify-between items-center">
+                        <label>Other images:</label>
+                        <input
+                          type="file"
+                          multiple
+                          {...register(`metals.${index}.images.others`)}
+                          className=""
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="mt-5">
+                        <div className="flex gap-5 justify-between items-center">
+                          <label>Primary image:</label>
+                          <input
+                            type="file"
+                            {...register(`metals.${index}.images.primary`)}
+                            className=""
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-5">
+                        <div className="flex gap-5 justify-between items-center">
+                          <label>Secondary image:</label>
+                          <input
+                            type="file"
+                            {...register(`metals.${index}.images.secondary`)}
+                            className=""
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mt-5">
+                        {metals[index]?.images.others
+                          .filter((url) => !deletedImages.includes(url))
+                          .map((url) => (
+                            <div key={url} className="relative">
+                              <img src={url} className="" />
+                              <button
+                                type="button"
+                                className="absolute top-1 right-1 group"
+                                onClick={() => {
+                                  setDeletedImages([...deletedImages, url]);
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 48 48"
+                                  className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                                  id="close"
+                                >
+                                  <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
+                                  <path fill="none" d="M0 0h48v48H0z"></path>
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+                      <div className="mt-5  flex gap-5 justify-between items-center">
+                        <label>Other images:</label>
+                        <input
+                          type="file"
+                          multiple
+                          {...register(`metals.${index}.images.others`)}
+                          className=""
+                        />
+                      </div>
+                    </>
+                  )}
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeMetal(index)}
+                      className="mt-3 p-2 bg-red-500 text-black rounded"
+                    >
+                      Remove metal
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  appendMetal({
+                    metal: "",
+                    quantity: 0,
+                    material: "",
+                    images: {
+                      primary: "",
+                      secondary: "",
+                      others: [],
+                    },
+                  })
+                }
+                className="p-3 border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
+              >
+                Add another metal
+              </button>
             </div>
             <button
               type="submit"
               className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
             >
-              Update product
+              <span>Update product</span>
             </button>
           </form>
         </div>

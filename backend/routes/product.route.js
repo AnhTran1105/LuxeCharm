@@ -36,7 +36,7 @@ router.delete("/products", verifyAdmin, deleteProducts);
 router.put(
   "/products/:id",
   verifyAdmin,
-  upload.fields([{ name: "imageUrls", maxCount: 5 }]),
+  upload.fields(metalFields),
   updateProduct
 );
 
