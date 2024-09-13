@@ -8,6 +8,7 @@ import Reviews from "../components/Reviews";
 import { Rating } from "react-simple-star-rating";
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
+import { useSearchParams } from "react-router-dom";
 
 function Product() {
   const [product, setProduct] = useState();
@@ -16,6 +17,7 @@ function Product() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleIncrease = () => {
     setQuantity((prev) => prev + 1);
@@ -43,7 +45,7 @@ function Product() {
       try {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
-        setMetal(productResponse.metals[0].metal);
+        setMetal(searchParams.get("metal") || productResponse.metals[0].metal);
         setMetalImages(
           productResponse.metals.find(
             (item) => item.metal === productResponse.metals[0].metal
@@ -53,7 +55,7 @@ function Product() {
         console.error(error);
       }
     })();
-  }, [id]);
+  }, [id, searchParams]);
 
   useEffect(() => {
     if (metal) {
@@ -118,7 +120,10 @@ function Product() {
                         item.metal === metal && "bg-color-foreground text-white"
                       }`}
                       key={item.metal}
-                      onClick={() => setMetal(item.metal)}
+                      onClick={() => {
+                        setMetal(item.metal);
+                        setSearchParams(`metal=${item.metal}`);
+                      }}
                     >
                       {item.metal}
                     </button>

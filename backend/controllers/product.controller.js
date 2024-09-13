@@ -4,8 +4,67 @@ import cloudinary from "cloudinary";
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find().sort("-createdAt");
-    res.json(products);
+    const { category, metal, material, minPrice, maxPrice } = req.query;
+
+    let query = {};
+
+    if (category) query.category = category;
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    const products = await Product.find(query).sort("-createdAt");
+
+    let filteredProducts = products;
+
+    // Nếu có filter theo metal
+    if (metal) {
+      const metalArray = metal.split(",");
+
+      // Lọc các sản phẩm có loại metal khớp với filter
+      filteredProducts = products.flatMap((product) => {
+        const filteredMetals = product.metals.filter((metalItem) =>
+          metalArray.includes(metalItem.metal)
+        );
+
+        if (filteredMetals.length > 0) {
+          return filteredMetals.map((metalItem) => ({
+            ...product.toObject(),
+            name: `${product.name} - ${metalItem.metal}`, // Hiển thị tên sản phẩm kèm tên metal
+            defaultMetal: metalItem, // Thêm defaultMetal để hiển thị ảnh tương ứng
+            metals: [metalItem], // Chỉ chứa loại metal được lọc
+          }));
+        }
+
+        return []; // Không trả về sản phẩm nào nếu không khớp metal
+      });
+    } else {
+      // Nếu không có filter theo metal
+      filteredProducts = products.flatMap((product) => {
+        // Nếu sản phẩm chỉ có 1 metal, trả về sản phẩm gốc
+        if (product.metals.length === 1) {
+          return [product];
+        }
+
+        // Nếu sản phẩm có nhiều hơn 1 metal, trả về từng loại metal kèm tên
+        return product.metals.map((metalItem) => ({
+          ...product.toObject(),
+          name: `${product.name} - ${metalItem.metal}`, // Hiển thị tên sản phẩm kèm tên metal
+          defaultMetal: metalItem, // Thêm defaultMetal để hiển thị ảnh tương ứng
+        }));
+      });
+    }
+
+    // Lọc theo material nếu có
+    if (material) {
+      filteredProducts = filteredProducts.filter((product) =>
+        product.metals.some((metalItem) => metalItem.material === material)
+      );
+    }
+
+    res.json(filteredProducts);
   } catch (error) {
     next(error);
   }
@@ -213,8 +272,6 @@ export const updateProduct = async (req, res, next) => {
       }
     }
 
-    console.log(metals);
-
     const updatedMetals = await Promise.all(
       metals.map(async (metal, index) => {
         if (req.files[`metals.${index}.images.primary`]) {
@@ -263,6 +320,7 @@ export const updateProduct = async (req, res, next) => {
             ...otherResults.map((result) => result.secure_url)
           );
         }
+
         return metal;
       })
     );

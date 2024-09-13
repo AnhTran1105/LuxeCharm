@@ -1,24 +1,9 @@
-import { useEffect, useState } from "react";
-import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import Button from "./Button";
 import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 
-function ProductList() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const productResponse = await axios.get("/products");
-        setProducts(productResponse);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
-
+function ProductList({ products }) {
   const dispatch = useDispatch();
 
   return (
@@ -28,20 +13,37 @@ function ProductList() {
     >
       {products.map((product) => (
         <li
-          key={product._id}
+          key={`${product._id}-${
+            product.defaultMetal && product.defaultMetal.metal
+          }`}
           className="group cursor-pointer relative carousel-item"
         >
-          <a href={`/products/${product._id}`} className="">
+          <a
+            href={
+              product.defaultMetal
+                ? `/products/${product._id}?metal=${product.defaultMetal.metal}`
+                : `/products/${product._id}`
+            }
+            className=""
+          >
             <div className="relative overflow-hidden">
               <img
                 loading="lazy"
                 alt={product.name}
-                src={product.metals[0].images.primary}
+                src={
+                  product.defaultMetal
+                    ? product.defaultMetal.images.primary
+                    : product.metals[0].images.primary
+                }
                 className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
               />
               <img
                 alt={product.name}
-                src={product.metals[0].images.secondary}
+                src={
+                  product.defaultMetal
+                    ? product.defaultMetal.images.secondary
+                    : product.metals[0].images.secondary
+                }
                 loading="lazy"
                 className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
               ></img>
@@ -58,12 +60,9 @@ function ProductList() {
             )}
             <div className="py-[10px] pb-[17px] text-center text-sm">
               <h3>
-                <a
-                  href="/"
-                  className="group-hover:underline underline-offset-3px"
-                >
+                <div className="group-hover:underline underline-offset-3px">
                   {product.name}
-                </a>
+                </div>
               </h3>
               <div>
                 {product.salePrice ? (
