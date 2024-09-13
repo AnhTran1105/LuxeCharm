@@ -13,7 +13,9 @@ import { closeOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 
 function OptionsModal() {
-  const { isOpened, productId } = useSelector((state) => state.optionsModal);
+  const { isOpened, productId, defaultMetal } = useSelector(
+    (state) => state.optionsModal
+  );
 
   const dispatch = useDispatch();
   const [product, setProduct] = useState();
@@ -48,13 +50,13 @@ function OptionsModal() {
         try {
           const productResponse = await axios.get(`/products/${productId}`);
           setProduct(productResponse);
-          setMetal(productResponse.metals[0].metal);
+          setMetal(defaultMetal.metal);
         } catch (error) {
           console.error(error);
         }
       })();
     }
-  }, [productId]);
+  }, [productId, defaultMetal]);
 
   return (
     isOpened &&
@@ -92,8 +94,8 @@ function OptionsModal() {
               <div className="w-[46%] h-full overflow-hidden flex justify-center">
                 <img
                   src={
-                    product.metals.find((item) => item.metal === metal)
-                      .imageUrls[0]
+                    product.metals.find((item) => item.metal === metal).images
+                      .primary
                   }
                   className="w-full"
                   alt={product.name}

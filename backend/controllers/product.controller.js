@@ -4,26 +4,43 @@ import cloudinary from "cloudinary";
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    const { category, metal, material, minPrice, maxPrice } = req.query;
+    const { category, metal, material, price } = req.query;
+
+    const minPrice =
+      price?.from !== undefined && price?.from !== null ? price.from : null;
+    const maxPrice =
+      price?.to !== undefined && price?.to !== null ? price.to : null;
 
     let query = {};
 
     if (category) query.category = category;
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+
+    if (minPrice !== null || maxPrice !== null) {
+      query.$or = [
+        {
+          salePrice: {
+            $ne: null,
+            ...(minPrice !== null && { $gte: Number(minPrice) }),
+            ...(maxPrice !== null && { $lte: Number(maxPrice) }),
+          },
+        },
+        {
+          salePrice: null,
+          price: {
+            ...(minPrice !== null && { $gte: Number(minPrice) }),
+            ...(maxPrice !== null && { $lte: Number(maxPrice) }),
+          },
+        },
+      ];
     }
 
     const products = await Product.find(query).sort("-createdAt");
 
     let filteredProducts = products;
 
-    // Nếu có filter theo metal
     if (metal) {
       const metalArray = metal.split(",");
 
-      // Lọc các sản phẩm có loại metal khớp với filter
       filteredProducts = products.flatMap((product) => {
         const filteredMetals = product.metals.filter((metalItem) =>
           metalArray.includes(metalItem.metal)
@@ -32,32 +49,28 @@ export const getAllProducts = async (req, res, next) => {
         if (filteredMetals.length > 0) {
           return filteredMetals.map((metalItem) => ({
             ...product.toObject(),
-            name: `${product.name} - ${metalItem.metal}`, // Hiển thị tên sản phẩm kèm tên metal
-            defaultMetal: metalItem, // Thêm defaultMetal để hiển thị ảnh tương ứng
-            metals: [metalItem], // Chỉ chứa loại metal được lọc
+            name: `${product.name} - ${metalItem.metal}`,
+            defaultMetal: metalItem,
+            metals: [metalItem],
           }));
         }
 
-        return []; // Không trả về sản phẩm nào nếu không khớp metal
+        return [];
       });
     } else {
-      // Nếu không có filter theo metal
       filteredProducts = products.flatMap((product) => {
-        // Nếu sản phẩm chỉ có 1 metal, trả về sản phẩm gốc
         if (product.metals.length === 1) {
           return [product];
         }
 
-        // Nếu sản phẩm có nhiều hơn 1 metal, trả về từng loại metal kèm tên
         return product.metals.map((metalItem) => ({
           ...product.toObject(),
-          name: `${product.name} - ${metalItem.metal}`, // Hiển thị tên sản phẩm kèm tên metal
-          defaultMetal: metalItem, // Thêm defaultMetal để hiển thị ảnh tương ứng
+          name: `${product.name} - ${metalItem.metal}`,
+          defaultMetal: metalItem,
         }));
       });
     }
 
-    // Lọc theo material nếu có
     if (material) {
       filteredProducts = filteredProducts.filter((product) =>
         product.metals.some((metalItem) => metalItem.material === material)

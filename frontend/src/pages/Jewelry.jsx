@@ -10,7 +10,10 @@ function Jewelry() {
     availability: [],
     metal: [],
     material: [],
-    price: [],
+    price: {
+      from: null,
+      to: null,
+    },
   });
 
   const handleFilterChange = (newFilters) => {
@@ -21,9 +24,18 @@ function Jewelry() {
     (async () => {
       try {
         const filtersToSend = { ...filters };
+
+        if (
+          filtersToSend.price?.from === null &&
+          filtersToSend.price?.to === null
+        ) {
+          delete filtersToSend.price;
+        }
+
         if (filtersToSend.metal.length > 0) {
           filtersToSend.metal = filtersToSend.metal.join(",");
         }
+
         const response = await axios.get("/products", {
           params: filtersToSend,
         });
@@ -173,7 +185,15 @@ function Jewelry() {
               </div>
             </a>
           </div>
-          <Filter onFilterChange={handleFilterChange} />
+          <Filter
+            onFilterChange={handleFilterChange}
+            filteredProductQuantity={products.length}
+            maxPrice={products.reduce((maxPrice, product) => {
+              const currentPrice =
+                product.salePrice !== null ? product.salePrice : product.price;
+              return Math.max(maxPrice, currentPrice);
+            }, 0)}
+          />
           <ProductList products={products} />
           <nav className="mt-[50px]">
             <ul role="list" className="flex justify-center items-center">
@@ -254,7 +274,6 @@ function Jewelry() {
               </li>
             </ul>
           </nav>
-          {/* End Pagination */}
         </div>
       </div>
     )

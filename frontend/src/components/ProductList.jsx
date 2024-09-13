@@ -81,7 +81,14 @@ function ProductList({ products }) {
           {product.metals.length > 1 ? (
             <Button
               title="Choose options"
-              onClick={() => dispatch(openOptionsModal(product._id))}
+              onClick={() =>
+                dispatch(
+                  openOptionsModal({
+                    productId: product._id,
+                    defaultMetal: product.defaultMetal,
+                  })
+                )
+              }
             />
           ) : (
             <Button

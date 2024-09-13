@@ -12,6 +12,10 @@ function FilterMenu({
   const [isVisible, setIsVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState(initialSelectedItems);
 
+  useEffect(() => {
+    setSelectedItems(initialSelectedItems);
+  }, [initialSelectedItems]);
+
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
   };
