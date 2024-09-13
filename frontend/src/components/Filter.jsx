@@ -1,14 +1,19 @@
 import FilterMenu from "./FilterMenu";
 import { useRef, useState, useEffect, useCallback } from "react";
 import PriceFilter from "./PriceFilter";
+import SortMenu from "./SortMenu";
 
-function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
+function Filter({
+  onFilterChange,
+  filteredProductQuantity,
+  maxPrice,
+  setSortingType,
+  sortingType,
+}) {
   const toggleMenuVisibility = useRef([]);
   const [filters, setFilters] = useState({
     category: [],
-    availability: [],
     metal: [],
-    material: [],
     price: { from: null, to: null },
   });
 
@@ -62,9 +67,7 @@ function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
   const handleRemoveAllFilters = () => {
     setFilters({
       category: [],
-      availability: [],
       metal: [],
-      material: [],
       price: {
         from: null,
         to: null,
@@ -147,50 +150,10 @@ function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
           </FilterMenu>
           <FilterMenu
             onFilterChange={handleFilterChange}
-            initialSelectedItems={filters.availability}
-            filterType="availability"
-            onToggleVisibility={(toggleFn) =>
-              (toggleMenuVisibility.current[1] = toggleFn)
-            }
-            items={[
-              {
-                name: "In stock",
-                quantity: 1,
-              },
-              {
-                name: "Out of stock",
-                quantity: 1,
-              },
-            ]}
-          >
-            <div
-              onClick={() => handleButtonClick(1)}
-              className="mr-[35px] flex justify-center items-center group cursor-pointer"
-            >
-              <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
-                Availability
-              </span>
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 22 13"
-                className="w-[10px] h-[10px]"
-              >
-                <polyline
-                  points="21.557 1.222 11 11.778 0.443 1.222"
-                  fill="none"
-                  stroke="#121212"
-                  strokeMiterlimit="10"
-                ></polyline>
-              </svg>
-            </div>
-          </FilterMenu>
-          <FilterMenu
-            onFilterChange={handleFilterChange}
             initialSelectedItems={filters.metal}
             filterType="metal"
             onToggleVisibility={(toggleFn) =>
-              (toggleMenuVisibility.current[2] = toggleFn)
+              (toggleMenuVisibility.current[1] = toggleFn)
             }
             items={[
               {
@@ -220,51 +183,11 @@ function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
             ]}
           >
             <div
-              onClick={() => handleButtonClick(2)}
+              onClick={() => handleButtonClick(1)}
               className="mr-[35px] flex justify-center items-center group cursor-pointer"
             >
               <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
                 Metal
-              </span>
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 22 13"
-                className="w-[10px] h-[10px]"
-              >
-                <polyline
-                  points="21.557 1.222 11 11.778 0.443 1.222"
-                  fill="none"
-                  stroke="#121212"
-                  strokeMiterlimit="10"
-                ></polyline>
-              </svg>
-            </div>
-          </FilterMenu>
-          <FilterMenu
-            onFilterChange={handleFilterChange}
-            initialSelectedItems={filters.material}
-            filterType="material"
-            onToggleVisibility={(toggleFn) =>
-              (toggleMenuVisibility.current[3] = toggleFn)
-            }
-            items={[
-              {
-                name: "Faux Leather",
-                quantity: 1,
-              },
-              {
-                name: "Resin",
-                quantity: 1,
-              },
-            ]}
-          >
-            <div
-              onClick={() => handleButtonClick(3)}
-              className="mr-[35px] flex justify-center items-center group cursor-pointer"
-            >
-              <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
-                Material
               </span>
               <svg
                 aria-hidden="true"
@@ -290,11 +213,11 @@ function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
             }}
             filterType="price"
             onToggleVisibility={(toggleFn) =>
-              (toggleMenuVisibility.current[4] = toggleFn)
+              (toggleMenuVisibility.current[3] = toggleFn)
             }
           >
             <div
-              onClick={() => handleButtonClick(4)}
+              onClick={() => handleButtonClick(3)}
               className="mr-[35px] flex justify-center items-center group cursor-pointer"
             >
               <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
@@ -318,27 +241,19 @@ function Filter({ onFilterChange, filteredProductQuantity, maxPrice }) {
         </div>
         <div className="flex justify-center items-center">
           <h2 className="mr-5">Sort by:</h2>
-          <div
-            onClick={handleButtonClick}
-            className="mr-[35px] w-[150px] flex justify-between items-center group cursor-pointer"
-          >
-            <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
-              Featured
-            </span>
-            <svg
-              aria-hidden="true"
-              focusable="false"
-              viewBox="0 0 22 13"
-              className="w-[10px] h-[10px]"
-            >
-              <polyline
-                points="21.557 1.222 11 11.778 0.443 1.222"
-                fill="none"
-                stroke="#121212"
-                strokeMiterlimit="10"
-              ></polyline>
-            </svg>
-          </div>
+          <SortMenu
+            items={[
+              "Featured",
+              "Alphabetically, A - Z",
+              "Alphabetically, Z - A",
+              "Price, low to high",
+              "Price, high to low",
+              "Date, old to new",
+              "Date, new to old",
+            ]}
+            sortingType={sortingType}
+            setSortingType={setSortingType}
+          />
           <h2 className="mr-5">{filteredProductQuantity} products</h2>
         </div>
       </div>

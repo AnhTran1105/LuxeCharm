@@ -5,11 +5,10 @@ import axios from "../utils/axios";
 
 function Jewelry() {
   const [products, setProducts] = useState([]);
+  const [sortingType, setSortingType] = useState("Featured");
   const [filters, setFilters] = useState({
     category: [],
-    availability: [],
     metal: [],
-    material: [],
     price: {
       from: null,
       to: null,
@@ -23,7 +22,7 @@ function Jewelry() {
   useEffect(() => {
     (async () => {
       try {
-        const filtersToSend = { ...filters };
+        const filtersToSend = { ...filters, sort: sortingType };
 
         if (
           filtersToSend.price?.from === null &&
@@ -44,7 +43,7 @@ function Jewelry() {
         console.error("Error fetching products:", error);
       }
     })();
-  }, [filters]);
+  }, [filters, sortingType]);
 
   return (
     products && (
@@ -186,6 +185,8 @@ function Jewelry() {
             </a>
           </div>
           <Filter
+            sortingType={sortingType}
+            setSortingType={setSortingType}
             onFilterChange={handleFilterChange}
             filteredProductQuantity={products.length}
             maxPrice={products.reduce((maxPrice, product) => {

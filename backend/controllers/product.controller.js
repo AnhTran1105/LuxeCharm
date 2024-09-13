@@ -4,19 +4,23 @@ import cloudinary from "cloudinary";
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    const { category, metal, material, price } = req.query;
+    const { category, metal, price, sort } = req.query;
 
     const minPrice =
       price?.from !== undefined && price?.from !== null ? price.from : null;
     const maxPrice =
       price?.to !== undefined && price?.to !== null ? price.to : null;
 
-    let query = {};
+    let matchQuery = {};
 
-    if (category) query.category = category;
+    if (category) {
+      matchQuery.category = Array.isArray(category)
+        ? { $in: category }
+        : category;
+    }
 
     if (minPrice !== null || maxPrice !== null) {
-      query.$or = [
+      matchQuery.$or = [
         {
           salePrice: {
             $ne: null,
@@ -34,7 +38,34 @@ export const getAllProducts = async (req, res, next) => {
       ];
     }
 
-    const products = await Product.find(query).sort("-createdAt");
+    let sortOption = {};
+    if (sort === "Price, low to high") {
+      sortOption = { computedPrice: 1 };
+    } else if (sort === "Price, high to low") {
+      sortOption = { computedPrice: -1 };
+    } else if (sort === "Alphabetically, A - Z") {
+      sortOption = { name: 1 };
+    } else if (sort === "Alphabetically, Z - A") {
+      sortOption = { name: -1 };
+    } else if (sort === "Date, old to new") {
+      sortOption = { createdAt: 1 };
+    } else if (sort === "Date, new to old") {
+      sortOption = { createdAt: -1 };
+    } else {
+      sortOption = { rating: 1 };
+    }
+
+    const products = await Product.aggregate([
+      { $match: matchQuery },
+      {
+        $addFields: {
+          computedPrice: {
+            $ifNull: ["$salePrice", "$price"],
+          },
+        },
+      },
+      { $sort: sortOption },
+    ]);
 
     let filteredProducts = products;
 
@@ -48,7 +79,7 @@ export const getAllProducts = async (req, res, next) => {
 
         if (filteredMetals.length > 0) {
           return filteredMetals.map((metalItem) => ({
-            ...product.toObject(),
+            ...product,
             name: `${product.name} - ${metalItem.metal}`,
             defaultMetal: metalItem,
             metals: [metalItem],
@@ -64,17 +95,11 @@ export const getAllProducts = async (req, res, next) => {
         }
 
         return product.metals.map((metalItem) => ({
-          ...product.toObject(),
+          ...product,
           name: `${product.name} - ${metalItem.metal}`,
           defaultMetal: metalItem,
         }));
       });
-    }
-
-    if (material) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.metals.some((metalItem) => metalItem.material === material)
-      );
     }
 
     res.json(filteredProducts);

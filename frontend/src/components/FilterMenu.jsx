@@ -50,7 +50,7 @@ function FilterMenu({
         offset={[0, 0]}
         visible={isVisible}
         render={() => (
-          <div className="border border-color-foreground/10 bg-white w-[350px]">
+          <div className="border border-color-foreground/10 bg-white w-[240px]">
             <div className="border-b border-color-foreground/20 py-[15px] px-5 flex justify-between items-center">
               <span>{selectedItems.length} selected</span>
               <button onClick={resetSelection} className="link" role="button">
@@ -62,11 +62,11 @@ function FilterMenu({
                 <li
                   key={index}
                   onClick={() => handleItemClick(item)}
-                  className="flex items-center cursor-pointer py-[10px] pr-5"
+                  className="flex items-center cursor-pointer py-[10px] pr-5 relative"
                 >
                   <svg
-                    className="mr-4"
                     width="16"
+                    className="mr-4"
                     height="16"
                     viewBox="0 0 16 16"
                     aria-hidden="true"
@@ -76,25 +76,26 @@ function FilterMenu({
                       width="16"
                       height="16"
                       stroke="currentColor"
-                      fill={
-                        selectedItems.includes(item.name)
-                          ? "currentColor"
-                          : "none"
-                      }
+                      fill="none"
                       strokeWidth="1"
                     ></rect>
-                    {selectedItems.includes(item.name) && (
-                      <path
-                        d="M4 8l3 3 5-5"
-                        stroke="white"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                    )}
                   </svg>
-                  <span aria-hidden="true capitalize">
-                    {item.name} ({item.quantity})
-                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    id="check"
+                    className={`${
+                      selectedItems.includes(item.name)
+                        ? "visible"
+                        : "invisible"
+                    } fill-foreground75 absolute`}
+                  >
+                    <path fill="none" d="M0 0h24v24H0V0z"></path>
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
+                  </svg>
+                  <span aria-hidden="true capitalize">{item.name}</span>
                 </li>
               ))}
             </ul>
