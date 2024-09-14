@@ -97,7 +97,7 @@ function Header() {
 
   return (
     <header
-      className={`border-b-[1px] bg-white z-[9999] border-color-foreground/8 ${
+      className={`border-b-[1px] bg-white z-[9999] border-border-tertiary ${
         isAtTop ? "relative" : "fixed top-0 left-0"
       } w-full transition-transform duration-300 ease-out ${
         isVisible

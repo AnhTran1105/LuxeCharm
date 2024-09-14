@@ -97,7 +97,12 @@ export const verifyOrder = async (req, res, next) => {
       for (let item of order.cartItems) {
         await Product.findOneAndUpdate(
           { _id: item.productId, "metals.metal": item.metal },
-          { $inc: { "metals.$.quantity": -item.quantity } }
+          {
+            $inc: {
+              "metals.$.quantity": -item.quantity,
+              soldCount: item.quantity,
+            },
+          }
         );
       }
 

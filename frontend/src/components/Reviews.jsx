@@ -4,6 +4,7 @@ import axios from "../utils/axios";
 import ReviewModal from "./ReviewModal";
 import { Rating } from "react-simple-star-rating";
 import moment from "moment";
+import ButtonTag from "./CustomTags/ButtonTag";
 
 const tooltipArray = ["Terrible", "Bad", "Average", "Great", "Awesome"];
 function Reviews({ productId, avgRating }) {
@@ -299,13 +300,11 @@ function Reviews({ productId, avgRating }) {
                     <div className="font-SofiaBold mt-3 text-lg">
                       We’re looking for feedback!
                     </div>
-                    <div className="mt-4">Let us know what you think</div>
+                    <div className="my-4">Let us know what you think</div>
                     <div>
-                      <Button
-                        title="Be the first to write a review!"
-                        onClick={() => setOpened(true)}
-                        className="!w-64 px-4 rounded-full text-sm h-9 mt-4"
-                      />
+                      <ButtonTag onClick={() => setOpened(true)}>
+                        Be the first to write a review!
+                      </ButtonTag>
                     </div>
                   </div>
                 </div>

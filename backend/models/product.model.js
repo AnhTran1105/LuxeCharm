@@ -27,7 +27,7 @@ const dimensionSchema = new mongoose.Schema({
 });
 
 const metalSchema = new mongoose.Schema({
-  metal: {
+  type: {
     type: String,
     required: true,
     enum: [
@@ -43,6 +43,11 @@ const metalSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["In stock", "Out of stock", "Low stock"],
   },
   images: {
     primary: {
@@ -133,9 +138,57 @@ const productSchema = new mongoose.Schema(
         default: 0,
       },
     },
+    soldCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
+
+productSchema.pre("save", function (next) {
+  this.metals.forEach((metal) => {
+    if (metal.quantity > 10) {
+      metal.status = "In stock";
+    } else if (metal.quantity > 0) {
+      metal.status = "Low stock";
+    } else {
+      metal.status = "Out of stock";
+    }
+  });
+  next();
+});
+
+productSchema.pre("findOneAndUpdate", function (next) {
+  this.metals.forEach((metal) => {
+    if (metal.quantity > 10) {
+      metal.status = "In stock";
+    } else if (metal.quantity > 0) {
+      metal.status = "Low stock";
+    } else {
+      metal.status = "Out of stock";
+    }
+  });
+  next();
+});
+
+productSchema.statics.findSimilarProducts = async function (
+  productId,
+  limit = 5
+) {
+  const product = await this.findById(productId);
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  return this.find({
+    _id: { $ne: product._id },
+    category: product.category,
+  })
+    .limit(limit)
+    .select("name category price images");
+};
 
 const Product = mongoose.model("Product", productSchema);
 

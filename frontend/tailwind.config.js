@@ -3,17 +3,24 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     colors: {
-      "color-foreground": "rgb(18,18,18)",
-      primary: "#a16854",
-      hover: "#a16854",
-      "badge-background": "rgb(236,218,218)",
+      text: {
+        primary: "rgba(18, 18, 18, 1)",
+        secondary: "rgba(18, 18, 18, 0.75)",
+        hover: "rgba(18, 18, 18, 1)",
+      },
+      background: {
+        primary: "#a16854",
+        secondary: "#f3f3f3",
+        hover: "",
+      },
+      border: {
+        primary: "rgba(18, 18, 18, 1)",
+        secondary: "rgba(18, 18, 18, 0.35)",
+        tertiary: "rgba(18, 18, 18, 0.08)",
+      },
       white: "#fff",
-      black: "#121212",
+      black: "rgba(18, 18, 18, 1)",
       red: "#E4003A",
-      background: "rgb(243, 243, 243)",
-      foreground75: "rgba(18, 18, 18, 0.75)",
-      border: "#e8e3dd",
-      hoverMini: "#f2f2f2",
     },
     fontFamily: {
       SofiaBold: ['"SofiaBold"'],
@@ -21,9 +28,6 @@ export default {
     extend: {
       opacity: {
         8: "0.08",
-      },
-      textUnderlineOffset: {
-        "3px": "3px",
       },
       scale: {
         103: "103%",

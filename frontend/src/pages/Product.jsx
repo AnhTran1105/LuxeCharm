@@ -9,6 +9,7 @@ import { Rating } from "react-simple-star-rating";
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import { useSearchParams } from "react-router-dom";
+import ButtonTag from "../components/CustomTags/ButtonTag";
 
 function Product() {
   const [product, setProduct] = useState();
@@ -100,10 +101,10 @@ function Product() {
               </div>
               {product.salePrice ? (
                 <div className="my-[15px] text-lg flex items-center">
-                  <span className="text-foreground75 line-through mr-4">
+                  <span className="text-text-secondary line-through mr-4">
                     ${product.price}.00
                   </span>
-                  <span className="mr-2">${product.salePrice}.00</span>
+                  <span className="mr-2 text-xl">${product.salePrice}.00</span>
                   <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                     Sale
                   </span>
@@ -112,9 +113,9 @@ function Product() {
                 <div className="my-[15px] text-lg">${product.price}.00</div>
               )}
               <div className="my-[15px]">
-                <p className="text-[13px] text-foreground75 mb-3">Metal</p>
-                <div className="flex gap-2">
-                  {product.metals.map((item) => (
+                <p className="text-[13px] text-text-secondary mb-3">Metal</p>
+                <div className="flex gap-3">
+                  {/* {product.metals.map((item) => (
                     <button
                       className={`py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground transition-[border] duration-100 tracking-[1px] leading-none text-sm ${
                         item.metal === metal && "bg-color-foreground text-white"
@@ -127,6 +128,22 @@ function Product() {
                     >
                       {item.metal}
                     </button>
+                  ))} */}
+                  {product.metals.map((item) => (
+                    <ButtonTag
+                      key={item.metal}
+                      className={
+                        item.metal === metal
+                          ? "bg-black text-white hover:text-white"
+                          : ""
+                      }
+                      onClick={() => {
+                        setMetal(item.metal);
+                        setSearchParams(`metal=${item.metal}`);
+                      }}
+                    >
+                      {item.metal}
+                    </ButtonTag>
                   ))}
                 </div>
               </div>
@@ -134,7 +151,7 @@ function Product() {
                 {product.metals.find((item) => item.metal === metal).quantity <
                 5 ? (
                   <p
-                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-foreground75"
+                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
                     role="status"
                   >
                     <svg width="15" height="15" aria-hidden="true">
@@ -157,7 +174,7 @@ function Product() {
                   </p>
                 ) : (
                   <p
-                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-foreground75"
+                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
                     role="status"
                   >
                     <svg
@@ -186,7 +203,7 @@ function Product() {
                 )}
               </div>
               <div className="my-[15px]">
-                <p className="text-[13px] text-foreground75 mb-3">Quantity</p>
+                <p className="text-[13px] text-text-secondary mb-3">Quantity</p>
                 <div className="quantity">
                   <button className="quantity-button" onClick={handleDecrease}>
                     <svg
@@ -266,7 +283,7 @@ function Product() {
                 />
               </div>
               <div className="border-b border-color-foreground/8">
-                <p className="my-[25px] text-xs text-foreground75">
+                <p className="my-[25px] text-xs text-text-secondary">
                   {product.description}
                 </p>
               </div>

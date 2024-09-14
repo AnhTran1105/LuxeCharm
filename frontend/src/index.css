@@ -24,8 +24,12 @@
   }
 }
 
+html {
+  @apply text-sm;
+}
+
 .Toastify__toast {
-  @apply !p-4 border border-foreground75 !rounded-none !shadow-sm !text-center !text-color-foreground;
+  @apply !p-4 border border-border-primary !rounded-none !shadow-sm !text-center !text-text-primary;
 }
 
 .Toastify__toast-theme--dark {
@@ -37,11 +41,11 @@
 }
 
 .Toastify__close-button {
-  @apply !text-foreground75 !opacity-100;
+  @apply !text-text-secondary !opacity-100;
 }
 
 .Toastify__toast-body {
-  @apply !text-foreground75;
+  @apply !text-text-secondary;
   font-family: "Sofia";
   font-size: 16px;
 }
@@ -96,7 +100,7 @@ header .active {
 }
 
 .link {
-  @apply text-color-foreground/75 block text-[13px] py-[6px] cursor-pointer underline-offset-3px tracking-[0.6px];
+  @apply text-text-secondary block text-[13px] py-[6px] cursor-pointer underline-offset-2 tracking-[0.6px];
 }
 
 .link:hover {
@@ -163,7 +167,7 @@ a:not(.arrow).pagination-item:hover:after {
 }
 
 .active-page {
-  @apply text-color-foreground/75;
+  @apply text-text-secondary;
 }
 
 .active-page.pagination-item:after {
@@ -430,7 +434,7 @@ textarea::placeholder {
 }
 
 .slick-dots.slick-thumb li.slick-active a {
-  @apply outline outline-color-foreground;
+  @apply outline outline-text-primary;
 }
 
 .slick-dots.slick-thumb li a img {

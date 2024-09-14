@@ -1,82 +1,57 @@
+import LinkTag from "./CustomTags/LinkTag";
+
 function Footer() {
   return (
-    <footer className="pt-12 pb-4 bg-background">
+    <footer className="pt-12 pb-4 bg-background-secondary">
       <div className="max-w-[920px] mx-auto px-[50px]">
         <div className="grid grid-cols-3 gap-3">
           <div>
             <h2 className="mb-5 text-lg">Customer Care</h2>
-            <ul>
-              <li className="mr-[15px]">
-                <a href="/helpguide" className="link !text-sm !px-0 !py-2">
-                  Help Guide
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/shipping" className="link !text-sm !px-0 !py-2">
-                  Shipping
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/returns" className="link !text-sm !px-0 !py-2">
-                  Returns + Exchanges
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/giftcards" className="link !text-sm !px-0 !py-2">
-                  Gift Cards
-                </a>
-              </li>
-            </ul>
+            <div className="space-y-4">
+              <LinkTag className="block" to="/help-guide">
+                Help Guide
+              </LinkTag>
+              <LinkTag className="block" to="/shipping">
+                Shipping
+              </LinkTag>
+              <LinkTag className="block" to="/returns-exchanges">
+                Returns and Exchanges
+              </LinkTag>
+              <LinkTag className="block" to="/gift-cards">
+                Gift Cards
+              </LinkTag>
+            </div>
           </div>
           <div>
             <h2 className="mb-5 text-lg">My Account</h2>
-            <ul>
-              <li className="mr-[15px]">
-                <a href="/helpguide" className="link !text-sm !px-0 !py-2">
-                  Login or Register
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/shipping" className="link !text-sm !px-0 !py-2">
-                  UJ Rewards
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/returns" className="link !text-sm !px-0 !py-2">
-                  Refer a Friend
-                </a>
-              </li>
-            </ul>
+            <div className="space-y-4">
+              <LinkTag className="block" to="/login">
+                Login or Register
+              </LinkTag>
+              <LinkTag className="block" to="/rewards">
+                Rewards
+              </LinkTag>
+              <LinkTag className="block" to="/refer">
+                Refer a Friend
+              </LinkTag>
+            </div>
           </div>
           <div>
             <h2 className="mb-5 text-lg">Information</h2>
-            <ul>
-              <li className="mr-[15px]">
-                <a href="/helpguide" className="link !text-sm !px-0 !py-2">
-                  Our Story
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/shipping" className="link !text-sm !px-0 !py-2">
-                  Finer Things Blog
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/returns" className="link !text-sm !px-0 !py-2">
-                  Uncommon Clean
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/giftcards" className="link !text-sm !px-0 !py-2">
-                  Stores
-                </a>
-              </li>
-              <li className="mr-[15px]">
-                <a href="/giftcards" className="link !text-sm !px-0 !py-2">
-                  Careers
-                </a>
-              </li>
-            </ul>
+            <div className="space-y-4">
+              <LinkTag className="block" to="/story">
+                Our Story
+              </LinkTag>
+              <LinkTag className="block" to="/blogs">
+                LuxeCharm Blogs
+              </LinkTag>
+              <LinkTag className="block" to="/stores">
+                Stores
+              </LinkTag>
+              <LinkTag className="block" to="/careers">
+                Careers
+              </LinkTag>
+            </div>
           </div>
         </div>
         <div className="">
@@ -151,61 +126,34 @@ function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t offset border-color-foreground/8">
+      <div className="border-t border-border-tertiary">
         <div className="px-[50px] mx-auto flex justify-center">
-          <div className="text-center mt-[15px] flex items-center">
-            <small className="text-[11px] text-color-foreground/75">
-              © {new Date().getFullYear()},{" "}
-              <a
-                className="hover:text-black hover:underline hover:underline-offset-3px"
-                href="/"
-                title=""
-              >
-                LuxeCharm
-              </a>
+          <div className="text-center mt-4 flex items-center">
+            <small className="text-xs text-text-secondary">
+              © {new Date().getFullYear()}, <LinkTag to="/">LuxeCharm</LinkTag>
             </small>
-            <ul className="flex">
-              <li className="policies flex justify-center items-center text-color-foreground/75">
-                <small className="text-[11px] text-color-foreground/75">
-                  <a
-                    className="hover:text-black hover:underline hover:underline-offset-3px"
-                    href="/policies flex justify-center items-center text-color-foreground/75/refund-policy"
-                  >
-                    Refund policy
-                  </a>
+            <div className="flex">
+              <li className="policies flex justify-center items-center text-text-secondary">
+                <small className="text-xs text-text-secondary">
+                  <LinkTag to="/refund-policy">Refund policy</LinkTag>
                 </small>
               </li>
-              <li className="policies flex justify-center items-center text-color-foreground/75">
-                <small className="text-[11px] text-color-foreground/75">
-                  <a
-                    className="hover:text-black hover:underline hover:underline-offset-3px"
-                    href="/policies flex justify-center items-center text-color-foreground/75/privacy-policy"
-                  >
-                    Privacy policy
-                  </a>
+              <li className="policies flex justify-center items-center text-text-secondary">
+                <small className="text-xs text-text-secondary">
+                  <LinkTag to="/privacy-policy">Privacy policy</LinkTag>
                 </small>
               </li>
-              <li className="policies flex justify-center items-center text-color-foreground/75">
-                <small className="text-[11px] text-color-foreground/75">
-                  <a
-                    className="hover:text-black hover:underline hover:underline-offset-3px"
-                    href="/policies flex justify-center items-center text-color-foreground/75/terms-of-service"
-                  >
-                    Terms of service
-                  </a>
+              <li className="policies flex justify-center items-center text-text-secondary">
+                <small className="text-xs text-text-secondary">
+                  <LinkTag to="/terms-of-service">Terms of service</LinkTag>
                 </small>
               </li>
-              <li className="policies flex justify-center items-center text-color-foreground/75">
-                <small className="text-[11px] text-color-foreground/75">
-                  <a
-                    className="hover:text-black hover:underline hover:underline-offset-3px"
-                    href="/pages/accessibility-statement"
-                  >
-                    Accessibility
-                  </a>
+              <li className="policies flex justify-center items-center text-text-secondary">
+                <small className="text-xs text-text-secondary">
+                  <LinkTag to="/accessibility">Accessibility</LinkTag>
                 </small>
               </li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
