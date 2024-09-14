@@ -14,6 +14,8 @@ import axios from "../utils/axios";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { Rating } from "react-simple-star-rating";
 import { useState } from "react";
+import ButtonTag from "./CustomTags/ButtonTag";
+import { CloseIcon } from "./SVG";
 
 const schema = yup
   .object({
@@ -71,23 +73,13 @@ function ReviewModal({ isOpened, setOpened, productId }) {
           transition
           className="w-[500px] space-y-4 bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <DialogTitle className="font-bold text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
+          <DialogTitle className="text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
             Share your thoughts
             <button
               onClick={() => setOpened(false)}
               className="absolute -top-4 -right-4 p-1 group"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 48 48"
-                className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                id="close"
-              >
-                <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                <path fill="none" d="M0 0h48v48H0z"></path>
-              </svg>
+              <CloseIcon width={20} height={20} />
             </button>
           </DialogTitle>
           <div className="flex items-center gap-3">
@@ -141,11 +133,9 @@ function ReviewModal({ isOpened, setOpened, productId }) {
               </span>
             </p>
           )}
-          <Button
-            title="Write a review"
-            onClick={handleSubmit(onSubmit)}
-            className="h-auto py-2"
-          />
+          <ButtonTag onClick={handleSubmit(onSubmit)} className="py-2">
+            Write a review
+          </ButtonTag>
         </DialogPanel>
       </div>
     </Dialog>

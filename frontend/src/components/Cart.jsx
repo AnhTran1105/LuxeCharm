@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
 import LinkTag from "./CustomTags/LinkTag";
+import { CloseIcon, TrashIcon } from "./SVG";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -38,25 +39,16 @@ function Cart() {
           transition
           className="fixed w-[500px] max-w-[calc(100%-20px)] top-0 right-0 bottom-0 m-[10px] rounded-2xl bg-white overflow-hidden transition duration-300 ease-out data-[closed]:opacity-0"
         >
-          <DialogTitle className="font-bold border-b border-border-primary/15 py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+          <DialogTitle className="border-b border-border-primary/15 py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
             Your cart
           </DialogTitle>
-          <button
+          <ButtonTag
             onClick={() => dispatch(hideCart())}
-            className="absolute top-[10px] right-[10px] p-1 group"
+            buttonType="icon"
+            className="absolute top-[10px] right-[10px] group"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 48 48"
-              className="fill-text-text-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
-              id="close"
-            >
-              <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-              <path fill="none" d="M0 0h48v48H0z"></path>
-            </svg>
-          </button>
+            <CloseIcon width={20} height={20} />
+          </ButtonTag>
           {items.length === 0 ? (
             <div className="py-10 px-5 border-b border-border-primary/15 text-center">
               <div>Your cart is empty!</div>
@@ -73,51 +65,37 @@ function Cart() {
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-primary/15 flex items-center"
                 >
                   <div className="w-[90px]">
-                    <a href={`/products/${item.productId}`} tabIndex={-1}>
+                    <LinkTag to={`/products/${item._id}?metal=${item.metal}`}>
                       <img src={item.imageUrl} alt={item.name} />
-                    </a>
+                    </LinkTag>
                   </div>
                   <div className="pl-5 w-full relative">
-                    <button
+                    <ButtonTag
+                      buttonType="icon"
                       onClick={() => {
                         dispatch(removeFromCart(item._id));
                       }}
-                      className="absolute top-0 right-0 w-5 h-5 group leading-5 flex justify-center items-center"
+                      className="absolute top-0 right-0"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 96 96"
-                        className="fill-text-text-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
-                        id="trash"
-                      >
-                        <switch>
-                          <g>
-                            <path d="M84 22H68v-4c0-6.63-5.37-12-12-12H40c-6.63 0-12 5.37-12 12v4H12a4 4 0 0 0 0 8h4v48c0 6.63 5.37 12 12 12h40c6.63 0 12-5.37 12-12V30h4a4 4 0 0 0 0-8zm-48-4c0-2.21 1.79-4 4-4h16c2.21 0 4 1.79 4 4v4H36v-4zm36 60c0 2.21-1.79 4-4 4H28c-2.21 0-4-1.79-4-4V30h48v48z"></path>
-                          </g>
-                        </switch>
-                      </svg>
-                    </button>
-                    <div>
-                      <LinkTag
-                        to={`/products/${item._id}?metal=${item.metal}`}
-                        className="font-SofiaBold leading-5 text-text-primary"
-                      >
-                        {item.name}
-                      </LinkTag>
-                      {item.salePrice && (
-                        <span className="ml-2 bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
-                          Sale
-                        </span>
-                      )}
-                    </div>
+                      <TrashIcon width={16} height={16} />
+                    </ButtonTag>
+                    <LinkTag
+                      to={`/products/${item._id}?metal=${item.metal}`}
+                      className="font-SofiaBold leading-5 text-text-primary"
+                    >
+                      {item.name}
+                    </LinkTag>
+                    {item.salePrice && (
+                      <span className="ml-2 bg-background-primary w-fit px-3 py-1 rounded-full text-xs text-white">
+                        Sale
+                      </span>
+                    )}
                     <div className="leading-3 text-xs">{item.metal}</div>
                     <div className="flex justify-between w-full items-center">
                       <div className="mt-[10px] text-left">
                         <QuantityWidget itemId={item._id} />
                       </div>
-                      <div className="mt-[5px] text-right text-xs leading-4">
+                      <div className="mt-2 text-right text-xs leading-4">
                         {item.salePrice ? (
                           <>
                             <span className="text-text-secondary line-through mr-2">
