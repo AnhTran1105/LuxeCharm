@@ -22,8 +22,6 @@ function CheckoutSuccess() {
     })();
   }, [orderId]);
 
-  console.log(order);
-
   return (
     order && (
       <div className="m-[50px] flex justify-center">
@@ -47,7 +45,7 @@ function CheckoutSuccess() {
               </svg>
             </i>
             <div className="mt-4 text-xl">Thank you for your purchase!</div>
-            <div className="">
+            <div className="text-foreground75 text-sm">
               We will email you an order confirmation with details and tracking
               info.
             </div>

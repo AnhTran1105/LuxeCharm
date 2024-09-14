@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
+import Product from "../models/product.model.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -81,10 +82,25 @@ export const verifyOrder = async (req, res, next) => {
     const { orderId, success } = req.body;
 
     if (success) {
-      await Order.findOneAndUpdate(
+      const order = await Order.findOneAndUpdate(
         { userId, status: "Pending" },
         { status: "Paid" }
       );
+
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found or already processed",
+        });
+      }
+
+      for (let item of order.cartItems) {
+        await Product.findOneAndUpdate(
+          { _id: item.productId, "metals.metal": item.metal },
+          { $inc: { "metals.$.quantity": -item.quantity } }
+        );
+      }
+
       const cart = await Cart.findOneAndUpdate(
         { userId },
         { $set: { items: [] } },
