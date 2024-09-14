@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
-import Button from "./Button";
+import ButtonTag from "./CustomTags/ButtonTag";
 import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 
 function ProductList({ products }) {
@@ -67,7 +67,7 @@ function ProductList({ products }) {
               <div>
                 {product.salePrice ? (
                   <div className="mt-2">
-                    <span className="text-foreground75 line-through mr-4">
+                    <span className="text-text-secondary line-through mr-4">
                       ${product.price}.00
                     </span>
                     <span className="mr-2">${product.salePrice}.00</span>
@@ -79,8 +79,7 @@ function ProductList({ products }) {
             </div>
           </a>
           {product.metals.length > 1 ? (
-            <Button
-              title="Choose options"
+            <ButtonTag
               onClick={() =>
                 dispatch(
                   openOptionsModal({
@@ -89,10 +88,11 @@ function ProductList({ products }) {
                   })
                 )
               }
-            />
+            >
+              Choose options
+            </ButtonTag>
           ) : (
-            <Button
-              title="Add to cart"
+            <ButtonTag
               onClick={() =>
                 dispatch(
                   handleAddToCart({
@@ -102,7 +102,9 @@ function ProductList({ products }) {
                   })
                 )
               }
-            />
+            >
+              Add to cart
+            </ButtonTag>
           )}
         </li>
       ))}

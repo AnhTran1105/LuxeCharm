@@ -2,6 +2,7 @@ import Filter from "../components/Filter";
 import ProductList from "../components/ProductList";
 import { useState, useEffect } from "react";
 import axios from "../utils/axios";
+import LinkTag from "../components/CustomTags/LinkTag";
 
 function Jewelry() {
   const [products, setProducts] = useState([]);
@@ -52,63 +53,63 @@ function Jewelry() {
           <div className="lg:max-w-[780px] md:max-w-[500px] text-center">
             <h1 className="text-[40px]">All Jewelry</h1>
             <div className="mt-5">
-              <p className="text-foreground75 tracking-[0.6px] leading-[28.8px]">
+              <p className="text-text-secondary tracking-[0.6px] leading-[28.8px]">
                 Create a look that's all your own with our affordable, everyday
                 jewelry. For a full layered look, stack our{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/silver"
+                <LinkTag
+                  to="/collections/silver"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   silver
-                </a>{" "}
+                </LinkTag>{" "}
                 and gold{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/necklaces"
+                <LinkTag
+                  to="/collections/necklaces"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   necklaces
-                </a>{" "}
+                </LinkTag>{" "}
                 or shop our{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/layer-up"
+                <LinkTag
+                  to="/collections/prestack-necklaces"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
-                  pre-stacked necklaces
-                </a>
+                  prestack-necklaces
+                </LinkTag>
                 . We also have everything you need for a killer ear stack —{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/dainty-jewelry"
+                <LinkTag
+                  to="/collections/simple"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   simple
-                </a>{" "}
+                </LinkTag>{" "}
                 and{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/statement-earrings"
+                <LinkTag
+                  to="/collections/statement"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   statement
-                </a>
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/earrings"
+                </LinkTag>
+                <LinkTag
+                  to="/collections/earrings"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   &nbsp;earrings
-                </a>
+                </LinkTag>
                 . If you need an arm candy look, simply stack up our{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/rings"
+                <LinkTag
+                  to="/collections/rings"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   rings
-                </a>{" "}
+                </LinkTag>{" "}
                 and{" "}
-                <a
-                  className="underline underline-offset-3px text-black decoration-1 hover:decoration-2"
-                  href="/collections/bracelets"
+                <LinkTag
+                  to="/collections/bracelets"
+                  className="underline underline-offset-2 text-base text-text-primary"
                 >
                   bracelets
-                </a>
+                </LinkTag>
                 .
               </p>
             </div>

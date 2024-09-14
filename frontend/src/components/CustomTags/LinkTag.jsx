@@ -6,7 +6,7 @@ const LinkTag = ({ to, className = "", children, ...props }) => {
     <Link
       to={to}
       relative="path"
-      className={`text-text-secondary hover:text-text-primary transition-all duration-100 ease-linear hover:underline hover:underline-offset-2 ${className}`}
+      className={`-:text-text-secondary -:text-sm -:hover:text-text-primary -:transition-all -:duration-100 -:ease-linear -:hover:underline -:hover:underline-offset-2 ${className}`}
       {...props}
     >
       {children}

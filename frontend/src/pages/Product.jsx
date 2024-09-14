@@ -100,41 +100,28 @@ function Product() {
                 </div>
               </div>
               {product.salePrice ? (
-                <div className="my-[15px] text-lg flex items-center">
+                <div className="my-[15px] flex items-center">
                   <span className="text-text-secondary line-through mr-4">
                     ${product.price}.00
                   </span>
-                  <span className="mr-2 text-xl">${product.salePrice}.00</span>
+                  <span className="mr-2 text-lg">${product.salePrice}.00</span>
                   <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                     Sale
                   </span>
                 </div>
               ) : (
-                <div className="my-[15px] text-lg">${product.price}.00</div>
+                <div className="my-[15px]">${product.price}.00</div>
               )}
               <div className="my-[15px]">
                 <p className="text-[13px] text-text-secondary mb-3">Metal</p>
                 <div className="flex gap-3">
-                  {/* {product.metals.map((item) => (
-                    <button
-                      className={`py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground transition-[border] duration-100 tracking-[1px] leading-none text-sm ${
-                        item.metal === metal && "bg-color-foreground text-white"
-                      }`}
-                      key={item.metal}
-                      onClick={() => {
-                        setMetal(item.metal);
-                        setSearchParams(`metal=${item.metal}`);
-                      }}
-                    >
-                      {item.metal}
-                    </button>
-                  ))} */}
                   {product.metals.map((item) => (
                     <ButtonTag
                       key={item.metal}
+                      type="rounded"
                       className={
                         item.metal === metal
-                          ? "bg-black text-white hover:text-white"
+                          ? "bg-black text-white hover:text-white cursor-default"
                           : ""
                       }
                       onClick={() => {
@@ -205,12 +192,17 @@ function Product() {
               <div className="my-[15px]">
                 <p className="text-[13px] text-text-secondary mb-3">Quantity</p>
                 <div className="quantity">
-                  <button className="quantity-button" onClick={handleDecrease}>
+                  <button
+                    className={`quantity-button ${
+                      quantity === 1 ? "opacity-30 cursor-not-allowed" : ""
+                    }`}
+                    onClick={handleDecrease}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                       focusable="false"
-                      className="w-[10px]"
+                      className={`w-[10px]`}
                       fill="none"
                       viewBox="0 0 10 2"
                     >
@@ -252,12 +244,13 @@ function Product() {
                 </div>
               </div>
               <div className="my-[15px] max-w-[440px]">
-                <Button
-                  title="Add to cart"
+                <ButtonTag
                   onClick={() =>
                     dispatch(handleAddToCart({ ...product, metal, quantity }))
                   }
-                />
+                >
+                  Add to cart
+                </ButtonTag>
               </div>
               <div className="my-[15px] max-w-[440px]">
                 <Button
@@ -282,7 +275,7 @@ function Product() {
                   className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:!bg-[#5762c1]"
                 />
               </div>
-              <div className="border-b border-color-foreground/8">
+              <div className="border-b border-border-primary/15">
                 <p className="my-[25px] text-xs text-text-secondary">
                   {product.description}
                 </p>

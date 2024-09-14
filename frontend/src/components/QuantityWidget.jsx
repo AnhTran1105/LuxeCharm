@@ -14,7 +14,7 @@ function QuantityWidget({ itemId }) {
   };
 
   return (
-    <div className="flex border-border border">
+    <div className="flex border-border-secondary border">
       <button
         disabled={item.quantity === 1}
         onClick={() => handleUpdateQuantity(item.quantity - 1)}
@@ -33,7 +33,7 @@ function QuantityWidget({ itemId }) {
           <path fill="none" d="M0 0h48v48H0z"></path>
         </svg>
       </button>
-      <span className="border-x border-border text-center leading-6 h-6 w-9 block text-xs">
+      <span className="border-x border-border-secondary text-center leading-6 h-6 w-9 block text-xs">
         {item.quantity}
       </span>
       <button

@@ -9,11 +9,13 @@ import { hideCart } from "../redux/cartModal/cartModalSlice";
 import QuantityWidget from "./QuantityWidget";
 import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
-import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import ButtonTag from "./CustomTags/ButtonTag";
+import LinkTag from "./CustomTags/LinkTag";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
-
+  const navigate = useNavigate();
   const { items, totalPrice } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
@@ -23,8 +25,6 @@ function Cart() {
       dispatch(fetchCart());
     }
   }, [isShow, dispatch]);
-
-  // console.log(items);
 
   return (
     isShow && (
@@ -38,7 +38,7 @@ function Cart() {
           transition
           className="fixed w-[500px] max-w-[calc(100%-20px)] top-0 right-0 bottom-0 m-[10px] rounded-2xl bg-white overflow-hidden transition duration-300 ease-out data-[closed]:opacity-0"
         >
-          <DialogTitle className="font-bold border-b border-border py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+          <DialogTitle className="font-bold border-b border-border-primary/15 py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
             Your cart
           </DialogTitle>
           <button
@@ -50,7 +50,7 @@ function Cart() {
               width="20"
               height="20"
               viewBox="0 0 48 48"
-              className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+              className="fill-text-text-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
               id="close"
             >
               <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
@@ -58,7 +58,7 @@ function Cart() {
             </svg>
           </button>
           {items.length === 0 ? (
-            <div className="py-10 px-5 border-b border-border text-center">
+            <div className="py-10 px-5 border-b border-border-primary/15 text-center">
               <div>Your cart is empty!</div>
               <div>Add your favorite items to your cart.</div>
             </div>
@@ -70,7 +70,7 @@ function Cart() {
               {[...items].reverse().map((item) => (
                 <li
                   key={item._id}
-                  className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
+                  className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-primary/15 flex items-center"
                 >
                   <div className="w-[90px]">
                     <a href={`/products/${item.productId}`} tabIndex={-1}>
@@ -89,7 +89,7 @@ function Cart() {
                         width="16"
                         height="16"
                         viewBox="0 0 96 96"
-                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                        className="fill-text-text-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
                         id="trash"
                       >
                         <switch>
@@ -100,16 +100,14 @@ function Cart() {
                       </svg>
                     </button>
                     <div>
-                      <a
-                        href={`/products/${item._id}`}
-                        alt={item.name}
-                        className="mr-2 font-SofiaBold text-sm leading-5"
-                        tabIndex={0}
+                      <LinkTag
+                        to={`/products/${item._id}?metal=${item.metal}`}
+                        className="font-SofiaBold leading-5 text-text-primary"
                       >
                         {item.name}
-                      </a>
+                      </LinkTag>
                       {item.salePrice && (
-                        <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
+                        <span className="ml-2 bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                           Sale
                         </span>
                       )}
@@ -122,10 +120,12 @@ function Cart() {
                       <div className="mt-[5px] text-right text-xs leading-4">
                         {item.salePrice ? (
                           <>
-                            <span className="text-foreground75 line-through mr-2">
+                            <span className="text-text-secondary line-through mr-2">
                               ${item.price}.00
                             </span>
-                            <span className="">${item.salePrice}.00</span>
+                            <span className="text-sm">
+                              ${item.salePrice}.00
+                            </span>
                           </>
                         ) : (
                           <span> ${item.price}.00</span>
@@ -138,7 +138,7 @@ function Cart() {
             </ul>
           )}
 
-          <div className="border-t border-border p-5 z-20 absolute bottom-0 right-0 left-0">
+          <div className="border-t border-border-primary/15 p-5 z-20 absolute bottom-0 right-0 left-0">
             <div className="flex justify-between font-SofiaBold mb-3">
               <div>
                 {`Subtotal (${items.reduce((total, item) => {
@@ -148,11 +148,9 @@ function Cart() {
               </div>
               <div>${totalPrice}.00</div>
             </div>
-            <Button
-              title="Check out"
-              className="h-auto py-2"
-              onClick={() => (window.location.href = "/checkout")}
-            />
+            <ButtonTag onClick={() => navigate("/checkout")} className="py-2">
+              Check out
+            </ButtonTag>
           </div>
         </DialogPanel>
       </Dialog>

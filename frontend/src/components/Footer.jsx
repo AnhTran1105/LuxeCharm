@@ -130,27 +130,38 @@ function Footer() {
         <div className="px-[50px] mx-auto flex justify-center">
           <div className="text-center mt-4 flex items-center">
             <small className="text-xs text-text-secondary">
-              © {new Date().getFullYear()}, <LinkTag to="/">LuxeCharm</LinkTag>
+              © {new Date().getFullYear()},{" "}
+              <LinkTag className="text-xs" to="/">
+                LuxeCharm
+              </LinkTag>
             </small>
             <div className="flex">
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag to="/refund-policy">Refund policy</LinkTag>
+                  <LinkTag className="text-xs" to="/refund-policy">
+                    Refund policy
+                  </LinkTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag to="/privacy-policy">Privacy policy</LinkTag>
+                  <LinkTag className="text-xs" to="/privacy-policy">
+                    Privacy policy
+                  </LinkTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag to="/terms-of-service">Terms of service</LinkTag>
+                  <LinkTag className="text-xs" to="/terms-of-service">
+                    Terms of service
+                  </LinkTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag to="/accessibility">Accessibility</LinkTag>
+                  <LinkTag className="text-xs" to="/accessibility">
+                    Accessibility
+                  </LinkTag>
                 </small>
               </li>
             </div>

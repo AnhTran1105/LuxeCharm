@@ -1,23 +1,23 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const LinkTag = ({ to, className = "", children, ...props }) => {
+const NavLinkTag = ({ to, className = "", children, ...props }) => {
   return (
-    <Link
+    <NavLink
       to={to}
       relative="path"
       className={`text-text-secondary hover:text-text-primary transition-all duration-100 ease-linear hover:underline hover:underline-offset-2 ${className}`}
       {...props}
     >
       {children}
-    </Link>
+    </NavLink>
   );
 };
 
-LinkTag.propTypes = {
+NavLinkTag.propTypes = {
   to: PropTypes.string.isRequired,
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
 };
 
-export default LinkTag;
+export default NavLinkTag;
