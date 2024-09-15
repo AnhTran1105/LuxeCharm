@@ -126,7 +126,13 @@ function Cart() {
               </div>
               <div>${totalPrice}.00</div>
             </div>
-            <ButtonTag onClick={() => navigate("/checkout")} className="py-2">
+            <ButtonTag
+              onClick={() => {
+                dispatch(hideCart());
+                navigate("/checkout");
+              }}
+              className="py-2"
+            >
               Check out
             </ButtonTag>
           </div>

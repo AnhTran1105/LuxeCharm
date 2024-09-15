@@ -47,8 +47,8 @@ function PriceFilter({
         offset={[0, 0]}
         visible={isVisible}
         render={() => (
-          <div className="border border-color-foreground/10 bg-white w-[350px]">
-            <div className="border-b border-color-foreground/20 py-[15px] px-5 flex justify-between items-center">
+          <div className="border border-border-tertiary bg-white w-[350px]">
+            <div className="border-b border-border-tertiary py-[15px] px-5 flex justify-between items-center">
               <span>The highest price is ${maxPrice}.00</span>
               <button onClick={resetPriceRange} className="link" role="button">
                 Reset
@@ -86,7 +86,7 @@ function PriceFilter({
                     autoCapitalize="off"
                     placeholder="To"
                     autoCorrect="off"
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-secondary"
                   />
                   <label htmlFor="password">To</label>
                 </div>

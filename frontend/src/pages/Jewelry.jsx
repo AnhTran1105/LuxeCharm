@@ -57,56 +57,64 @@ function Jewelry() {
                 Create a look that's all your own with our affordable, everyday
                 jewelry. For a full layered look, stack our{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/silver"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   silver
                 </LinkTag>{" "}
                 and gold{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/necklaces"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   necklaces
                 </LinkTag>{" "}
                 or shop our{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/prestack-necklaces"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   prestack-necklaces
                 </LinkTag>
                 . We also have everything you need for a killer ear stack —{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/simple"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   simple
                 </LinkTag>{" "}
                 and{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/statement"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   statement
                 </LinkTag>
                 <LinkTag
+                  type="underline"
                   to="/collections/earrings"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   &nbsp;earrings
                 </LinkTag>
                 . If you need an arm candy look, simply stack up our{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/rings"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   rings
                 </LinkTag>{" "}
                 and{" "}
                 <LinkTag
+                  type="underline"
                   to="/collections/bracelets"
-                  className="underline underline-offset-2 text-base text-text-primary"
+                  className="text-base text-text-primary"
                 >
                   bracelets
                 </LinkTag>

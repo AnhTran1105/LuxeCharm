@@ -50,8 +50,8 @@ function FilterMenu({
         offset={[0, 0]}
         visible={isVisible}
         render={() => (
-          <div className="border border-color-foreground/10 bg-white w-[240px]">
-            <div className="border-b border-color-foreground/20 py-[15px] px-5 flex justify-between items-center">
+          <div className="border border-border-tertiary bg-white w-[240px]">
+            <div className="border-b border-border-tertiary py-[15px] px-5 flex justify-between items-center">
               <span>{selectedItems.length} selected</span>
               <button onClick={resetSelection} className="link" role="button">
                 Reset
@@ -90,7 +90,7 @@ function FilterMenu({
                       selectedItems.includes(item.name)
                         ? "visible"
                         : "invisible"
-                    } fill-foreground75 absolute`}
+                    } fill-text-secondary absolute`}
                   >
                     <path fill="none" d="M0 0h24v24H0V0z"></path>
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>

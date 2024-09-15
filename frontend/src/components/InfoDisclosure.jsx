@@ -7,7 +7,7 @@ import {
 function InfoDisclosure({ title, content }) {
   return (
     <div className="border-b border-border-primary/15">
-      <Disclosure as="div" className="w-full text-foreground75">
+      <Disclosure as="div" className="w-full text-text-secondary">
         <DisclosureButton className="group w-full py-[15px] text-[15px] text-color-foreground flex justify-between items-center text-left">
           {title}
           <svg

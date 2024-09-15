@@ -3,6 +3,7 @@ import { app } from "../firebase";
 import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ButtonTag from "./CustomTags/ButtonTag";
 
 function OAuth() {
   const dispatch = useDispatch();
@@ -27,15 +28,14 @@ function OAuth() {
   };
 
   return (
-    <button
-      type="button"
+    <ButtonTag
       onClick={handleGoogleClick}
-      className="flex justify-center items-center gap-4 p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mb-[15px] text-base px-[30px]"
+      className="flex justify-center items-center gap-3"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
+        width="20"
+        height="20"
         preserveAspectRatio="xMidYMid"
         viewBox="0 0 256 262"
         id="google"
@@ -57,8 +57,8 @@ function OAuth() {
           d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
         ></path>
       </svg>
-      <span className="">Continue with Google</span>
-    </button>
+      Continue with Google
+    </ButtonTag>
   );
 }
 

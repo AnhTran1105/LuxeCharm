@@ -76,7 +76,7 @@ function Filter({
   };
 
   return (
-    <div className="pt-[10px] w-full text-foreground75 text-sm">
+    <div className="pt-[10px] w-full text-text-secondary text-sm">
       <div className="w-full mb-5 flex justify-between">
         <div className="flex justify-center items-center">
           <h2 className="mr-5">Filter:</h2>
@@ -130,7 +130,7 @@ function Filter({
               onClick={() => handleButtonClick(0)}
               className="mr-[35px] flex justify-center items-center group cursor-pointer"
             >
-              <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+              <span className="mr-2 group-hover:underline group-hover:underline-offset-2 group-hover:text-color-foreground">
                 Category
               </span>
               <svg
@@ -186,7 +186,7 @@ function Filter({
               onClick={() => handleButtonClick(1)}
               className="mr-[35px] flex justify-center items-center group cursor-pointer"
             >
-              <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+              <span className="mr-2 group-hover:underline group-hover:underline-offset-2 group-hover:text-color-foreground">
                 Metal
               </span>
               <svg
@@ -220,7 +220,7 @@ function Filter({
               onClick={() => handleButtonClick(3)}
               className="mr-[35px] flex justify-center items-center group cursor-pointer"
             >
-              <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
+              <span className="mr-2 group-hover:underline group-hover:underline-offset-2 group-hover:text-color-foreground">
                 Price
               </span>
               <svg
@@ -277,7 +277,7 @@ function Filter({
                       width="14"
                       height="14"
                       viewBox="0 0 48 48"
-                      className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                      className="fill-text-stext-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
                       id="close"
                     >
                       <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
@@ -304,7 +304,7 @@ function Filter({
                         width="14"
                         height="14"
                         viewBox="0 0 48 48"
-                        className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
+                        className="fill-text-stext-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
                         id="close"
                       >
                         <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>

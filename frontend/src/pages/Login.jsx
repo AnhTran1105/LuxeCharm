@@ -9,6 +9,8 @@ import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
+import ButtonTag from "../components/CustomTags/ButtonTag";
+import LinkTag from "../components/CustomTags/LinkTag";
 
 const schema = yup
   .object({
@@ -57,7 +59,7 @@ function Login() {
         <div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="mt-10 text-sm text-color-foreground/75"
+            className="mt-10 text-sm text-text-secondary"
           >
             <p className="my-[10px]">* indicates a required field</p>
             <div className="field">
@@ -69,7 +71,7 @@ function Login() {
                 placeholder="Email"
                 autoCorrect="off"
                 {...register("email")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-text-secondary"
               />
               <label htmlFor="email">Email*</label>
             </div>
@@ -105,7 +107,7 @@ function Login() {
                 placeholder="Password"
                 autoCorrect="off"
                 {...register("password")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-text-secondary"
               />
               <label htmlFor="password">Password*</label>
             </div>
@@ -131,28 +133,18 @@ function Login() {
                 </span>
               </p>
             )}
-            <a
-              className="!text-sm text-left link mt-[10px] underline hover:decoration-2 w-fit"
-              href="/password/recover"
-            >
-              Forgot your password?
-            </a>
-            <button
-              type="submit"
-              className="p-3 w-full border border-solid hover:outline-2 hover:outline transition-[outline] duration-100 mt-10 mb-[15px] text-base px-[30px] bg-[rgba(247,244,244,1)] min-h-[50px]"
-            >
-              Login now
-            </button>
-
-            <OAuth />
-            <div className="flex justify-center">
-              <a
-                className="!text-sm link underline hover:decoration-2 w-fit"
-                href="/account/register"
-              >
-                Create account
-              </a>
+            <div className="text-left">
+              <LinkTag to="/password/recover" type="underline" className="mt-3">
+                Forgot your password?
+              </LinkTag>
             </div>
+            <ButtonTag className="my-5" type="submit">
+              Login now
+            </ButtonTag>
+            <OAuth />
+            <LinkTag to="/account/register" type="underline" className="mt-3">
+              Create account
+            </LinkTag>
           </form>
         </div>
       </div>

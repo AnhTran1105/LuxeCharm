@@ -13,7 +13,7 @@ function SortMenu({ items, setSortingType, sortingType }) {
         offset={[0, 0]}
         visible={isVisible}
         render={() => (
-          <div className="border border-color-foreground/10 bg-white">
+          <div className="border border-border-tertiary bg-white">
             <ul role="list" className="px-5 py-[10px]">
               {items.map((item, index) => (
                 <li
@@ -32,7 +32,7 @@ function SortMenu({ items, setSortingType, sortingType }) {
                     id="check"
                     className={`${
                       sortingType === item ? "visible" : "invisible"
-                    } fill-foreground75`}
+                    } fill-text-secondary`}
                   >
                     <path fill="none" d="M0 0h24v24H0V0z"></path>
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
@@ -49,9 +49,7 @@ function SortMenu({ items, setSortingType, sortingType }) {
           onClick={() => setIsVisible(!isVisible)}
           className="mr-[35px] flex justify-between items-center group cursor-pointer"
         >
-          <span className="mr-2 group-hover:underline group-hover:underline-offset-3px group-hover:text-color-foreground">
-            {sortingType}
-          </span>
+          <span className="mr-2">{sortingType}</span>
           <svg
             aria-hidden="true"
             focusable="false"
