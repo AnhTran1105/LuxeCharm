@@ -10,7 +10,9 @@ import { fetchCart } from "../redux/cart/cartSlice";
 import { logout } from "../redux/auth/authSlice";
 import moment from "moment";
 import ChangePasswordModal from "../components/ChangePasswordModal";
-import Button from "../components/Button";
+import ButtonTag from "../components/CustomTags/ButtonTag";
+import ErrorMessage from "../components/ErrorMessage";
+import { useNavigate } from "react-router-dom";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -27,6 +29,7 @@ const schema = yup
 
 function Account() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
@@ -107,32 +110,29 @@ function Account() {
         <h1 className="text-[40px]">Account</h1>
         <div className="mx-auto w-4/5 grid grid-cols-2 gap-12 mt-10">
           <div className="">
-            <div className="text-center border border-color-foreground">
-              <div className="font-bold border-b border-color-foreground py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+            <div className="text-center border border-border-primary">
+              <div className="border-b border-border-primary py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
                 Account Information
               </div>
               <div className="flex justify-end pr-5 gap-4 p-2">
-                <button
-                  type="button"
-                  className="link !text-sm"
+                <ButtonTag
                   onClick={() => setEditMode(!editMode)}
+                  className="px-2 py-1 w-fit"
                 >
                   {editMode ? "Cancel edit" : "Edit"}
-                </button>
-                <button
+                </ButtonTag>
+                <ButtonTag
                   onClick={() => setIsOpened(true)}
-                  type="button"
-                  className="link !text-sm"
+                  className="px-2 py-1 w-fit"
                 >
                   Change password
-                </button>
-                <button
-                  type="button"
+                </ButtonTag>
+                <ButtonTag
                   onClick={() => dispatch(logout())}
-                  className="link !text-sm"
+                  className="px-2 py-1 w-fit"
                 >
                   Logout
-                </button>
+                </ButtonTag>
               </div>
               {editMode && (
                 <p className="mb-4 mt-2 text-sm">
@@ -141,7 +141,7 @@ function Account() {
               )}
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="px-5 pb-5 text-sm text-color-foreground/75"
+                className="px-5 pb-5 text-sm text-text-secondary"
               >
                 <div className="field">
                   <input
@@ -153,31 +153,12 @@ function Account() {
                     disabled
                     autoCorrect="off"
                     {...register("email")}
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
                   />
                   <label htmlFor="email">Email</label>
                 </div>
                 {errors.email && (
-                  <p className="text-left px-4 pt-2 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      enableBackground="new 0 0 24 24"
-                      className="fill-red mr-2"
-                      width={20}
-                      height={20}
-                      viewBox="0 0 24 24"
-                      id="exclamation-mark"
-                    >
-                      <path
-                        d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-      	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                      ></path>
-                    </svg>
-
-                    <span className="first-letter:capitalize">
-                      {errors.email?.message}
-                    </span>
-                  </p>
+                  <ErrorMessage message={errors.email?.message} />
                 )}
                 <div className="flex gap-3">
                   <div className="field !mt-5">
@@ -190,33 +171,14 @@ function Account() {
                       disabled={!editMode}
                       autoCorrect="off"
                       {...register("firstName")}
-                      className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                      className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
                     />
                     <label htmlFor="firstName">
                       First name{editMode && "*"}
                     </label>
                   </div>
                   {errors.firstName && (
-                    <p className="text-left px-4 pt-2 flex items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        enableBackground="new 0 0 24 24"
-                        className="fill-red mr-2"
-                        width={20}
-                        height={20}
-                        viewBox="0 0 24 24"
-                        id="exclamation-mark"
-                      >
-                        <path
-                          d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-          	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                        ></path>
-                      </svg>
-
-                      <span className="first-letter:capitalize">
-                        {errors.firstName?.message}
-                      </span>
-                    </p>
+                    <ErrorMessage message={errors.firstName?.message} />
                   )}
                   <div className="field">
                     <input
@@ -228,31 +190,12 @@ function Account() {
                       placeholder="lastName"
                       autoCorrect="off"
                       {...register("lastName")}
-                      className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                      className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
                     />
                     <label htmlFor="lastName">Last name{editMode && "*"}</label>
                   </div>
                   {errors.lastName && (
-                    <p className="text-left px-4 pt-2 flex items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        enableBackground="new 0 0 24 24"
-                        className="fill-red mr-2"
-                        width={20}
-                        height={20}
-                        viewBox="0 0 24 24"
-                        id="exclamation-mark"
-                      >
-                        <path
-                          d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-          	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                        ></path>
-                      </svg>
-
-                      <span className="first-letter:capitalize">
-                        {errors.lastName?.message}
-                      </span>
-                    </p>
+                    <ErrorMessage message={errors.lastName?.message} />
                   )}
                 </div>
                 <div className="field">
@@ -265,31 +208,12 @@ function Account() {
                     placeholder="address"
                     autoCorrect="off"
                     {...register("address")}
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
                   />
                   <label htmlFor="address">Address{editMode && "*"}</label>
                 </div>
                 {errors.address && (
-                  <p className="text-left px-4 pt-2 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      enableBackground="new 0 0 24 24"
-                      className="fill-red mr-2"
-                      width={20}
-                      height={20}
-                      viewBox="0 0 24 24"
-                      id="exclamation-mark"
-                    >
-                      <path
-                        d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-      	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                      ></path>
-                    </svg>
-
-                    <span className="first-letter:capitalize">
-                      {errors.address?.message}
-                    </span>
-                  </p>
+                  <ErrorMessage message={errors.address?.message} />
                 )}
                 <div className="field">
                   <input
@@ -301,47 +225,26 @@ function Account() {
                     placeholder="phoneNumber"
                     autoCorrect="off"
                     {...register("phoneNumber")}
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
                   />
                   <label htmlFor="phoneNumber">
                     Phone number{editMode && "*"}
                   </label>
                 </div>
                 {errors.phoneNumber && (
-                  <p className="text-left px-4 pt-2 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      enableBackground="new 0 0 24 24"
-                      className="fill-red mr-2"
-                      width={20}
-                      height={20}
-                      viewBox="0 0 24 24"
-                      id="exclamation-mark"
-                    >
-                      <path
-                        d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-      	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                      ></path>
-                    </svg>
-
-                    <span className="first-letter:capitalize">
-                      {errors.phoneNumber?.message}
-                    </span>
-                  </p>
+                  <ErrorMessage message={errors.phoneNumber?.message} />
                 )}
                 {editMode && (
-                  <Button
-                    title="Update information"
-                    type="submit"
-                    className="mt-5"
-                  />
+                  <ButtonTag type="submit" className="mt-5">
+                    Update
+                  </ButtonTag>
                 )}
               </form>
             </div>
           </div>
           <div className="">
-            <div className="text-center border border-color-foreground">
-              <div className="font-bold border-b border-color-foreground py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+            <div className="text-center border border-border-primary">
+              <div className="border-b border-border-primary py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
                 Your purchase
               </div>
               <ul role="list" className="">
@@ -349,9 +252,9 @@ function Account() {
                   [...orders].reverse().map((item) => (
                     <li
                       key={item._id}
-                      className="border-t border-color-foreground first:border-t-0"
+                      className="border-t border-border-primary first:border-t-0"
                     >
-                      <div className="px-5 pt-5 grid grid-cols-2 gap-1 text-left text-sm text-foreground75">
+                      <div className="px-5 pt-5 grid grid-cols-2 gap-1 text-left text-sm text-text-primary">
                         <div>
                           <span className="font-SofiaBold">Status:</span>{" "}
                           {item.status}
@@ -376,7 +279,7 @@ function Account() {
                       {item.cartItems.map((cartItem) => (
                         <li
                           key={cartItem._id}
-                          className="mx-5 py-5 [&:not(:last-child)]:border-b border-border flex items-center"
+                          className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-secondary flex items-center"
                         >
                           <div className="w-[90px]">
                             <a
@@ -422,13 +325,9 @@ function Account() {
                 ) : (
                   <div className="p-5 flex justify-center items-center gap-1 text-sm">
                     <div>You haven't placed any orders yet.</div>
-                    <button
-                      type="button"
-                      onClick={() => (window.location.href = "/")}
-                      className="link !text-sm"
-                    >
+                    <ButtonTag onClick={() => navigate("/")}>
                       Shopping now
-                    </button>
+                    </ButtonTag>
                   </div>
                 )}
               </ul>

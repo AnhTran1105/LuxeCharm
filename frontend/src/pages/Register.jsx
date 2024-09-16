@@ -9,7 +9,7 @@ import { sendMessage } from "../redux/notification/notificationSlice";
 import { useState } from "react";
 import LinkTag from "../components/CustomTags/LinkTag";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { WarningIcon } from "../components/SVG";
+import ErrorMessage from "../components/ErrorMessage";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -87,12 +87,7 @@ function Register() {
               <label htmlFor="firstName">First name*</label>
             </div>
             {errors.firstName && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.firstName?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.firstName?.message} />
             )}
             <div className="field">
               <input
@@ -107,12 +102,7 @@ function Register() {
               <label htmlFor="lastName">Last name*</label>
             </div>
             {errors.lastName && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.lastName?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.lastName?.message} />
             )}
             <div className="field">
               <input
@@ -127,12 +117,7 @@ function Register() {
               <label htmlFor="address">Address*</label>
             </div>
             {errors.address && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.address?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.address?.message} />
             )}
             <div className="field">
               <input
@@ -148,12 +133,7 @@ function Register() {
               <label htmlFor="phoneNumber">Phone number*</label>
             </div>
             {errors.phoneNumber && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize">
-                  {errors.phoneNumber?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.phoneNumber?.message} />
             )}
             <div className="field">
               <input
@@ -168,14 +148,7 @@ function Register() {
               />
               <label htmlFor="email">Email*</label>
             </div>
-            {errors.email && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.email?.message}
-                </span>
-              </p>
-            )}
+            {errors.email && <ErrorMessage message={errors.email?.message} />}
             <div className="field">
               <input
                 id="password"
@@ -191,12 +164,7 @@ function Register() {
               <label htmlFor="password">Password*</label>
             </div>
             {errors.password && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.password?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.password?.message} />
             )}
             <div className="field relative">
               <input
@@ -281,12 +249,7 @@ function Register() {
               </button>
             </div>
             {errors.passwordConfirmation && (
-              <p className="text-left px-4 pt-2 flex items-center">
-                <WarningIcon width={20} height={20} />
-                <span className="first-letter:capitalize flex">
-                  {errors.passwordConfirmation?.message}
-                </span>
-              </p>
+              <ErrorMessage message={errors.passwordConfirmation?.message} />
             )}
             <ButtonTag type="submit" className="mt-5">
               Create account

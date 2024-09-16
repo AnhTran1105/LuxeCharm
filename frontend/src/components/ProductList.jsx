@@ -11,7 +11,7 @@ function ProductList({ products }) {
   return (
     <ul
       role="list"
-      className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4"
+      className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4"
     >
       {products.map((product) => (
         <li

@@ -3,7 +3,7 @@ import LinkTag from "./CustomTags/LinkTag";
 function Footer() {
   return (
     <footer className="pt-12 pb-4 bg-background-secondary">
-      <div className="max-w-[920px] mx-auto px-[50px]">
+      <div className="max-w-[920px] mx-auto md:px-12 px-4">
         <div className="grid grid-cols-3 gap-3">
           <div>
             <h2 className="mb-5 text-lg">Customer Care</h2>
@@ -54,7 +54,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="">
+        <div className="mt-6">
           <ul role="list" className="flex justify-center">
             <li>
               <a href="/" className="group p-[13px]">
