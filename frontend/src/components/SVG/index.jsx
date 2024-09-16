@@ -192,7 +192,7 @@ export const MenuIcon = ({ width, height, className, ...props }) => (
     viewBox="0 0 18 16"
     width={width}
     height={height}
-    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    className={`-:stroke-text-secondary -:group-hover:stroke-text-primary -:group-hover:scale-105 ${className}`}
     {...props}
   >
     <line
@@ -201,7 +201,7 @@ export const MenuIcon = ({ width, height, className, ...props }) => (
       x2="21.9795"
       y2="1.4749"
       fill="none"
-      stroke="#231f20"
+      stroke=""
       strokeMiterlimit="10"
     ></line>
     <line
@@ -210,7 +210,7 @@ export const MenuIcon = ({ width, height, className, ...props }) => (
       x2="21.9795"
       y2="8.5"
       fill="none"
-      stroke="#231f20"
+      stroke=""
       strokeMiterlimit="10"
     ></line>
     <line
@@ -219,7 +219,7 @@ export const MenuIcon = ({ width, height, className, ...props }) => (
       x2="21.9795"
       y2="15.5251"
       fill="none"
-      stroke="#231f20"
+      stroke=""
       strokeMiterlimit="10"
     ></line>
   </svg>
@@ -228,16 +228,16 @@ export const MenuIcon = ({ width, height, className, ...props }) => (
 export const SearchIcon = ({ width, height, className, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
-    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    viewBox="0 0 16 16"
+    width={width + 2}
+    height={height + 2}
     id="search"
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
     {...props}
   >
     <path
-      d="M7 0C3.14 0 0 3.14 0 7s3.14 7 7 7c1.75 0 3.348-.651 4.576-1.717l3.567 3.567a.5.5 0 1 0 .707-.707l-3.567-3.567A6.962 6.962 0 0 0 14 7c0-3.86-3.14-7-7-7zm0 1c3.32 0 6 2.68 6 6s-2.68 6-6 6-6-2.68-6-6 2.68-6 6-6z"
-      color="#000"
-      overflow="visible"
+      fill=""
+      d="M13.85,13.15l-2.68-2.69a5.14,5.14,0,0,0,1.2-3.28,5.19,5.19,0,1,0-5.19,5.19,5.14,5.14,0,0,0,3.28-1.2l2.69,2.68a.48.48,0,0,0,.7,0A.48.48,0,0,0,13.85,13.15ZM3,7.18a4.19,4.19,0,1,1,4.18,4.19A4.19,4.19,0,0,1,3,7.18Z"
     ></path>
   </svg>
 );
@@ -250,7 +250,7 @@ export const AccountIcon = ({ width, height, className, ...props }) => (
     fill="none"
     width={width}
     height={height}
-    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    className={`-:stroke-text-secondary -:group-hover:stroke-text-primary -:group-hover:scale-105 ${className}`}
     viewBox="0 0 18 19"
     {...props}
   >
@@ -260,13 +260,13 @@ export const AccountIcon = ({ width, height, className, ...props }) => (
         cy="4.3273"
         r="3.367"
         fill="none"
-        stroke="#231f20"
+        stroke=""
         strokeMiterlimit="10"
       ></circle>
       <path
         d="M15.25,15.1109a6.25,6.25,0,0,0-12.5,0Z"
         fill="none"
-        stroke="#231f20"
+        stroke=""
         strokeMiterlimit="10"
       ></path>
     </g>

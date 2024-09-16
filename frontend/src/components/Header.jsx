@@ -102,9 +102,11 @@ function Header() {
 
   return (
     <header
-      className={`border-b border-border-tertiary bg-white z-[9999] w-full h-[52px]`}
+      className={`border-b border-border-tertiary bg-white z-[9999] w-full ${
+        isAtTop ? "relative" : "fixed top-0 left-0 right-0"
+      }`}
     >
-      <div className="px-8 lg:px-12 py-2 grid grid-cols-3">
+      <div className="px-4 md:px-8 lg:px-12 py-2 grid grid-cols-3">
         <ButtonTag
           onClick={() => {}}
           buttonType="icon"
@@ -122,21 +124,14 @@ function Header() {
         <HeaderMenu isOpened={isOpened} setIsOpened={setIsOpened} />
         <LinkTag to="/" className="flex justify-center">
           <HeaderLogo
-            width={118}
+            width={90}
             height={36}
             className={`${
               isAtTop && "w-[180px]"
             } transition-[width] duration-300 ease`}
           />
-          {/* <img
-              src={Logo}
-              alt="LuxeCharm Homepage"
-              className={`${
-                isAtTop ? "w-[140px]" : "w-[100px]"
-              } transition-[width] duration-300 ease`}
-            /> */}
         </LinkTag>
-        <div className="flex justify-end items-center gap-6">
+        <div className="flex justify-end items-center gap-6 max-md:gap-4">
           <ButtonTag
             onClick={() => {}}
             buttonType="icon"
@@ -144,7 +139,10 @@ function Header() {
           >
             <SearchIcon width={20} height={20} />
           </ButtonTag>
-          <LinkTag to="/account" className="p-0 flex items-center h-full group">
+          <LinkTag
+            to="/account"
+            className="p-0 flex items-center h-full group max-md:hidden"
+          >
             <AccountIcon width={20} height={20} />
           </LinkTag>
           <ButtonTag
@@ -155,6 +153,95 @@ function Header() {
             <CartIcon width={20} height={20} />
           </ButtonTag>
         </div>
+        <ul
+          role="list"
+          className="col-span-3 mt-3 flex justify-center text-sm max-lg:hidden"
+        >
+          <li className="p-3">
+            <NavLink
+              to="/best-sellers"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Best Sellers
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/necklaces"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Necklaces
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/earrings"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Earrings
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/rings"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Rings
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/bracelets"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Bracelets
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/charms"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              Charms
+            </NavLink>
+          </li>
+          <li className="p-3">
+            <NavLink
+              to="/all-jewelry"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-background-primary underline underline-offset-2 decoration-2"
+                  : "text-text-secondary hover:text-text-primary hover:underline hover:underline-offset-2"
+              }
+            >
+              All Jewelry
+            </NavLink>
+          </li>
+        </ul>
       </div>
     </header>
     // <header
