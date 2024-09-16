@@ -353,3 +353,22 @@ export const CartIcon = ({ width, height, className, ...props }) => (
     </g>
   </svg>
 );
+
+export const CaretIcon = ({ width, height, className, ...props }) => (
+  <svg
+    aria-hidden="true"
+    width={width}
+    height={height}
+    focusable="false"
+    className={`-:stroke-text-secondary -:group-hover:stroke-text-primary -:group-hover:scale-105 ${className}`}
+    viewBox="0 0 22 13"
+    {...props}
+  >
+    <polyline
+      points="21.557 1.222 11 11.778 0.443 1.222"
+      fill="none"
+      stroke=""
+      strokeMiterlimit="10"
+    ></polyline>
+  </svg>
+);

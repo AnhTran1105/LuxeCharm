@@ -1,68 +1,194 @@
 import Slider from "react-slick";
-import ProductCard from "./ProductCard";
-import { useState } from "react";
-import ArrowPrev from "./ArrowPrev";
-import ArrowNext from "./ArrowNext";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { handleAddToCart } from "../redux/cart/cartSlice";
+import ButtonTag from "./CustomTags/ButtonTag";
+import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
+import { useNavigate } from "react-router-dom";
+import { CaretIcon } from "./SVG";
 
-function ProductCarousel() {
+function calculateTotalPages(totalItems, itemsPerPage) {
+  return Math.ceil(totalItems / itemsPerPage);
+}
+
+function ProductCarousel({ products }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [sliderRef, setSliderRef] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 10;
+
+  const afterChangeHandler = (current) => {
+    setCurrentSlide(current);
+  };
+
+  const getSlidesToShow = () => {
+    if (window.innerWidth >= 1280) return 5;
+    if (window.innerWidth >= 1024) return 4;
+    if (window.innerWidth >= 768) return 3;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+  };
+
+  const totalPages = calculateTotalPages(products.length, getSlidesToShow());
 
   const settings = {
     dots: false,
     infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 4,
+    arrows: false,
     initialSlide: 0,
-    nextArrow: <ArrowNext />,
-    prevArrow: <ArrowPrev />,
-    afterChange: (index) => setCurrentSlide(index),
+    speed: 500,
+    slidesToShow: getSlidesToShow(),
+    slidesToScroll: 1,
+    afterChange: (current) => setCurrentSlide(current),
+    lazyLoad: true,
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 4,
-          slidesToScroll: 3,
+          initialSlide: 0,
+          slidesToScroll: 1,
+          slidesToShow: 5,
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 2,
+          initialSlide: 0,
+          slidesToScroll: 1,
+          slidesToShow: 4,
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          initialSlide: 0,
           slidesToScroll: 1,
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToScroll: 1,
+          initialSlide: 0,
+          slidesToShow: 2,
         },
       },
     ],
   };
+
   return (
     <div className="py-3 my-4">
       <ul role="list" className="px-[15px]">
-        <Slider {...settings} className="-mx-[6px] carousel">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard isOptional={true} />
-          <ProductCard isOff={true} />
-          <ProductCard isOptional={true} />
+        <Slider ref={setSliderRef} {...settings} className="-mx-[6px] carousel">
+          {products.map((product) => (
+            <li
+              key={`${product._id}-${
+                product.defaultMetal && product.defaultMetal.metal
+              }`}
+              onClick={() =>
+                navigate(
+                  product.defaultMetal
+                    ? `/products/${product._id}?metal=${product.defaultMetal.metal}`
+                    : `/products/${product._id}`
+                )
+              }
+              className="group cursor-pointer relative carousel-item"
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  loading="lazy"
+                  alt={product.name}
+                  src={
+                    product.defaultMetal
+                      ? product.defaultMetal.images.primary
+                      : product.metals[0].images.primary
+                  }
+                  className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
+                />
+                <img
+                  alt={product.name}
+                  src={
+                    product.defaultMetal
+                      ? product.defaultMetal.images.secondary
+                      : product.metals[0].images.secondary
+                  }
+                  loading="lazy"
+                  className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
+                ></img>
+              </div>
+              {product.salePrice && (
+                <div className="absolute top-3 left-3">
+                  <span className="bg-background-primary w-fit px-3 py-2 rounded-full text-xs text-white">
+                    {Math.ceil(
+                      ((product.price - product.salePrice) / product.price) *
+                        100
+                    )}
+                    % Off
+                  </span>
+                </div>
+              )}
+              <div className="pt-3 pb-4 text-center text-sm">
+                <h3>
+                  <div className="group-hover:underline underline-offset-2">
+                    {product.name}
+                  </div>
+                </h3>
+                <div>
+                  {product.salePrice ? (
+                    <div className="mt-2">
+                      <span className="text-text-secondary line-through mr-4">
+                        ${product.price}.00
+                      </span>
+                      <span className="mr-2">${product.salePrice}.00</span>
+                    </div>
+                  ) : (
+                    <div className="mt-2">${product.price}.00</div>
+                  )}
+                </div>
+              </div>
+              {product.metals.length > 1 ? (
+                <ButtonTag
+                  onClick={() =>
+                    dispatch(
+                      openOptionsModal({
+                        productId: product._id,
+                        defaultMetal: product.defaultMetal,
+                      })
+                    )
+                  }
+                >
+                  Choose options
+                </ButtonTag>
+              ) : (
+                <ButtonTag
+                  onClick={() =>
+                    dispatch(
+                      handleAddToCart({
+                        ...product,
+                        metal: product.metals[0].metal,
+                        quantity: 1,
+                      })
+                    )
+                  }
+                >
+                  Add to cart
+                </ButtonTag>
+              )}
+            </li>
+          ))}
         </Slider>
       </ul>
-      <div className="text-center text-sm text-foreground75">
+      <div className="text-sm text-text-secondary flex justify-center items-center gap-6 mt-4">
+        <ButtonTag buttonType="icon" onClick={() => sliderRef?.slickPrev()}>
+          <CaretIcon width={12} height={12} className="rotate-90" />
+        </ButtonTag>
         <span>
-          {Math.ceil(currentSlide / 4) + 1}/
-          {Math.ceil(totalSlides / settings.slidesToScroll)}
+          {Math.ceil(currentSlide / getSlidesToShow()) + 1} / {totalPages}
         </span>
+        <ButtonTag buttonType="icon" onClick={() => sliderRef?.slickNext()}>
+          <CaretIcon width={12} height={12} className="-rotate-90" />
+        </ButtonTag>
       </div>
     </div>
   );

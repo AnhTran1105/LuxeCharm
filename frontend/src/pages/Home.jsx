@@ -1,44 +1,40 @@
-import ProductCard from "../components/ProductCard";
+import { useEffect, useState } from "react";
 import ProductCarousel from "../components/ProductCarousel";
+import axios from "../utils/axios";
 
 function Home() {
+  const [products, setProducts] = useState([]);
+
+  const getRandomProducts = (products, num) => {
+    const shuffled = products.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, num);
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get("/products");
+        setProducts(response);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
   return (
     <div>
-      {/* Banner */}
-      <a href="/products/hard-feelings-fragrance" className="flex">
-        <img
-          src="//uncommonjames.com/cdn/shop/files/Fragrance_Jul24_Hero_Desktop.jpg?v=1721940727&amp;width=2100"
-          alt=""
-          srcSet="//uncommonjames.com/cdn/shop/files/Fragrance_Jul24_Hero_Desktop.jpg?v=1721940727&amp;width=550 550w, //uncommonjames.com/cdn/shop/files/Fragrance_Jul24_Hero_Desktop.jpg?v=1721940727&amp;width=1100 1100w, //uncommonjames.com/cdn/shop/files/Fragrance_Jul24_Hero_Desktop.jpg?v=1721940727&amp;width=2100 2100w"
-          width="2100"
-          height="1050.0"
-          loading="lazy"
-          sizes="(min-width: 750px) 50vw, 100vw"
-        />
-      </a>
-      {/* End Banner */}
-      {/* Products */}
+      <img
+        src="https://uncommonjames.com/cdn/shop/files/SterlingSilver_Sept24_Hero_Desktop.jpg?v=1725976472&width=2100"
+        alt=""
+        loading="lazy"
+        className="w-full"
+      />
       <div className="py-3 my-4">
-        <ul role="list" className="grid grid-cols-5 gap-3 px-[15px]">
-          <li>
-            <ProductCard />
-          </li>
-          <li>
-            <ProductCard />
-          </li>
-          <li>
-            <ProductCard isOptional={true} />
-          </li>
-          <li>
-            <ProductCard isOff={true} />
-          </li>
-          <li>
-            <ProductCard isOptional={true} />
-          </li>
-        </ul>
+        {products && (
+          <ProductCarousel products={getRandomProducts(products, 5)} />
+        )}
       </div>
-      {/* End Products */}
-      {/* Banner */}
+
       <a href="/collections/broadway-nights-collection" className="flex">
         <img
           src="//uncommonjames.com/cdn/shop/files/Fall1_Jul24_Hero_Desktop.jpg?v=1721661493&amp;width=2100"
@@ -154,7 +150,7 @@ function Home() {
       </a>
       {/* End Banner */}
       {/* Products */}
-      <ProductCarousel />
+      {/* <ProductCarousel /> */}
       {/* End Products */}
       {/* Banner */}
       <div className="pt-7 px-[50px] grid grid-cols-3 gap-3">

@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
-import Logo from "../assets/images/LuxuryCharming.png";
 import { useDispatch, useSelector } from "react-redux";
 import { showCart } from "../redux/cartModal/cartModalSlice";
 import ButtonTag from "./CustomTags/ButtonTag";
@@ -104,6 +103,8 @@ function Header() {
     <header
       className={`border-b border-border-tertiary bg-white z-[9999] w-full ${
         isAtTop ? "relative" : "fixed top-0 left-0 right-0"
+      } transition-transform duration-300 ease-out ${
+        isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
     >
       <div className="px-4 md:px-8 lg:px-12 py-2 grid grid-cols-3">

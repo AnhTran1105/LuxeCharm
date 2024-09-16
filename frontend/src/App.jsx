@@ -77,9 +77,9 @@ export default function App() {
     <BrowserRouter>
       <Header />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/collections/jewelry" element={<Jewelry />} />
+          <Route path="/all-jewelry" element={<Jewelry />} />
           <Route path="/products/:id" element={<Product />} />
           <Route path="/collections/bestsellers" element={<BestSellers />} />
           <Route path="/account/login" element={<Login />} />
