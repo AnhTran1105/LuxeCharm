@@ -7,78 +7,67 @@ import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 import { useNavigate } from "react-router-dom";
 import { CaretIcon } from "./SVG";
 
-function calculateTotalPages(totalItems, itemsPerPage) {
-  return Math.ceil(totalItems / itemsPerPage);
-}
+const getSlidesToShow = () => {
+  if (window.innerWidth <= 768) return 2;
+  if (window.innerWidth <= 1024) return 3;
+  if (window.innerWidth <= 1280) return 4;
+  return 5;
+};
 
 function ProductCarousel({ products }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sliderRef, setSliderRef] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesToShow, setSlidesToShow] = useState(getSlidesToShow());
 
-  const afterChangeHandler = (current) => {
-    setCurrentSlide(current);
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setSlidesToShow(getSlidesToShow());
+    };
 
-  const getSlidesToShow = () => {
-    if (window.innerWidth >= 1280) return 5;
-    if (window.innerWidth >= 1024) return 4;
-    if (window.innerWidth >= 768) return 3;
-    if (window.innerWidth >= 640) return 2;
-    return 1;
-  };
-
-  const totalPages = calculateTotalPages(products.length, getSlidesToShow());
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const settings = {
     dots: false,
     infinite: false,
     arrows: false,
-    initialSlide: 0,
     speed: 500,
-    slidesToShow: getSlidesToShow(),
     slidesToScroll: 1,
+    slidesToShow: getSlidesToShow(),
     afterChange: (current) => setCurrentSlide(current),
     lazyLoad: true,
     responsive: [
       {
-        breakpoint: 1280,
+        breakpoint: 768,
         settings: {
-          initialSlide: 0,
           slidesToScroll: 1,
-          slidesToShow: 5,
+          slidesToShow: 2,
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          initialSlide: 0,
-          slidesToScroll: 1,
-          slidesToShow: 4,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          initialSlide: 0,
           slidesToScroll: 1,
           slidesToShow: 3,
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 1280,
         settings: {
           slidesToScroll: 1,
-          initialSlide: 0,
-          slidesToShow: 2,
+          slidesToShow: 4,
         },
       },
     ],
   };
 
   return (
-    <div className="py-3 my-4">
+    <>
       <ul role="list" className="px-[15px]">
         <Slider ref={setSliderRef} {...settings} className="-mx-[6px] carousel">
           {products.map((product) => (
@@ -130,7 +119,7 @@ function ProductCarousel({ products }) {
               )}
               <div className="pt-3 pb-4 text-center text-sm">
                 <h3>
-                  <div className="group-hover:underline underline-offset-2">
+                  <div className="group-hover:underline underline-offset-2 single-line">
                     {product.name}
                   </div>
                 </h3>
@@ -179,18 +168,34 @@ function ProductCarousel({ products }) {
           ))}
         </Slider>
       </ul>
-      <div className="text-sm text-text-secondary flex justify-center items-center gap-6 mt-4">
-        <ButtonTag buttonType="icon" onClick={() => sliderRef?.slickPrev()}>
-          <CaretIcon width={12} height={12} className="rotate-90" />
-        </ButtonTag>
-        <span>
-          {Math.ceil(currentSlide / getSlidesToShow()) + 1} / {totalPages}
-        </span>
-        <ButtonTag buttonType="icon" onClick={() => sliderRef?.slickNext()}>
-          <CaretIcon width={12} height={12} className="-rotate-90" />
-        </ButtonTag>
-      </div>
-    </div>
+      {getSlidesToShow() < products.length && (
+        <div className="text-sm text-text-secondary flex justify-center items-center gap-6 mt-4">
+          <ButtonTag
+            disabled={currentSlide === 0}
+            buttonType="icon"
+            onClick={() => sliderRef?.slickPrev()}
+            className={currentSlide === 0 ? "opacity-30" : ""}
+          >
+            <CaretIcon width={12} height={12} className="rotate-90" />
+          </ButtonTag>
+          <span>
+            {currentSlide + 1} / {products.length - slidesToShow + 1}
+          </span>
+          <ButtonTag
+            disabled={currentSlide + 1 === products.length - slidesToShow + 1}
+            className={
+              currentSlide + 1 === products.length - slidesToShow + 1
+                ? "opacity-30"
+                : ""
+            }
+            buttonType="icon"
+            onClick={() => sliderRef?.slickNext()}
+          >
+            <CaretIcon width={12} height={12} className="-rotate-90" />
+          </ButtonTag>
+        </div>
+      )}
+    </>
   );
 }
 

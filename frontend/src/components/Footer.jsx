@@ -1,4 +1,4 @@
-import LinkTag from "./CustomTags/LinkTag";
+import AnchorTag from "./CustomTags/AnchorTag";
 
 function Footer() {
   return (
@@ -8,49 +8,49 @@ function Footer() {
           <div>
             <h2 className="mb-5 text-lg">Customer Care</h2>
             <div className="space-y-4">
-              <LinkTag className="block" to="/help-guide">
+              <AnchorTag className="block" href="/help-guide">
                 Help Guide
-              </LinkTag>
-              <LinkTag className="block" to="/shipping">
+              </AnchorTag>
+              <AnchorTag className="block" href="/shipping">
                 Shipping
-              </LinkTag>
-              <LinkTag className="block" to="/returns-exchanges">
+              </AnchorTag>
+              <AnchorTag className="block" href="/returns-exchanges">
                 Returns and Exchanges
-              </LinkTag>
-              <LinkTag className="block" to="/gift-cards">
+              </AnchorTag>
+              <AnchorTag className="block" href="/gift-cards">
                 Gift Cards
-              </LinkTag>
+              </AnchorTag>
             </div>
           </div>
           <div>
             <h2 className="mb-5 text-lg">My Account</h2>
             <div className="space-y-4">
-              <LinkTag className="block" to="/login">
+              <AnchorTag className="block" href="/login">
                 Login or Register
-              </LinkTag>
-              <LinkTag className="block" to="/rewards">
+              </AnchorTag>
+              <AnchorTag className="block" href="/rewards">
                 Rewards
-              </LinkTag>
-              <LinkTag className="block" to="/refer">
+              </AnchorTag>
+              <AnchorTag className="block" href="/refer">
                 Refer a Friend
-              </LinkTag>
+              </AnchorTag>
             </div>
           </div>
           <div>
             <h2 className="mb-5 text-lg">Information</h2>
             <div className="space-y-4">
-              <LinkTag className="block" to="/story">
+              <AnchorTag className="block" href="/story">
                 Our Story
-              </LinkTag>
-              <LinkTag className="block" to="/blogs">
+              </AnchorTag>
+              <AnchorTag className="block" href="/blogs">
                 LuxeCharm Blogs
-              </LinkTag>
-              <LinkTag className="block" to="/stores">
+              </AnchorTag>
+              <AnchorTag className="block" href="/stores">
                 Stores
-              </LinkTag>
-              <LinkTag className="block" to="/careers">
+              </AnchorTag>
+              <AnchorTag className="block" href="/careers">
                 Careers
-              </LinkTag>
+              </AnchorTag>
             </div>
           </div>
         </div>
@@ -131,37 +131,37 @@ function Footer() {
           <div className="text-center mt-4 flex items-center">
             <small className="text-xs text-text-secondary">
               © {new Date().getFullYear()},{" "}
-              <LinkTag className="text-xs" to="/">
+              <AnchorTag className="text-xs" href="/">
                 LuxeCharm
-              </LinkTag>
+              </AnchorTag>
             </small>
             <div className="flex">
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag className="text-xs" to="/refund-policy">
+                  <AnchorTag className="text-xs" href="/refund-policy">
                     Refund policy
-                  </LinkTag>
+                  </AnchorTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag className="text-xs" to="/privacy-policy">
+                  <AnchorTag className="text-xs" href="/privacy-policy">
                     Privacy policy
-                  </LinkTag>
+                  </AnchorTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag className="text-xs" to="/terms-of-service">
+                  <AnchorTag className="text-xs" href="/terms-of-service">
                     Terms of service
-                  </LinkTag>
+                  </AnchorTag>
                 </small>
               </li>
               <li className="policies flex justify-center items-center text-text-secondary">
                 <small className="text-xs text-text-secondary">
-                  <LinkTag className="text-xs" to="/accessibility">
+                  <AnchorTag className="text-xs" href="/accessibility">
                     Accessibility
-                  </LinkTag>
+                  </AnchorTag>
                 </small>
               </li>
             </div>

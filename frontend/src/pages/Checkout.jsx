@@ -11,7 +11,7 @@ import QuantityWidget from "../components/QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import { WarningIcon, StripeIcon, TrashIcon } from "../components/SVG";
-import LinkTag from "../components/CustomTags/LinkTag";
+import AnchorTag from "../components/CustomTags/AnchorTag";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -249,9 +249,11 @@ function Checkout() {
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-secondary flex items-center"
                 >
                   <div className="w-[90px]">
-                    <LinkTag to={`/products/${item._id}?metal=${item.metal}`}>
+                    <AnchorTag
+                      href={`/products/${item._id}?metal=${item.metal}`}
+                    >
                       <img src={item.imageUrl} alt={item.name} />
-                    </LinkTag>
+                    </AnchorTag>
                   </div>
                   <div className="pl-5 w-full relative text-left">
                     <ButtonTag
@@ -263,12 +265,12 @@ function Checkout() {
                     >
                       <TrashIcon width={16} height={16} />
                     </ButtonTag>
-                    <LinkTag
-                      to={`/products/${item._id}?metal=${item.metal}`}
+                    <AnchorTag
+                      href={`/products/${item._id}?metal=${item.metal}`}
                       className="font-SofiaBold leading-5 text-text-primary"
                     >
                       {item.name}
-                    </LinkTag>
+                    </AnchorTag>
                     {item.salePrice && (
                       <span className="ml-2 bg-background-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                         Sale

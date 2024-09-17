@@ -7,7 +7,7 @@ import axios from "../utils/axios";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { useState } from "react";
-import LinkTag from "../components/CustomTags/LinkTag";
+import AnchorTag from "../components/CustomTags/AnchorTag";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import ErrorMessage from "../components/ErrorMessage";
 
@@ -256,9 +256,9 @@ function Register() {
             </ButtonTag>
             <div className="flex justify-center items-center gap-1 mt-3">
               Already have an account?
-              <LinkTag to="/account/login" type="underline">
+              <AnchorTag href="/account/login" type="underline">
                 Login now
-              </LinkTag>
+              </AnchorTag>
             </div>
           </form>
         </div>

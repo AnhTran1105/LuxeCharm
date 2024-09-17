@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import LinkTag from "../components/CustomTags/LinkTag";
+import AnchorTag from "../components/CustomTags/AnchorTag";
 import ErrorMessage from "../components/ErrorMessage";
 
 const schema = yup
@@ -95,17 +95,25 @@ function Login() {
               <ErrorMessage message={errors.password?.message} />
             )}
             <div className="text-left">
-              <LinkTag to="/password/recover" type="underline" className="mt-3">
+              <AnchorTag
+                href="/password/recover"
+                type="underline"
+                className="mt-3"
+              >
                 Forgot your password?
-              </LinkTag>
+              </AnchorTag>
             </div>
             <ButtonTag className="my-5" type="submit">
               Login now
             </ButtonTag>
             <OAuth />
-            <LinkTag to="/account/register" type="underline" className="mt-3">
+            <AnchorTag
+              href="/account/register"
+              type="underline"
+              className="mt-3"
+            >
               Create account
-            </LinkTag>
+            </AnchorTag>
           </form>
         </div>
       </div>

@@ -22,19 +22,18 @@ function Home() {
   }, []);
 
   return (
-    <div>
+    <main className="pb-6">
       <img
         src="https://uncommonjames.com/cdn/shop/files/SterlingSilver_Sept24_Hero_Desktop.jpg?v=1725976472&width=2100"
         alt=""
         loading="lazy"
         className="w-full"
       />
-      <div className="py-3 my-4">
+      <div className="py-3 mt-4">
         {products && (
           <ProductCarousel products={getRandomProducts(products, 5)} />
         )}
       </div>
-
       <a href="/collections/broadway-nights-collection" className="flex">
         <img
           src="//uncommonjames.com/cdn/shop/files/Fall1_Jul24_Hero_Desktop.jpg?v=1721661493&amp;width=2100"
@@ -46,8 +45,6 @@ function Home() {
           sizes="(min-width: 750px) 50vw, 100vw"
         />
       </a>
-      {/* End Banner */}
-      {/* Product Types */}
       <div className="py-3 my-4">
         <div className="grid grid-cols-4 gap-3 px-[15px]">
           <a href="/collections/necklaces" className="group cursor-pointer">
@@ -135,8 +132,6 @@ function Home() {
           </a>
         </div>
       </div>
-      {/* End Products Types */}
-      {/* Banner */}
       <a href="/collections/bestsellers" className="flex">
         <img
           src="//uncommonjames.com/cdn/shop/files/BestSellers_Apr24_Hero_Desktop.jpg?v=1712326654&amp;width=2100"
@@ -148,11 +143,6 @@ function Home() {
           sizes="(min-width: 750px) 50vw, 100vw"
         />
       </a>
-      {/* End Banner */}
-      {/* Products */}
-      {/* <ProductCarousel /> */}
-      {/* End Products */}
-      {/* Banner */}
       <div className="pt-7 px-[50px] grid grid-cols-3 gap-3">
         <a
           href="/collections/statement-pieces"
@@ -191,8 +181,10 @@ function Home() {
           />
         </a>
       </div>
-      {/* End Banner */}
-    </div>
+      <div className="py-3 mt-4">
+        {products && <ProductCarousel products={products} />}
+      </div>
+    </main>
   );
 }
 

@@ -456,3 +456,9 @@ textarea::placeholder {
 .custom-paging .slick-dots.slick-thumb {
   @apply px-10;
 }
+
+.single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -2,7 +2,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { NavLink } from "react-router-dom";
 import { CloseIcon, AccountIcon } from "./SVG";
-import LinkTag from "./CustomTags/LinkTag";
+import AnchorTag from "./CustomTags/AnchorTag";
 
 function HeaderMenu({ isOpened, setIsOpened }) {
   return (
@@ -26,16 +26,16 @@ function HeaderMenu({ isOpened, setIsOpened }) {
           >
             <CloseIcon width={24} height={24} />
           </ButtonTag>
-          <LinkTag
-            to="/account"
+          <AnchorTag
+            href="/account"
             className="p-0 flex items-center group pt-12 pb-6 px-6 gap-2 text-base border-b border-border-tertiary md:hidden"
           >
             <AccountIcon width={20} height={20} />
             Login
-          </LinkTag>
+          </AnchorTag>
           <nav className="md:my-12 my-6">
             <NavLink
-              to="/best-sellers"
+              href="/best-sellers"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -47,7 +47,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Best Sellers
             </NavLink>
             <NavLink
-              to="/necklaces"
+              href="/necklaces"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -59,7 +59,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Necklaces
             </NavLink>
             <NavLink
-              to="/earrings"
+              href="/earrings"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -71,7 +71,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Earrings
             </NavLink>
             <NavLink
-              to="/rings"
+              href="/rings"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -83,7 +83,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Rings
             </NavLink>
             <NavLink
-              to="/bracelets"
+              href="/bracelets"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -95,7 +95,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Bracelets
             </NavLink>
             <NavLink
-              to="/charms"
+              href="/charms"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive
@@ -107,7 +107,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
               Charms
             </NavLink>
             <NavLink
-              to="/all-jewelry"
+              href="/all-jewelry"
               className={({ isActive }) =>
                 `w-full block px-6 py-3 ${
                   isActive

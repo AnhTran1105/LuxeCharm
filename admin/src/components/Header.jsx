@@ -253,7 +253,7 @@ function Header() {
               <NavLink
                 className={`header-nav-item text-color-foreground/75 hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] 
                   text-hover hover:text-hover`}
-                to="/collections/bestsellers"
+                href="/collections/bestsellers"
               >
                 <span>Dashboard</span>
               </NavLink>
@@ -262,7 +262,7 @@ function Header() {
             <li>
               <NavLink
                 className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative`}
-                to="/products"
+                href="/products"
               >
                 <span>Products</span>
               </NavLink>
@@ -271,7 +271,7 @@ function Header() {
             <li>
               <NavLink
                 className={`header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s] relative`}
-                to="/users"
+                href="/users"
               >
                 <span>Users</span>
               </NavLink>
@@ -280,7 +280,7 @@ function Header() {
             <li>
               <NavLink
                 className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
-                to="/collections/fragrance"
+                href="/collections/fragrance"
               >
                 <span>Fragrance</span>
               </NavLink>
@@ -292,7 +292,7 @@ function Header() {
                   !lifestyleMenuRef.current.classList.contains("opacity-0") &&
                   "underline underline-offset-[2.5px] hover:decoration-2"
                 }`}
-                // to="/collections/lifestyle"
+                // href="/collections/lifestyle"
               >
                 <span>Lifestyle</span>
                 <svg
@@ -379,7 +379,7 @@ function Header() {
               <button
                 onClick={() => dispatch(logout())}
                 className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
-                to="/collections/sale"
+                href="/collections/sale"
               >
                 <span>Logout</span>
               </button>

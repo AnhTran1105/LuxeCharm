@@ -2,7 +2,7 @@ import Filter from "../components/Filter";
 import ProductList from "../components/ProductList";
 import { useState, useEffect } from "react";
 import axios from "../utils/axios";
-import LinkTag from "../components/CustomTags/LinkTag";
+import AnchorTag from "../components/CustomTags/AnchorTag";
 
 function Jewelry() {
   const [products, setProducts] = useState([]);
@@ -55,68 +55,68 @@ function Jewelry() {
             <p className="text-text-secondary tracking-[0.6px] leading-[28.8px]">
               Create a look that's all your own with our affordable, everyday
               jewelry. For a full layered look, stack our{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/silver"
+                href="/collections/silver"
                 className="text-base text-text-primary"
               >
                 silver
-              </LinkTag>{" "}
+              </AnchorTag>{" "}
               and gold{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/necklaces"
+                href="/collections/necklaces"
                 className="text-base text-text-primary"
               >
                 necklaces
-              </LinkTag>{" "}
+              </AnchorTag>{" "}
               or shop our{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/prestack-necklaces"
+                href="/collections/prestack-necklaces"
                 className="text-base text-text-primary"
               >
                 prestack-necklaces
-              </LinkTag>
+              </AnchorTag>
               . We also have everything you need for a killer ear stack —{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/simple"
+                href="/collections/simple"
                 className="text-base text-text-primary"
               >
                 simple
-              </LinkTag>{" "}
+              </AnchorTag>{" "}
               and{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/statement"
+                href="/collections/statement"
                 className="text-base text-text-primary"
               >
                 statement
-              </LinkTag>
-              <LinkTag
+              </AnchorTag>
+              <AnchorTag
                 type="underline"
-                to="/collections/earrings"
+                href="/collections/earrings"
                 className="text-base text-text-primary"
               >
                 &nbsp;earrings
-              </LinkTag>
+              </AnchorTag>
               . If you need an arm candy look, simply stack up our{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/rings"
+                href="/collections/rings"
                 className="text-base text-text-primary"
               >
                 rings
-              </LinkTag>{" "}
+              </AnchorTag>{" "}
               and{" "}
-              <LinkTag
+              <AnchorTag
                 type="underline"
-                to="/collections/bracelets"
+                href="/collections/bracelets"
                 className="text-base text-text-primary"
               >
                 bracelets
-              </LinkTag>
+              </AnchorTag>
               .
             </p>
           </div>

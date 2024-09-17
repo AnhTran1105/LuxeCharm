@@ -11,7 +11,7 @@ import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
-import LinkTag from "./CustomTags/LinkTag";
+import AnchorTag from "./CustomTags/AnchorTag";
 import { CloseIcon, TrashIcon } from "./SVG";
 
 function Cart() {
@@ -65,9 +65,11 @@ function Cart() {
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-primary/15 flex items-center"
                 >
                   <div className="w-[90px]">
-                    <LinkTag to={`/products/${item._id}?metal=${item.metal}`}>
+                    <AnchorTag
+                      href={`/products/${item._id}?metal=${item.metal}`}
+                    >
                       <img src={item.imageUrl} alt={item.name} />
-                    </LinkTag>
+                    </AnchorTag>
                   </div>
                   <div className="pl-5 w-full relative">
                     <ButtonTag
@@ -79,12 +81,12 @@ function Cart() {
                     >
                       <TrashIcon width={16} height={16} />
                     </ButtonTag>
-                    <LinkTag
-                      to={`/products/${item._id}?metal=${item.metal}`}
+                    <AnchorTag
+                      href={`/products/${item._id}?metal=${item.metal}`}
                       className="font-SofiaBold leading-5 text-text-primary"
                     >
                       {item.name}
-                    </LinkTag>
+                    </AnchorTag>
                     {item.salePrice && (
                       <span className="ml-2 bg-background-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                         Sale

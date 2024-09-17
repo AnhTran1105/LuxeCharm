@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { showCart } from "../redux/cartModal/cartModalSlice";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { AccountIcon, CartIcon, HeaderLogo, MenuIcon, SearchIcon } from "./SVG";
-import LinkTag from "./CustomTags/LinkTag";
+import AnchorTag from "./CustomTags/AnchorTag";
 import HeaderMenu from "./HeaderMenu";
 
 function Header() {
@@ -123,7 +123,7 @@ function Header() {
           <MenuIcon width={20} height={20} />
         </ButtonTag>
         <HeaderMenu isOpened={isOpened} setIsOpened={setIsOpened} />
-        <LinkTag to="/" className="flex justify-center">
+        <AnchorTag href="/" className="flex justify-center">
           <HeaderLogo
             width={90}
             height={36}
@@ -131,7 +131,7 @@ function Header() {
               isAtTop && "w-[180px]"
             } transition-[width] duration-300 ease`}
           />
-        </LinkTag>
+        </AnchorTag>
         <div className="flex justify-end items-center gap-6 max-md:gap-4">
           <ButtonTag
             onClick={() => {}}
@@ -140,12 +140,12 @@ function Header() {
           >
             <SearchIcon width={20} height={20} />
           </ButtonTag>
-          <LinkTag
-            to="/account"
+          <AnchorTag
+            href="/account"
             className="p-0 flex items-center h-full group max-md:hidden"
           >
             <AccountIcon width={20} height={20} />
-          </LinkTag>
+          </AnchorTag>
           <ButtonTag
             onClick={() => dispatch(showCart())}
             buttonType="icon"
@@ -160,7 +160,7 @@ function Header() {
         >
           <li className="p-3">
             <NavLink
-              to="/best-sellers"
+              href="/best-sellers"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -172,7 +172,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/necklaces"
+              href="/necklaces"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -184,7 +184,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/earrings"
+              href="/earrings"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -196,7 +196,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/rings"
+              href="/rings"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -208,7 +208,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/bracelets"
+              href="/bracelets"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -220,7 +220,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/charms"
+              href="/charms"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -232,7 +232,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              to="/all-jewelry"
+              href="/all-jewelry"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -414,7 +414,7 @@ function Header() {
     //           <NavLink
     //             className={`header-nav-item text-color-foreground/75 hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]
     //               text-hover hover:text-hover`}
-    //             to="/collections/bestsellers"
+    //             href="/collections/bestsellers"
     //           >
     //             <span>Best Sellers</span>
     //           </NavLink>
@@ -430,7 +430,7 @@ function Header() {
     //               !jewelryMenuRef.current.classList.contains("opacity-0") &&
     //               "underline underline-offset-[2.5px] hover:decoration-2"
     //             }`}
-    //             // to="/collections/jewelry"
+    //             // href="/collections/jewelry"
     //           >
     //             <span>Jewelry</span>
     //             <svg
@@ -573,7 +573,7 @@ function Header() {
     //               !beautyMenuRef.current.classList.contains("opacity-0") &&
     //               "underline underline-offset-[2.5px] hover:decoration-2"
     //             }`}
-    //             // to="/collections/beauty"
+    //             // href="/collections/beauty"
     //           >
     //             <span>Beauty</span>
     //             <svg
@@ -659,7 +659,7 @@ function Header() {
     //         <li>
     //           <NavLink
     //             className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
-    //             to="/collections/fragrance"
+    //             href="/collections/fragrance"
     //           >
     //             <span>Fragrance</span>
     //           </NavLink>
@@ -671,7 +671,7 @@ function Header() {
     //               !lifestyleMenuRef.current.classList.contains("opacity-0") &&
     //               "underline underline-offset-[2.5px] hover:decoration-2"
     //             }`}
-    //             // to="/collections/lifestyle"
+    //             // href="/collections/lifestyle"
     //           >
     //             <span>Lifestyle</span>
     //             <svg
@@ -757,7 +757,7 @@ function Header() {
     //         <li>
     //           <NavLink
     //             className="header-nav-item text-color-foreground/75 hover:text-color-foreground hover:underline hover:underline-offset-[2.5px] transition-[text-decoration] ease-linear duration-[0.1s]"
-    //             to="/collections/sale"
+    //             href="/collections/sale"
     //           >
     //             <span>Sale</span>
     //           </NavLink>
