@@ -3,13 +3,12 @@ import ProductList from "../components/ProductList";
 import { useState, useEffect } from "react";
 import axios from "../utils/axios";
 import AnchorTag from "../components/CustomTags/AnchorTag";
-import { useParams } from "react-router-dom";
 
-function Jewelry() {
-  const { category } = useParams();
+function AllJewelry() {
   const [products, setProducts] = useState([]);
   const [sortingType, setSortingType] = useState("Featured");
   const [filters, setFilters] = useState({
+    category: [],
     metal: [],
     price: {
       from: null,
@@ -24,11 +23,7 @@ function Jewelry() {
   useEffect(() => {
     (async () => {
       try {
-        const filtersToSend = {
-          ...filters,
-          category: [category[0].toUpperCase() + category.slice(1)],
-          sort: sortingType,
-        };
+        const filtersToSend = { ...filters, sort: sortingType };
 
         if (
           filtersToSend.price?.from === null &&
@@ -49,16 +44,14 @@ function Jewelry() {
         console.error("Error fetching products:", error);
       }
     })();
-  }, [filters, category, sortingType]);
+  }, [filters, sortingType]);
 
   return (
     products && (
       <div className="mx-auto my-0 flex flex-col items-center justify-center">
         <div className="lg:max-w-[780px] md:max-w-[500px] text-center">
-          <h1 className="text-[40px]">
-            {category[0].toUpperCase() + category.slice(1)}
-          </h1>
-          <div className="my-6">
+          <h1 className="text-[40px]">All Jewelry</h1>
+          <div className="mt-5">
             <p className="text-text-secondary tracking-[0.6px] leading-[28.8px]">
               Create a look that's all your own with our affordable, everyday
               jewelry. For a full layered look, stack our{" "}
@@ -127,6 +120,77 @@ function Jewelry() {
               .
             </p>
           </div>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-5 mt-4 pb-2">
+          <a className="text-center group" href="/">
+            <div className="m-5 overflow-hidden">
+              <img
+                srcSet="//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=165 165w,//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=330 330w,//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=535 535w,//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=750 750w,//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=1000 1000w,//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611 1200w
+                "
+                src="//uncommonjames.com/cdn/shop/collections/Hearts_SMS.jpg?v=1718660611&amp;width=1500"
+                sizes="
+                  (min-width: 1600px) 500px,
+                  (min-width: 750px) calc((100vw - 10rem) / 2),
+                  calc(100vw - 3rem)"
+                alt=""
+                height="1200"
+                width="1200"
+                loading="lazy"
+                className="aspect-[4/5] group-hover:scale-103 object-cover transition-transform duration-300 ease-linear"
+              />
+            </div>
+            <div className="pt-4 pb-[10px]">
+              <a href="/collections/hearts-collection" className="text-lg">
+                Hearts Collection
+              </a>
+            </div>
+          </a>
+          <a className="text-center group" href="/">
+            <div className="m-5 overflow-hidden">
+              <img
+                srcSet="//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=165 165w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=330 330w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=535 535w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=750 750w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=1000 1000w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=1500 1500w,//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648 2000w
+                "
+                src="//uncommonjames.com/cdn/shop/collections/J11N-BEADCHAIN-GOLD-M-KC.jpg?v=1719498648&amp;width=1500"
+                sizes="
+                  (min-width: 1600px) 500px,
+                  (min-width: 750px) calc((100vw - 10rem) / 2),
+                  calc(100vw - 3rem)"
+                alt=""
+                height="2000"
+                width="2000"
+                loading="lazy"
+                className="aspect-[4/5] group-hover:scale-103 object-cover transition-transform duration-300 ease-linear"
+              />
+            </div>
+            <div className="pt-4 pb-[10px]">
+              <a href="/collections/hearts-collection" className="text-lg">
+                Beaded Jewelry
+              </a>
+            </div>
+          </a>
+          <a className="text-center group" href="/">
+            <div className="m-5 overflow-hidden">
+              <img
+                srcSet="//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=165 165w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=330 330w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=535 535w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=750 750w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=1000 1000w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=1500 1500w,//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478 2000w
+                "
+                src="//uncommonjames.com/cdn/shop/collections/Pearls_Nav1.jpg?v=1719498478&amp;width=1500"
+                sizes="
+                  (min-width: 1600px) 500px,
+                  (min-width: 750px) calc((100vw - 10rem) / 2),
+                  calc(100vw - 3rem)"
+                alt=""
+                height="2000"
+                width="2000"
+                loading="lazy"
+                className="aspect-[4/5] group-hover:scale-103 object-cover transition-transform duration-300 ease-linear"
+              />
+            </div>
+            <div className="pt-4 pb-[10px]">
+              <a href="/collections/hearts-collection" className="text-lg">
+                Pearl Jewelry
+              </a>
+            </div>
+          </a>
         </div>
         <Filter
           sortingType={sortingType}
@@ -218,4 +282,4 @@ function Jewelry() {
   );
 }
 
-export default Jewelry;
+export default AllJewelry;

@@ -180,7 +180,7 @@ a:not(.arrow).pagination-item:hover:after {
 }
 
 .carousel .carousel-item {
-  @apply px-[6px];
+  @apply px-2;
 }
 
 .field {

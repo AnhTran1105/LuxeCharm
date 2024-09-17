@@ -160,7 +160,7 @@ function Header() {
         >
           <li className="p-3">
             <NavLink
-              href="/best-sellers"
+              to="/best-sellers"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -172,7 +172,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/necklaces"
+              to="/jewelry/necklaces"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -184,7 +184,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/earrings"
+              to="/jewelry/earrings"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -196,7 +196,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/rings"
+              to="/jewelry/rings"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -208,7 +208,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/bracelets"
+              to="/jewelry/bracelets"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -220,7 +220,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/charms"
+              to="/jewelry/charms"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
@@ -232,7 +232,7 @@ function Header() {
           </li>
           <li className="p-3">
             <NavLink
-              href="/all-jewelry"
+              to="/all-jewelry"
               className={({ isActive }) =>
                 isActive
                   ? "text-background-primary underline underline-offset-2 decoration-2"
