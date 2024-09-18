@@ -3,7 +3,6 @@ import axios from "../utils/axios";
 import { useParams } from "react-router-dom";
 import CustomPaging from "../components/CustomPaging";
 import InfoDisclosure from "../components/InfoDisclosure";
-import Button from "../components/Button";
 import Reviews from "../components/Reviews";
 import { Rating } from "react-simple-star-rating";
 import { useDispatch } from "react-redux";
@@ -12,7 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import { StripeIcon } from "../components/SVG";
 
-function Product() {
+function ProductDetails() {
   const [product, setProduct] = useState();
   const [metal, setMetal] = useState();
   const [metalImages, setMetalImages] = useState({});
@@ -70,18 +69,20 @@ function Product() {
   return (
     product && (
       <>
-        <section className="pt-9 pb-3 px-[50px]">
-          <div className="flex">
-            <div className="max-w-[55%] w-[55%]">
-              <CustomPaging
-                imageUrls={[
-                  metalImages.primary,
-                  metalImages.secondary,
-                  ...metalImages.others,
-                ]}
-              />
+        <section className="">
+          <div className="sm:flex max-sm:space-y-6">
+            <div className="w-full sm:w-[55%]">
+              <div className="max-sm:w-[95%] mx-auto">
+                <CustomPaging
+                  imageUrls={[
+                    metalImages.primary,
+                    metalImages.secondary,
+                    ...metalImages.others,
+                  ]}
+                />
+              </div>
             </div>
-            <div className="pl-[50px] max-w-[45%] w-[45%]">
+            <div className="sm:pl-8 lg:pl-12 w-full sm:w-[45%]">
               <div className="mb-4">
                 <h1 className="text-[22px]">{product.name}</h1>
               </div>
@@ -297,4 +298,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default ProductDetails;

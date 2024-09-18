@@ -106,9 +106,9 @@ function Account() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center py-10 px-[50px]">
+      <section className="w-full max-w-[440px] text-center mx-auto">
         <h1 className="text-[40px]">Account</h1>
-        <div className="mx-auto w-4/5 grid grid-cols-2 gap-12 mt-10">
+        <div className="mt-6 space-y-6">
           <div className="">
             <div className="text-center border border-border-primary">
               <div className="border-b border-border-primary py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
@@ -334,7 +334,7 @@ function Account() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
       <ChangePasswordModal isOpened={isOpened} setIsOpened={setIsOpened} />
     </>
   );

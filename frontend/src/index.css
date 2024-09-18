@@ -6,7 +6,6 @@
   html {
     font-family: "Sofia", system-ui, sans-serif;
     line-height: 1.3;
-    font-size: 16px;
     color: #121212;
   }
 
@@ -22,6 +21,14 @@
     font-style: normal;
     font-display: swap;
     src: url(./assets/fonts/sp-sb.woff) format("woff2");
+  }
+}
+
+html {
+  font-size: 14px;
+
+  @screen lg {
+    font-size: 16px;
   }
 }
 
@@ -473,4 +480,8 @@ textarea::placeholder {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.slick-active a {
+  @apply outline outline-text-primary;
 }

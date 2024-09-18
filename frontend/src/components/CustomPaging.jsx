@@ -1,8 +1,12 @@
 import Slider from "react-slick";
-import ArrowNext from "./ArrowNext";
-import ArrowPrev from "./ArrowPrev";
+import { CaretIcon } from "./SVG";
+import { useState } from "react";
+import ButtonTag from "./CustomTags/ButtonTag";
 
 function CustomPaging({ imageUrls }) {
+  const [sliderRef, setSliderRef] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const settings = {
     customPaging: function (i) {
       return (
@@ -16,20 +20,46 @@ function CustomPaging({ imageUrls }) {
       );
     },
     dots: true,
-    dotsClass: "slick-dots slick-thumb",
+    fade: true,
+    dotsClass: "grid grid-cols-5 gap-2 lg:gap-3 relative px-10",
     infinite: false,
-    speed: 500,
+    afterChange: (current) => setCurrentSlide(current),
+    appendDots: (dots) => (
+      <ul>
+        <ButtonTag
+          disabled={currentSlide === 0}
+          buttonType="icon"
+          onClick={() => sliderRef?.slickPrev()}
+          className={`absolute top-1/2 left-0 -translate-y-1/2 ${
+            currentSlide === 0 ? "opacity-30" : ""
+          }`}
+        >
+          <CaretIcon width={12} height={12} className="rotate-90" />
+        </ButtonTag>
+        {dots}
+        <ButtonTag
+          disabled={currentSlide + 1 === imageUrls.length}
+          buttonType="icon"
+          onClick={() => sliderRef?.slickNext()}
+          className={`absolute top-1/2 right-0 -translate-y-1/2 ${
+            currentSlide + 1 === imageUrls.length ? "opacity-30" : ""
+          }`}
+        >
+          <CaretIcon width={12} height={12} className="-rotate-90" />
+        </ButtonTag>
+      </ul>
+    ),
+    speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <ArrowNext />,
-    prevArrow: <ArrowPrev />,
   };
+
   return (
     <div className="slider-container custom-paging">
-      <Slider {...settings}>
+      <Slider ref={setSliderRef} {...settings}>
         {imageUrls.map((url) => (
           <div key={url} className="!flex justify-center">
-            <img src={url} className="w-[375px] aspect-[3/4]" />
+            <img src={url} className="w-full lg:w-1/2 aspect-[3/4]" />
           </div>
         ))}
       </Slider>

@@ -8,7 +8,7 @@ function InfoDisclosure({ title, content }) {
   return (
     <div className="border-b border-border-primary/15">
       <Disclosure as="div" className="w-full text-text-secondary">
-        <DisclosureButton className="group w-full py-[15px] text-[15px] text-color-foreground flex justify-between items-center text-left">
+        <DisclosureButton className="group w-full py-[15px] text-[15px] text-text-primary flex justify-between items-center text-left">
           {title}
           <svg
             className="h-3 w-3 mr-[15px] group-data-[open]:rotate-180 stroke-text-primary"

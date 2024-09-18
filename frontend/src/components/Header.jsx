@@ -102,7 +102,7 @@ function Header() {
   return (
     <header
       className={`border-b border-border-tertiary bg-white z-[9999] w-full ${
-        isAtTop ? "relative" : "fixed top-0 left-0 right-0"
+        isAtTop ? "relative" : "sticky top-0 left-0 right-0"
       } transition-transform duration-300 ease-out ${
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}

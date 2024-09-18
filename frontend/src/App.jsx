@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Jewelry from "./pages/Jewelry";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Product from "./pages/Product";
+import ProductDetails from "./pages/ProductDetails";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -83,7 +83,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/jewelry/:category" element={<Jewelry />} />
             <Route path="/all-jewelry" element={<AllJewelry />} />
-            <Route path="/products/:id" element={<Product />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/collections/bestsellers" element={<BestSellers />} />
             <Route path="/account/login" element={<Login />} />
             <Route path="/account/register" element={<Register />} />
