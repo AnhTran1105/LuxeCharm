@@ -186,42 +186,14 @@ export const WarningIcon = ({ width, height, className, ...props }) => (
 export const MenuIcon = ({ width, height, className, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-    focusable="false"
-    fill="none"
-    viewBox="0 0 18 16"
+    viewBox="0 0 32 32"
     width={width}
     height={height}
-    className={`-:stroke-text-secondary -:group-hover:stroke-text-primary -:group-hover:scale-105 ${className}`}
+    id="menu"
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
     {...props}
   >
-    <line
-      x1="2.0205"
-      y1="1.4749"
-      x2="21.9795"
-      y2="1.4749"
-      fill="none"
-      stroke=""
-      strokeMiterlimit="10"
-    ></line>
-    <line
-      x1="2.0205"
-      y1="8.5"
-      x2="21.9795"
-      y2="8.5"
-      fill="none"
-      stroke=""
-      strokeMiterlimit="10"
-    ></line>
-    <line
-      x1="2.0205"
-      y1="15.5251"
-      x2="21.9795"
-      y2="15.5251"
-      fill="none"
-      stroke=""
-      strokeMiterlimit="10"
-    ></line>
+    <path d="M30 4.112H2a1 1 0 0 0 0 2h28a1 1 0 0 0 0-2zM30 15H2a1 1 0 0 0 0 2h28a1 1 0 0 0 0-2zm0 10.888H2a1 1 0 1 0 0 2h28a1 1 0 1 0 0-2z"></path>
   </svg>
 );
 
@@ -370,5 +342,139 @@ export const CaretIcon = ({ width, height, className, ...props }) => (
       stroke=""
       strokeMiterlimit="10"
     ></polyline>
+  </svg>
+);
+
+export const EyeIcon = ({ width, height, className, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 256 256"
+    id="eye-closed"
+    className={`${className}`}
+    width={width}
+    height={height}
+  >
+    <rect width="256" height="256" fill="none"></rect>
+    <line
+      x1="201.15"
+      x2="223.96"
+      y1="127.305"
+      y2="166.813"
+      fill="none"
+      stroke="#121212"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="12"
+    ></line>
+    <line
+      x1="154.182"
+      x2="161.296"
+      y1="149.263"
+      y2="189.607"
+      fill="none"
+      stroke="#121212"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="12"
+    ></line>
+    <line
+      x1="101.73"
+      x2="94.615"
+      y1="149.244"
+      y2="189.594"
+      fill="none"
+      stroke="#121212"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="12"
+    ></line>
+    <line
+      x1="54.809"
+      x2="31.889"
+      y1="127.272"
+      y2="166.971"
+      fill="none"
+      stroke="#121212"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="12"
+    ></line>
+    <path
+      fill="none"
+      stroke="#121212"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="12"
+      d="M31.99943,104.87509C48.81193,125.68556,79.63353,152,128,152c48.36629,0,79.18784-26.31424,96.00039-47.12468"
+    ></path>
+  </svg>
+);
+
+export const FacebookIcon = ({ width, height, className, ...props }) => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    viewBox="0 0 18 18"
+    width={width}
+    height={height}
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    {...props}
+  >
+    <path
+      fill=""
+      d="M16.42.61c.27 0 .5.1.69.28.19.2.28.42.28.7v15.44c0 .27-.1.5-.28.69a.94.94 0 01-.7.28h-4.39v-6.7h2.25l.31-2.65h-2.56v-1.7c0-.4.1-.72.28-.93.18-.2.5-.32 1-.32h1.37V3.35c-.6-.06-1.27-.1-2.01-.1-1.01 0-1.83.3-2.45.9-.62.6-.93 1.44-.93 2.53v1.97H7.04v2.65h2.24V18H.98c-.28 0-.5-.1-.7-.28a.94.94 0 01-.28-.7V1.59c0-.27.1-.5.28-.69a.94.94 0 01.7-.28h15.44z"
+    ></path>
+  </svg>
+);
+
+export const InstagramIcon = ({ width, height, className, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 18 18"
+    id="instagram"
+    width={width}
+    height={height}
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    {...props}
+  >
+    <path
+      d="M18.946 6.29a6.606 6.606 0 0 0-.418-2.185 4.412 4.412 0 0 0-1.039-1.594 4.412 4.412 0 0 0-1.594-1.039 6.606 6.606 0 0 0-2.184-.418C12.75 1.01 12.444 1 10 1s-2.75.01-3.71.054a6.606 6.606 0 0 0-2.185.418A4.412 4.412 0 0 0 2.51 2.511a4.412 4.412 0 0 0-1.039 1.594 6.606 6.606 0 0 0-.418 2.184C1.01 7.25 1 7.556 1 10s.01 2.75.054 3.71a6.606 6.606 0 0 0 .418 2.185 4.412 4.412 0 0 0 1.039 1.594 4.411 4.411 0 0 0 1.594 1.039 6.606 6.606 0 0 0 2.184.418C7.25 18.99 7.556 19 10 19s2.75-.01 3.71-.054a6.606 6.606 0 0 0 2.185-.418 4.602 4.602 0 0 0 2.633-2.633 6.606 6.606 0 0 0 .418-2.184C18.99 12.75 19 12.444 19 10s-.01-2.75-.054-3.71zm-1.62 7.347a4.978 4.978 0 0 1-.31 1.67 2.98 2.98 0 0 1-1.708 1.709 4.979 4.979 0 0 1-1.671.31c-.95.043-1.234.052-3.637.052s-2.688-.009-3.637-.052a4.979 4.979 0 0 1-1.67-.31 2.788 2.788 0 0 1-1.036-.673 2.788 2.788 0 0 1-.673-1.035 4.978 4.978 0 0 1-.31-1.671c-.043-.95-.052-1.234-.052-3.637s.009-2.688.052-3.637a4.979 4.979 0 0 1 .31-1.67 2.788 2.788 0 0 1 .673-1.036 2.788 2.788 0 0 1 1.035-.673 4.979 4.979 0 0 1 1.671-.31c.95-.043 1.234-.052 3.637-.052s2.688.009 3.637.052a4.979 4.979 0 0 1 1.67.31 2.788 2.788 0 0 1 1.036.673 2.788 2.788 0 0 1 .673 1.035 4.979 4.979 0 0 1 .31 1.671c.043.95.052 1.234.052 3.637s-.009 2.688-.052 3.637zM10 5.378A4.622 4.622 0 1 0 14.622 10 4.622 4.622 0 0 0 10 5.378zM10 13a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm5.884-7.804a1.08 1.08 0 1 1-1.08-1.08 1.08 1.08 0 0 1 1.08 1.08z"
+      transform="translate(-1 -1)"
+    ></path>
+  </svg>
+);
+
+export const TiktokIcon = ({ width, height, className, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 33.867 33.867"
+    id="tiktok"
+    width={width}
+    height={height}
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    {...props}
+  >
+    <path
+      d="m22.913 1.057-5.29.001v21.836a4.614 4.614 0 0 1-2.859 4.276 4.611 4.611 0 0 1-5.043-1.003 4.615 4.615 0 0 1-1.004-5.046 4.612 4.612 0 0 1 4.276-2.856h1.711v-5.29h-1.71A9.934 9.934 0 0 0 3.83 19.1a9.934 9.934 0 0 0 2.15 10.81 9.935 9.935 0 0 0 10.81 2.149 9.934 9.934 0 0 0 6.123-9.164V10.786c1.44.858 3.14 1.488 5.233 1.488h2.644V6.983h-2.644c-2.975 0-3.781-1.21-4.487-2.745-.706-1.534-.746-3.181-.746-3.181Z"
+      color="#000"
+      overflow="visible"
+    ></path>
+  </svg>
+);
+
+export const PinterestIcon = ({ width, height, className, ...props }) => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    width={width}
+    height={height}
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    {...props}
+    viewBox="0 0 17 18"
+  >
+    <path
+      fill=""
+      d="M8.48.58a8.42 8.42 0 015.9 2.45 8.42 8.42 0 011.33 10.08 8.28 8.28 0 01-7.23 4.16 8.5 8.5 0 01-2.37-.32c.42-.68.7-1.29.85-1.8l.59-2.29c.14.28.41.52.8.73.4.2.8.31 1.24.31.87 0 1.65-.25 2.34-.75a4.87 4.87 0 001.6-2.05 7.3 7.3 0 00.56-2.93c0-1.3-.5-2.41-1.49-3.36a5.27 5.27 0 00-3.8-1.43c-.93 0-1.8.16-2.58.48A5.23 5.23 0 002.85 8.6c0 .75.14 1.41.43 1.98.28.56.7.96 1.27 1.2.1.04.19.04.26 0 .07-.03.12-.1.15-.2l.18-.68c.05-.15.02-.3-.11-.45a2.35 2.35 0 01-.57-1.63A3.96 3.96 0 018.6 4.8c1.09 0 1.94.3 2.54.89.61.6.92 1.37.92 2.32 0 .8-.11 1.54-.33 2.21a3.97 3.97 0 01-.93 1.62c-.4.4-.87.6-1.4.6-.43 0-.78-.15-1.06-.47-.27-.32-.36-.7-.26-1.13a111.14 111.14 0 01.47-1.6l.18-.73c.06-.26.09-.47.09-.65 0-.36-.1-.66-.28-.89-.2-.23-.47-.35-.83-.35-.45 0-.83.2-1.13.62-.3.41-.46.93-.46 1.56a4.1 4.1 0 00.18 1.15l.06.15c-.6 2.58-.95 4.1-1.08 4.54-.12.55-.16 1.2-.13 1.94a8.4 8.4 0 01-5-7.65c0-2.3.81-4.28 2.44-5.9A8.04 8.04 0 018.48.57z"
+    ></path>
   </svg>
 );

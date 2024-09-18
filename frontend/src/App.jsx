@@ -76,29 +76,31 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route element={<Layout />}>
-          <Route path="/jewelry/:category" element={<Jewelry />} />
-          <Route path="/all-jewelry" element={<AllJewelry />} />
-          <Route path="/products/:id" element={<Product />} />
-          <Route path="/collections/bestsellers" element={<BestSellers />} />
-          <Route path="/account/login" element={<Login />} />
-          <Route path="/account/register" element={<Register />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/account" element={<Account />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/checkout/verify" element={<VerifyOrder />} />
-            <Route
-              path="/checkout/success/:orderId"
-              element={<CheckoutSuccess />}
-            />
-            <Route path="/checkout/error" element={<CheckoutError />} />
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route element={<Layout />}>
+            <Route path="/jewelry/:category" element={<Jewelry />} />
+            <Route path="/all-jewelry" element={<AllJewelry />} />
+            <Route path="/products/:id" element={<Product />} />
+            <Route path="/collections/bestsellers" element={<BestSellers />} />
+            <Route path="/account/login" element={<Login />} />
+            <Route path="/account/register" element={<Register />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/account" element={<Account />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout/verify" element={<VerifyOrder />} />
+              <Route
+                path="/checkout/success/:orderId"
+                element={<CheckoutSuccess />}
+              />
+              <Route path="/checkout/error" element={<CheckoutError />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-      <Footer />
+        </Routes>
+        <Footer />
+      </div>
       <LoaderPortal>
         {isLoading && (
           <HashLoader

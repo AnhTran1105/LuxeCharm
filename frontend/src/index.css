@@ -243,6 +243,14 @@ a:not(.arrow).pagination-item:hover:after {
   margin: 20px 0 0;
 }
 
+.double-field {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.double-field .field:last-of-type {
+  margin-top: 0;
+}
+
 .field input:focus,
 .field input:not(:placeholder-shown),
 .field input:-webkit-autofill {
@@ -261,6 +269,10 @@ a:not(.arrow).pagination-item:hover:after {
   font-size: 10px;
   letter-spacing: 0.64px;
   top: 4px;
+}
+
+input {
+  @apply text-base !text-text-primary;
 }
 
 input::-webkit-input-placeholder {
