@@ -478,3 +478,17 @@ export const PinterestIcon = ({ width, height, className, ...props }) => (
     ></path>
   </svg>
 );
+
+export const StockIcon = ({ color }) => (
+  <svg width="15" height="15" aria-hidden="true" className={`fill-[${color}]`}>
+    <circle cx="7.5" cy="7.5" r="7.5" className={`fill-[${color}]/30`}></circle>
+    <circle
+      cx="7.5"
+      cy="7.5"
+      r="5"
+      stroke="rgb(255, 255, 255)"
+      strokeWidth="1"
+      className={`fill-[${color}]`}
+    ></circle>
+  </svg>
+);

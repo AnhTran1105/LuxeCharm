@@ -59,7 +59,7 @@ function Jewelry() {
             {category[0].toUpperCase() + category.slice(1)}
           </h1>
           <div className="my-6">
-            <p className="text-text-secondary tracking-[0.6px] leading-[28.8px]">
+            <p className="text-text-secondary tracking-[0.6px] leading-7">
               Create a look that's all your own with our affordable, everyday
               jewelry. For a full layered look, stack our{" "}
               <AnchorTag

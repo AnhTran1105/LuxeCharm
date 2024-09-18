@@ -30,14 +30,7 @@ const metalSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: [
-      "Gold",
-      "Gold Vermeil",
-      "Mixed Metal",
-      "Rose Gold",
-      "Silver",
-      "Sterling Silver",
-    ],
+    enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
   },
   quantity: {
     type: Number,
@@ -46,8 +39,7 @@ const metalSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
-    enum: ["In stock", "Out of stock", "Low stock"],
+    enum: ["inStock", "outOfStock", "lowStock"],
   },
   images: {
     primary: {
@@ -83,17 +75,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: [
-        "Anklets",
-        "Body Chains",
-        "Bracelets",
-        "Charms",
-        "Earrings",
-        "Gift Bundles",
-        "Mystery",
-        "Necklaces",
-        "Rings",
-      ],
+      enum: ["bracelets", "charms", "earrings", "necklaces", "rings"],
     },
     description: {
       type: String,
@@ -149,11 +131,11 @@ const productSchema = new mongoose.Schema(
 productSchema.pre("save", function (next) {
   this.metals.forEach((metal) => {
     if (metal.quantity > 10) {
-      metal.status = "In stock";
+      metal.status = "inStock";
     } else if (metal.quantity > 0) {
-      metal.status = "Low stock";
+      metal.status = "lowStock";
     } else {
-      metal.status = "Out of stock";
+      metal.status = "outOfStock";
     }
   });
   next();
@@ -162,11 +144,11 @@ productSchema.pre("save", function (next) {
 productSchema.pre("findOneAndUpdate", function (next) {
   this.metals.forEach((metal) => {
     if (metal.quantity > 10) {
-      metal.status = "In stock";
+      metal.status = "inStock";
     } else if (metal.quantity > 0) {
-      metal.status = "Low stock";
+      metal.status = "lowStock";
     } else {
-      metal.status = "Out of stock";
+      metal.status = "outOfStock";
     }
   });
   next();

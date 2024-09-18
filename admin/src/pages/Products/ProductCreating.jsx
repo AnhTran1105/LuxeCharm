@@ -36,7 +36,7 @@ const schema = yup.object({
   ),
   metals: yup.array().of(
     yup.object().shape({
-      metal: yup.string().required(),
+      type: yup.string().required(),
       quantity: yup.number().positive().required(),
       material: yup.string().required(),
     })
@@ -107,7 +107,7 @@ function ProductCreating() {
   useEffect(() => {
     if (watchMetals.length === 0) {
       appendMetal({
-        metal: "",
+        type: "",
         quantity: 0,
         material: "",
         images: {
@@ -144,7 +144,7 @@ function ProductCreating() {
     });
 
     formData.metals.forEach((metal, index) => {
-      data.append(`metals.${index}.metal`, metal.metal);
+      data.append(`metals.${index}.type`, metal.type);
       data.append(`metals.${index}.quantity`, metal.quantity);
       data.append(`metals.${index}.material`, metal.material);
 
@@ -227,15 +227,11 @@ function ProductCreating() {
               defaultOption="Choose category"
               title="Category"
               options={[
-                "Anklets",
-                "Body Chains",
-                "Bracelets",
-                "Charms",
-                "Earrings",
-                "Gift Bundles",
-                "Mystery",
-                "Necklaces",
-                "Rings",
+                "bracelets",
+                "charms",
+                "earrings",
+                "necklaces",
+                "rings",
               ]}
               onValueChange={(newValue) => setCategory(newValue)}
             />
@@ -471,17 +467,15 @@ function ProductCreating() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="field first:mt-5">
                     <Controller
-                      name={`metals.${index}.metal`}
+                      name={`metals.${index}.type`}
                       control={control}
                       render={({ field }) => (
                         <select {...field} className="w-full h-[45px] p-[15px]">
                           <option value="">Select metal</option>
-                          <option value="Gold">Gold</option>
-                          <option value="Gold Vermeil">Gold Vermeil</option>
-                          <option value="Mixed Metal">Mixed Metal</option>
-                          <option value="Rose Gold">Rose Gold</option>
-                          <option value="Silver">Silver</option>
-                          <option value="Sterling Silver">
+                          <option value="gold">Gold</option>
+                          <option value="goldVermeil">Gold Vermeil</option>
+                          <option value="silver">Silver</option>
+                          <option value="sterlingSilver">
                             Sterling Silver
                           </option>
                         </select>

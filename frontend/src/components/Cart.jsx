@@ -103,9 +103,7 @@ function Cart() {
                             <span className="text-text-secondary line-through mr-2">
                               ${item.price}.00
                             </span>
-                            <span className="text-sm">
-                              ${item.salePrice}.00
-                            </span>
+                            <span className="">${item.salePrice}.00</span>
                           </>
                         ) : (
                           <span> ${item.price}.00</span>

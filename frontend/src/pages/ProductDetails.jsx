@@ -9,11 +9,13 @@ import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import { useSearchParams } from "react-router-dom";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { StripeIcon } from "../components/SVG";
+import { StockIcon, StripeIcon } from "../components/SVG";
+import { metalTypes, statusTypes } from "../constants";
 
 function ProductDetails() {
   const [product, setProduct] = useState();
   const [metal, setMetal] = useState();
+  const [status, setStatus] = useState();
   const [metalImages, setMetalImages] = useState({});
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -46,10 +48,11 @@ function ProductDetails() {
       try {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
-        setMetal(searchParams.get("metal") || productResponse.metals[0].metal);
+        setMetal(searchParams.get("metal") || productResponse.metals[0].type);
+        setStatus(productResponse.metals[0].status);
         setMetalImages(
           productResponse.metals.find(
-            (item) => item.metal === productResponse.metals[0].metal
+            (item) => item.type === productResponse.metals[0].type
           ).images
         );
       } catch (error) {
@@ -60,11 +63,12 @@ function ProductDetails() {
 
   useEffect(() => {
     if (metal) {
-      setMetalImages(
-        product.metals.find((item) => item.metal === metal).images
-      );
+      setMetalImages(product.metals.find((item) => item.type === metal).images);
+      setStatus(product.metals.find((item) => item.type === metal).status);
     }
   }, [metal, product]);
+
+  console.log(product);
 
   return (
     product && (
@@ -119,77 +123,39 @@ function ProductDetails() {
                 <div className="flex gap-3">
                   {product.metals.map((item) => (
                     <ButtonTag
-                      key={item.metal}
+                      key={item.type}
                       buttonType="rounded"
                       className={
-                        item.metal === metal
+                        item.type === metal
                           ? "bg-black text-white hover:text-white cursor-default"
                           : ""
                       }
                       onClick={() => {
-                        setMetal(item.metal);
-                        setSearchParams(`metal=${item.metal}`);
+                        setMetal(item.type);
+                        setSearchParams(`metal=${item.type}`);
                       }}
                     >
-                      {item.metal}
+                      {metalTypes[item.type]}
                     </ButtonTag>
                   ))}
                 </div>
               </div>
               <div className="my-4">
-                {product.metals.find((item) => item.metal === metal).quantity <
-                5 ? (
-                  <p
-                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
-                    role="status"
-                  >
-                    <svg width="15" height="15" aria-hidden="true">
-                      <circle
-                        cx="7.5"
-                        cy="7.5"
-                        r="7.5"
-                        className="fill-[#f19226]/30"
-                      ></circle>
-                      <circle
-                        cx="7.5"
-                        cy="7.5"
-                        r="5"
-                        stroke="rgb(255, 255, 255)"
-                        strokeWidth="1"
-                        className="fill-[#f19226]"
-                      ></circle>
-                    </svg>
-                    Low stock
-                  </p>
-                ) : (
-                  <p
-                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
-                    role="status"
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      aria-hidden="true"
-                      className="fill-[rgb(62,214,96)]"
-                    >
-                      <circle
-                        cx="7.5"
-                        cy="7.5"
-                        r="7.5"
-                        className="fill-[rgb(62,214,96,0.3)]"
-                      ></circle>
-                      <circle
-                        cx="7.5"
-                        cy="7.5"
-                        r="5"
-                        stroke="rgb(255, 255, 255)"
-                        strokeWidth="1"
-                        className="fill-[rgb(62,214,96)]"
-                      ></circle>
-                    </svg>
-                    {product.quantity <= 5 ? "Low stock" : "In stock"}
-                  </p>
-                )}
+                <p
+                  className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
+                  role="status"
+                >
+                  <StockIcon
+                    color={
+                      status === "inStock"
+                        ? "rgb(241,146,38)"
+                        : status === "lowStock"
+                        ? "rgb(62,214,96)"
+                        : "rgb(18,18,18)"
+                    }
+                  />
+                  {statusTypes[status]}
+                </p>
               </div>
               <div className="my-4">
                 <p className="text-sm text-text-secondary mb-3">Quantity</p>
@@ -271,7 +237,7 @@ function ProductDetails() {
               <InfoDisclosure
                 title="Materials"
                 content={product.metals.map((item) => ({
-                  key: item.metal,
+                  key: metalTypes[item.type],
                   value: item.material,
                 }))}
               />
