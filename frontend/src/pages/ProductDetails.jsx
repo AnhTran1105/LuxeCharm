@@ -68,7 +68,7 @@ function ProductDetails() {
     }
   }, [metal, product]);
 
-  console.log(product);
+  console.log(status === "lowStock");
 
   return (
     product && (
@@ -146,12 +146,12 @@ function ProductDetails() {
                   role="status"
                 >
                   <StockIcon
-                    color={
+                    className={
                       status === "inStock"
-                        ? "rgb(241,146,38)"
+                        ? "fill-[rgb(62,214,96)]"
                         : status === "lowStock"
-                        ? "rgb(62,214,96)"
-                        : "rgb(18,18,18)"
+                        ? "fill-[rgb(241,146,38)]"
+                        : "fill-[rgb(18,18,18)]"
                     }
                   />
                   {statusTypes[status]}

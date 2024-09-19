@@ -6,6 +6,7 @@ import modalReducer from "./modal/modalSlice";
 import cartModalReducer from "./cartModal/cartModalSlice";
 import cartReducer from "./cart/cartSlice";
 import optionsModalReducer from "./optionsModal/optionsModalSlice";
+import searchModalReducer from "./searchModal/searchModalSlice";
 import { authMiddleware } from "./middleware/authMiddleware";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     cartModal: cartModalReducer,
     cart: cartReducer,
     optionsModal: optionsModalReducer,
+    searchModal: searchModalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(authMiddleware),

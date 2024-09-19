@@ -6,6 +6,7 @@ import ButtonTag from "./CustomTags/ButtonTag";
 import { AccountIcon, CartIcon, HeaderLogo, MenuIcon, SearchIcon } from "./SVG";
 import AnchorTag from "./CustomTags/AnchorTag";
 import HeaderMenu from "./HeaderMenu";
+import { openSearchModal } from "../redux/searchModal/searchModalSlice";
 
 function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -109,7 +110,7 @@ function Header() {
     >
       <div className="px-4 md:px-8 lg:px-12 py-2 grid grid-cols-3">
         <ButtonTag
-          onClick={() => {}}
+          onClick={() => dispatch(openSearchModal())}
           buttonType="icon"
           className="p-0 h-full max-lg:hidden"
         >
@@ -134,7 +135,7 @@ function Header() {
         </AnchorTag>
         <div className="flex justify-end items-center gap-6 max-md:gap-4">
           <ButtonTag
-            onClick={() => {}}
+            onClick={() => dispatch(openSearchModal())}
             buttonType="icon"
             className="p-0 h-full lg:hidden"
           >

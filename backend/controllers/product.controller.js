@@ -80,7 +80,7 @@ export const getAllProducts = async (req, res, next) => {
         if (filteredMetals.length > 0) {
           return filteredMetals.map((metalItem) => ({
             ...product,
-            name: `${product.name} - ${metalItem.metal}`,
+            name: `${product.name} - ${metalItem.type}`,
             defaultMetal: metalItem,
             metals: [metalItem],
           }));
@@ -96,7 +96,7 @@ export const getAllProducts = async (req, res, next) => {
 
         return product.metals.map((metalItem) => ({
           ...product,
-          name: `${product.name} - ${metalItem.metal}`,
+          name: `${product.name} - ${metalItem.type}`,
           defaultMetal: metalItem,
         }));
       });
@@ -388,6 +388,35 @@ export const updateProduct = async (req, res, next) => {
 
     await product.save();
     res.status(200).json({ message: "Product updated successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const searchProducts = async (req, res, next) => {
+  try {
+    const { search } = req.query;
+
+    if (!search) {
+      return res.json([]);
+    }
+
+    const products = await Product.find(
+      {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+        ],
+      },
+      {
+        name: 1,
+        metals: 1,
+        price: 1,
+        salePrice: 1,
+      }
+    ).limit(10);
+
+    res.json(products);
   } catch (error) {
     next(error);
   }

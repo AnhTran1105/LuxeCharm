@@ -13,7 +13,7 @@ function ProductItem({ product }) {
       onClick={() =>
         navigate(
           product.defaultMetal
-            ? `/products/${product._id}?metal=${product.defaultMetal.metal}`
+            ? `/products/${product._id}?metal=${product.defaultMetal.type}`
             : `/products/${product._id}`
         )
       }

@@ -26,6 +26,7 @@ import { fetchCart } from "./redux/cart/cartSlice.js";
 import OptionsModal from "./components/OptionsModal.jsx";
 import Layout from "./components/Layout.jsx";
 import AllJewelry from "./pages/AllJewelry.jsx";
+import SearchModal from "./components/SearchModal.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -115,6 +116,7 @@ export default function App() {
       </LoaderPortal>
       <Cart />
       <OptionsModal />
+      <SearchModal />
     </BrowserRouter>
   );
 }
