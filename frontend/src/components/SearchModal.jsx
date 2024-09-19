@@ -46,8 +46,6 @@ function SearchModal() {
     };
   }, [searchTerm]);
 
-  console.log(window.innerWidth);
-
   return (
     isOpened && (
       <Dialog

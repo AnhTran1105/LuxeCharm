@@ -9,7 +9,7 @@ function ProductList({ products }) {
       {products.map((product) => (
         <ProductItem
           key={`${product._id}-${
-            product.defaultMetal && product.defaultMetal.metal
+            product.defaultMetal && product.defaultMetal.type
           }`}
           product={product}
         />
