@@ -413,6 +413,7 @@ export const searchProducts = async (req, res, next) => {
         metals: 1,
         price: 1,
         salePrice: 1,
+        rating: 1,
       }
     ).limit(10);
 
