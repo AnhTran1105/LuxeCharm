@@ -6,6 +6,7 @@ import {
   deleteProducts,
   updateProduct,
   searchProducts,
+  getFilteredProducts,
 } from "../controllers/product.controller.js";
 import { verifyAdmin } from "../middlewares/auth.js";
 import { param } from "express-validator";
@@ -14,6 +15,8 @@ import upload from "../middlewares/multer.js";
 const router = express.Router();
 
 router.get("/products/search", searchProducts);
+
+router.get("/products/filtered", getFilteredProducts);
 
 router.get(
   "/products/:id",

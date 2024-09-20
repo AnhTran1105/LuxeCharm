@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { categoryTypes, metalTypes } from "../constants";
+import { CaretIcon } from "./SVG";
 
 function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleCategoryChange = (item) => {
     setSelectedItems((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
@@ -19,18 +17,21 @@ function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
     <Popover>
       {({ open }) => (
         <>
-          <PopoverButton
-            onClick={() => setIsOpen(!isOpen)}
-            className="focus:outline-none capitalize"
-          >
+          <PopoverButton className="focus:outline-none capitalize flex gap-3 items-center hover:text-text-primary">
             {title}
+            <CaretIcon
+              width={10}
+              height={10}
+              className={open ? "rotate-180" : ""}
+            />
           </PopoverButton>
           {open && (
             <PopoverPanel
               static
-              className="absolute z-10 mt-2 w-[240px] border border-border-tertiary bg-white shadow-lg"
+              transition
+              className="absolute z-10 mt-2 w-[240px] border border-border-tertiary bg-white shadow-sm origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
             >
-              <div className="border-b border-border-tertiary py-[15px] px-5 flex justify-between items-center">
+              <div className="border-b border-border-tertiary py-3 px-5 flex justify-between items-center">
                 <span>{selectedItems.length} selected</span>
                 <button className="link" role="button" onClick={handleReset}>
                   Reset

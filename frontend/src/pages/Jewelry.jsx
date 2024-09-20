@@ -23,27 +23,38 @@ function Jewelry() {
   const [products, setProducts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMetals, setSelectedMetals] = useState([]);
-  const [selectedSortingType, setSelectedSortingType] = useState("rating_desc");
+  const [selectedSortingType, setSelectedSortingType] = useState(
+    sortingTypes[0]
+  );
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("/products", {
+        const response = await axios.get("/products/filtered", {
           params: {
             categories: selectedCategories.join(","),
             metals: selectedMetals.join(","),
             minPrice: minPrice || undefined,
             maxPrice: maxPrice || undefined,
+            sortBy: selectedSortingType,
           },
         });
+
+        console.log(response);
         setProducts(response);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     })();
-  }, [selectedCategories, selectedMetals, minPrice, maxPrice]);
+  }, [
+    selectedCategories,
+    selectedMetals,
+    minPrice,
+    maxPrice,
+    selectedSortingType,
+  ]);
 
   return (
     products && (
@@ -139,14 +150,17 @@ function Jewelry() {
                 setSelectedItems={setSelectedMetals}
               />
             </div>
-            <div className="flex justify-center items-center">
-              <h2 className="mr-5">Sort by:</h2>
+            <div className="flex justify-center items-center gap-5">
+              <h2 className="">Sort by:</h2>
               <SortDropdown
                 items={sortingTypes}
-                selectedSortingType={selectedSortingType}
-                setSelectedSortingType={setSelectedSortingType}
+                selectedItem={selectedSortingType}
+                setSelectedItem={setSelectedSortingType}
               />
-              <h2 className="mr-5">{0} products</h2>
+              <h2 className="">
+                {products.length}{" "}
+                {products.length === 1 ? "product" : "products"}
+              </h2>
             </div>
           </div>
           {/* <div className="flex gap-4 items-center">

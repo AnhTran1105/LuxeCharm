@@ -2,109 +2,97 @@ import { validationResult } from "express-validator";
 import Product from "../models/product.model.js";
 import cloudinary from "cloudinary";
 
-export const getAllProducts = async (req, res, next) => {
+export const getAllProducts = async (res, next) => {
   try {
-    const { category, metal, price, sort } = req.query;
+    const products = await Product.find().sort({ createdAt: -1 });
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+};
 
-    const minPrice =
-      price?.from !== undefined && price?.from !== null ? price.from : null;
-    const maxPrice =
-      price?.to !== undefined && price?.to !== null ? price.to : null;
+export const getFilteredProducts = async (req, res) => {
+  try {
+    const { categories, metals, minPrice, maxPrice, sortBy } = req.query;
 
-    let matchQuery = {};
+    let query = {};
+    let sort = {};
 
-    if (category) {
-      matchQuery.category = Array.isArray(category)
-        ? { $in: category }
-        : category;
+    if (categories) {
+      query.category = { $in: categories.split(",") };
     }
 
-    if (minPrice !== null || maxPrice !== null) {
-      matchQuery.$or = [
+    if (metals) {
+      query["metals.type"] = { $in: metals.split(",") };
+    }
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      query.$or = [
         {
-          salePrice: {
-            $ne: null,
-            ...(minPrice !== null && { $gte: Number(minPrice) }),
-            ...(maxPrice !== null && { $lte: Number(maxPrice) }),
-          },
+          $and: [
+            { price: { $gte: Number(minPrice) || 0 } },
+            { price: { $lte: Number(maxPrice) || Infinity } },
+          ],
         },
         {
-          salePrice: null,
-          price: {
-            ...(minPrice !== null && { $gte: Number(minPrice) }),
-            ...(maxPrice !== null && { $lte: Number(maxPrice) }),
-          },
+          $and: [
+            { salePrice: { $ne: null } },
+            { salePrice: { $gte: Number(minPrice) || 0 } },
+            { salePrice: { $lte: Number(maxPrice) || Infinity } },
+          ],
         },
       ];
     }
 
-    let sortOption = {};
-    if (sort === "Price, low to high") {
-      sortOption = { computedPrice: 1 };
-    } else if (sort === "Price, high to low") {
-      sortOption = { computedPrice: -1 };
-    } else if (sort === "Alphabetically, A - Z") {
-      sortOption = { name: 1 };
-    } else if (sort === "Alphabetically, Z - A") {
-      sortOption = { name: -1 };
-    } else if (sort === "Date, old to new") {
-      sortOption = { createdAt: 1 };
-    } else if (sort === "Date, new to old") {
-      sortOption = { createdAt: -1 };
-    } else {
-      sortOption = { rating: 1 };
+    switch (sortBy) {
+      case "alphabetical_asc":
+        sort = { name: 1 };
+        break;
+      case "alphabetical_desc":
+        sort = { name: -1 };
+        break;
+      case "price_asc":
+        sort = { price: 1 };
+        break;
+      case "price_desc":
+        sort = { price: -1 };
+        break;
+      case "date_asc":
+        sort = { createdAt: 1 };
+        break;
+      case "date_desc":
+        sort = { createdAt: -1 };
+        break;
+      default:
+        sort = { "rating.avgRating": -1 };
     }
 
-    const products = await Product.aggregate([
-      { $match: matchQuery },
-      {
-        $addFields: {
-          computedPrice: {
-            $ifNull: ["$salePrice", "$price"],
-          },
-        },
-      },
-      { $sort: sortOption },
-    ]);
+    const products = await Product.find(query).sort(sort);
 
-    let filteredProducts = products;
+    const expandedProducts = products.flatMap((product) => {
+      const filteredMetals = product.metals.filter(
+        (metal) => !metals || metals.split(",").includes(metal.type)
+      );
 
-    if (metal) {
-      const metalArray = metal.split(",");
+      if (filteredMetals.length === 0) return [];
 
-      filteredProducts = products.flatMap((product) => {
-        const filteredMetals = product.metals.filter((metalItem) =>
-          metalArray.includes(metalItem.metal)
-        );
+      const totalMetals = filteredMetals.length;
 
-        if (filteredMetals.length > 0) {
-          return filteredMetals.map((metalItem) => ({
-            ...product,
-            name: `${product.name} - ${metalItem.type}`,
-            defaultMetal: metalItem,
-            metals: [metalItem],
-          }));
-        }
+      return filteredMetals.map((metal) => ({
+        _id: `${product._id}${totalMetals > 1 ? `-${metal.type}` : ""}`,
+        name: `${product.name} ${totalMetals > 1 ? `- ${metal.type}` : ""}`,
+        price: product.price,
+        salePrice: product.salePrice,
+        metal: metal,
+        totalMetals: totalMetals,
+      }));
+    });
 
-        return [];
-      });
-    } else {
-      filteredProducts = products.flatMap((product) => {
-        if (product.metals.length === 1) {
-          return [product];
-        }
-
-        return product.metals.map((metalItem) => ({
-          ...product,
-          name: `${product.name} - ${metalItem.type}`,
-          defaultMetal: metalItem,
-        }));
-      });
-    }
-
-    res.json(filteredProducts);
+    res.json(expandedProducts);
   } catch (error) {
-    next(error);
+    res
+      .status(500)
+      .json({ message: "Error filtering products", error: error.message });
   }
 };
 

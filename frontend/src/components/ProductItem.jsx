@@ -2,41 +2,25 @@ import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
-import { useNavigate } from "react-router-dom";
 
 function ProductItem({ product }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   return (
     <li
-      onClick={() =>
-        navigate(
-          product.defaultMetal
-            ? `/products/${product._id}?metal=${product.defaultMetal.type}`
-            : `/products/${product._id}`
-        )
-      }
+      onClick={() => (window.location.href = `/products/${product._id}`)}
       className="group cursor-pointer relative carousel-item"
     >
       <div className="relative overflow-hidden">
         <img
           loading="lazy"
           alt={product.name}
-          src={
-            product.defaultMetal
-              ? product.defaultMetal.images.primary
-              : product.metals[0].images.primary
-          }
+          src={product.metal.images.primary}
           className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
         />
         <img
           alt={product.name}
-          src={
-            product.defaultMetal
-              ? product.defaultMetal.images.secondary
-              : product.metals[0].images.secondary
-          }
+          src={product.metal.images.secondary}
           loading="lazy"
           className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
         ></img>
@@ -70,13 +54,13 @@ function ProductItem({ product }) {
           )}
         </div>
       </div>
-      {product.metals.length > 1 ? (
+      {product.totalMetals > 1 ? (
         <ButtonTag
           onClick={() =>
             dispatch(
               openOptionsModal({
                 productId: product._id,
-                defaultMetal: product.defaultMetal,
+                metal: product.metal,
               })
             )
           }
@@ -89,7 +73,7 @@ function ProductItem({ product }) {
             dispatch(
               handleAddToCart({
                 ...product,
-                metal: product.metals[0].metal,
+                metal: product.metal.type,
                 quantity: 1,
               })
             )
