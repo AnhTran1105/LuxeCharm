@@ -5,6 +5,10 @@ import AnchorTag from "../components/CustomTags/AnchorTag";
 import { useParams } from "react-router-dom";
 import FilterDropdown from "../components/FilterDropdown";
 import SortDropdown from "../components/SortDropdown";
+import PriceDropdown from "../components/PriceDropdown";
+import { CloseIcon } from "../components/SVG";
+import ButtonTag from "../components/CustomTags/ButtonTag";
+import { categoryTypes, metalTypes } from "../constants";
 
 const categories = ["bracelets", "charms", "earrings", "necklaces", "rings"];
 const metals = ["gold", "goldVermeil", "silver", "sterlingSilver"];
@@ -20,7 +24,8 @@ const sortingTypes = [
 
 function Jewelry() {
   const { category } = useParams();
-  const [products, setProducts] = useState([]);
+  const [productsInfo, setProductsInfo] = useState();
+
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMetals, setSelectedMetals] = useState([]);
   const [selectedSortingType, setSelectedSortingType] = useState(
@@ -41,9 +46,7 @@ function Jewelry() {
             sortBy: selectedSortingType,
           },
         });
-
-        console.log(response);
-        setProducts(response);
+        setProductsInfo(response);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -56,8 +59,26 @@ function Jewelry() {
     selectedSortingType,
   ]);
 
+  const handleRemoveFilter = (filterType, value) => {
+    if (filterType === "category") {
+      setSelectedCategories((prev) => prev.filter((cat) => cat !== value));
+    } else if (filterType === "metal") {
+      setSelectedMetals((prev) => prev.filter((metal) => metal !== value));
+    } else if (filterType === "price") {
+      setMinPrice(null);
+      setMaxPrice(null);
+    }
+  };
+
+  const handleRemoveAllFilters = () => {
+    setSelectedCategories([]);
+    setSelectedMetals([]);
+    setMinPrice("");
+    setMaxPrice("");
+  };
+
   return (
-    products && (
+    productsInfo && (
       <div className="mx-auto my-0 flex flex-col items-center justify-center">
         <div className="lg:max-w-[780px] md:max-w-[500px] text-center">
           <h1 className="text-[40px]">
@@ -149,6 +170,13 @@ function Jewelry() {
                 selectedItems={selectedMetals}
                 setSelectedItems={setSelectedMetals}
               />
+              <PriceDropdown
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
+                highestPrice={productsInfo.highestPrice}
+              />
             </div>
             <div className="flex justify-center items-center gap-5">
               <h2 className="">Sort by:</h2>
@@ -158,82 +186,77 @@ function Jewelry() {
                 setSelectedItem={setSelectedSortingType}
               />
               <h2 className="">
-                {products.length}{" "}
-                {products.length === 1 ? "product" : "products"}
+                {productsInfo.totalProducts === productsInfo.products.length
+                  ? ""
+                  : productsInfo.products.length + " of"}{" "}
+                {productsInfo.totalProducts}{" "}
+                {productsInfo.totalProducts === 1 ? "product" : "products"}
               </h2>
             </div>
           </div>
-          {/* <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center">
             <ul role="list" className="flex gap-4">
-              {Object.entries(filters).map(([key, value]) => {
-                if (key === "price" && value.from !== null) {
-                  return (
-                    <li
-                      key={key}
-                      className="mb-5 border-[#ccc] border hover:border-color-foreground hover:cursor-pointer rounded-full px-2 py-1 flex gap-2 justify-center items-center"
-                    >
-                      Price: ${value.from}.00 - $
-                      {value.to !== null ? value.to : maxPrice}.00
-                      <button
-                        onClick={() => handleRemoveSingleFilter(key)}
-                        className="group"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 48 48"
-                          className="fill-text-stext-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
-                          id="close"
-                        >
-                          <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                          <path fill="none" d="M0 0h48v48H0z"></path>
-                        </svg>
-                      </button>
-                    </li>
-                  );
-                }
+              {selectedCategories.map((category) => (
+                <li
+                  key={category}
+                  className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
+                >
+                  Category: {categoryTypes[category]}
+                  <ButtonTag
+                    buttonType="icon"
+                    onClick={() => handleRemoveFilter("category", category)}
+                    className="p-0"
+                  >
+                    <CloseIcon width={14} height={14} />
+                  </ButtonTag>
+                </li>
+              ))}
 
-                return value.length > 0
-                  ? value.map((item, index) => (
-                      <li
-                        key={`${key}-${index}`}
-                        className="mb-5 border-[#ccc] border hover:border-color-foreground hover:cursor-pointer rounded-full px-2 py-1 flex gap-2 justify-center items-center"
-                      >
-                        {key.charAt(0).toUpperCase() + key.slice(1)}: {item}
-                        <button
-                          onClick={() => handleRemoveSingleFilter(key, item)}
-                          className="group"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 48 48"
-                            className="fill-text-stext-text-secondary group-hover:fill-color-foreground group-hover:scale-105"
-                            id="close"
-                          >
-                            <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                            <path fill="none" d="M0 0h48v48H0z"></path>
-                          </svg>
-                        </button>
-                      </li>
-                    ))
-                  : null;
-              })}
+              {selectedMetals.map((metal) => (
+                <li
+                  key={metal}
+                  className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
+                >
+                  Metal: {metalTypes[metal]}
+                  <ButtonTag
+                    buttonType="icon"
+                    onClick={() => handleRemoveFilter("metal", metal)}
+                    className="p-0"
+                  >
+                    <CloseIcon width={14} height={14} />
+                  </ButtonTag>
+                </li>
+              ))}
+
+              {(minPrice || maxPrice) && (
+                <li className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center">
+                  Price: ${minPrice}.00 - $
+                  {maxPrice || productsInfo.highestPrice}.00
+                  <ButtonTag
+                    buttonType="icon"
+                    onClick={() => handleRemoveFilter("price")}
+                    className="p-0"
+                  >
+                    <CloseIcon width={14} height={14} />
+                  </ButtonTag>
+                </li>
+              )}
             </ul>
-            {Object.values(filters).some((value) => value.length > 0) && (
-              <button
-                type="button"
-                className="mb-5"
+            {(selectedCategories.length > 0 ||
+              selectedMetals.length > 0 ||
+              minPrice ||
+              maxPrice) && (
+              <ButtonTag
+                buttonType="icon"
                 onClick={handleRemoveAllFilters}
+                className="mb-5 hover:text-text-primary"
               >
                 Remove all
-              </button>
+              </ButtonTag>
             )}
-          </div> */}
+          </div>
         </div>
-        <ProductList products={products} />
+        <ProductList products={productsInfo.products} />
         <nav className="mt-[50px]">
           <ul role="list" className="flex justify-center items-center">
             <li className="max-w-[44px] mr-[10px] group">

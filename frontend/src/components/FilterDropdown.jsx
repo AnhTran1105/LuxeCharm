@@ -17,7 +17,7 @@ function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
     <Popover>
       {({ open }) => (
         <>
-          <PopoverButton className="focus:outline-none capitalize flex gap-3 items-center hover:text-text-primary">
+          <PopoverButton className="focus:outline-none capitalize flex gap-3 items-center hover:text-text-primary group">
             {title}
             <CaretIcon
               width={10}
@@ -29,7 +29,7 @@ function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
             <PopoverPanel
               static
               transition
-              className="absolute z-10 mt-2 w-[240px] border border-border-tertiary bg-white shadow-sm origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+              className="absolute z-10 mt-2 w-60 border border-border-tertiary bg-white shadow-sm origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
             >
               <div className="border-b border-border-tertiary py-3 px-5 flex justify-between items-center">
                 <span>{selectedItems.length} selected</span>
@@ -37,7 +37,7 @@ function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
                   Reset
                 </button>
               </div>
-              <ul role="list" className="py-[5px] px-5">
+              <div className="py-[5px] px-5">
                 {items.map((item) => (
                   <div
                     key={item}
@@ -78,7 +78,7 @@ function FilterDropdown({ title, items, selectedItems, setSelectedItems }) {
                       : metalTypes[item]}
                   </div>
                 ))}
-              </ul>
+              </div>
             </PopoverPanel>
           )}
         </>

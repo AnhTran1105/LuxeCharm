@@ -7,6 +7,7 @@ import {
   updateProduct,
   searchProducts,
   getFilteredProducts,
+  getProductsInfo,
 } from "../controllers/product.controller.js";
 import { verifyAdmin } from "../middlewares/auth.js";
 import { param } from "express-validator";
@@ -17,6 +18,8 @@ const router = express.Router();
 router.get("/products/search", searchProducts);
 
 router.get("/products/filtered", getFilteredProducts);
+
+router.get("/products/info", getProductsInfo);
 
 router.get(
   "/products/:id",

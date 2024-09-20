@@ -7,7 +7,7 @@ function SortDropdown({ items, selectedItem, setSelectedItem }) {
     <Menu>
       {({ open, close }) => (
         <>
-          <MenuButton className="focus:outline-none flex items-center gap-4 hover:text-text-primary">
+          <MenuButton className="focus:outline-none flex items-center gap-4 hover:text-text-primary group">
             {sortingTypes[selectedItem]}
             <CaretIcon
               width={10}

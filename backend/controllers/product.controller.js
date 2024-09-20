@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import Product from "../models/product.model.js";
 import cloudinary from "cloudinary";
+import { metalTypes } from "../constants.js";
 
 export const getAllProducts = async (res, next) => {
   try {
@@ -27,18 +28,29 @@ export const getFilteredProducts = async (req, res) => {
     }
 
     if (minPrice !== undefined || maxPrice !== undefined) {
+      const minPriceNum = Number(minPrice) || 0;
+      const maxPriceNum = Number(maxPrice) || Infinity;
+
       query.$or = [
         {
           $and: [
-            { price: { $gte: Number(minPrice) || 0 } },
-            { price: { $lte: Number(maxPrice) || Infinity } },
+            { salePrice: null },
+            { price: { $gte: minPriceNum, $lte: maxPriceNum } },
           ],
         },
+
         {
           $and: [
             { salePrice: { $ne: null } },
-            { salePrice: { $gte: Number(minPrice) || 0 } },
-            { salePrice: { $lte: Number(maxPrice) || Infinity } },
+            { salePrice: { $gte: minPriceNum, $lte: maxPriceNum } },
+          ],
+        },
+
+        {
+          $and: [
+            { salePrice: { $ne: null } },
+            { price: { $gte: minPriceNum, $lte: maxPriceNum } },
+            { $expr: { $lt: ["$price", "$salePrice"] } },
           ],
         },
       ];
@@ -67,9 +79,26 @@ export const getFilteredProducts = async (req, res) => {
         sort = { "rating.avgRating": -1 };
     }
 
-    const products = await Product.find(query).sort(sort);
+    const filteredProducts = await Product.find(query).sort(sort);
+    const allProducts = await Product.find();
 
-    const expandedProducts = products.flatMap((product) => {
+    let highestPrice = 0;
+
+    if (categories === "" && metals === "") {
+      highestPrice = Math.max(
+        ...allProducts.map((product) =>
+          product.salePrice ? product.salePrice : product.price
+        )
+      );
+    } else {
+      highestPrice = Math.max(
+        ...filteredProducts.map((product) =>
+          product.salePrice ? product.salePrice : product.price
+        )
+      );
+    }
+
+    const expandedProducts = filteredProducts.flatMap((product) => {
       const filteredMetals = product.metals.filter(
         (metal) => !metals || metals.split(",").includes(metal.type)
       );
@@ -80,19 +109,82 @@ export const getFilteredProducts = async (req, res) => {
 
       return filteredMetals.map((metal) => ({
         _id: `${product._id}${totalMetals > 1 ? `-${metal.type}` : ""}`,
-        name: `${product.name} ${totalMetals > 1 ? `- ${metal.type}` : ""}`,
+        name: `${product.name} ${
+          totalMetals > 1 ? `- ${metalTypes[metal.type]}` : ""
+        }`,
         price: product.price,
         salePrice: product.salePrice,
         metal: metal,
+        category: product.category,
         totalMetals: totalMetals,
       }));
     });
 
-    res.json(expandedProducts);
+    res.json({
+      products: expandedProducts,
+      highestPrice,
+      totalProducts: allProducts.reduce((total, product) => {
+        return total + product.metals.length;
+      }, 0),
+    });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error filtering products", error: error.message });
+  }
+};
+
+export const getProductsInfo = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+
+    const highestPrice = Math.max(
+      ...products.map((product) =>
+        Math.max(product.price, product.salePrice || product.price)
+      )
+    );
+
+    const categoryCount = {
+      bracelets: 0,
+      charms: 0,
+      earrings: 0,
+      necklaces: 0,
+      rings: 0,
+    };
+
+    const metalCount = {
+      gold: 0,
+      goldVermeil: 0,
+      silver: 0,
+      sterlingSilver: 0,
+    };
+
+    let totalProducts = 0;
+
+    products.forEach((product) => {
+      if (product.category in categoryCount) {
+        categoryCount[product.category] += product.metals.length;
+      }
+
+      product.metals.forEach((metal) => {
+        if (metal.type in metalCount) {
+          metalCount[metal.type]++;
+        }
+      });
+
+      totalProducts += product.metals.length;
+    });
+
+    const response = {
+      highestPrice,
+      categoryCount,
+      metalCount,
+      totalProducts,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(error);
   }
 };
 
