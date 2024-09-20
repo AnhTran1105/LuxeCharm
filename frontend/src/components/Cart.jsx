@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
 import AnchorTag from "./CustomTags/AnchorTag";
 import { CloseIcon, TrashIcon } from "./SVG";
+import { metalTypes } from "../constants";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -37,15 +38,15 @@ function Cart() {
         <DialogBackdrop className="fixed inset-0 bg-black/70" />
         <DialogPanel
           transition
-          className="fixed w-[500px] max-w-[calc(100%-20px)] top-0 right-0 bottom-0 m-[10px] rounded-2xl bg-white overflow-hidden transition duration-300 ease-out data-[closed]:opacity-0"
+          className="fixed w-full min-[440px]:w-4/5 sm:w-3/5 lg:w-1/2 xl:w-1/3 top-0 right-0 bottom-0 bg-white overflow-hidden transition duration-300 ease-out data-[closed]:opacity-0"
         >
-          <DialogTitle className="border-b border-border-primary/15 py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+          <DialogTitle className="border-b border-border-primary/15 px-5 pt-4 pb-3 text-center uppercase font-SofiaBold text-sm">
             Your cart
           </DialogTitle>
           <ButtonTag
             onClick={() => dispatch(hideCart())}
             buttonType="icon"
-            className="absolute top-[10px] right-[10px] group"
+            className="absolute top-2 right-2 group"
           >
             <CloseIcon width={20} height={20} />
           </ButtonTag>
@@ -64,11 +65,15 @@ function Cart() {
                   key={item._id}
                   className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-primary/15 flex items-center"
                 >
-                  <div className="w-[90px]">
+                  <div className="w-24">
                     <AnchorTag
                       href={`/products/${item._id}?metal=${item.metal}`}
                     >
-                      <img src={item.imageUrl} alt={item.name} />
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="border border-border-primary/15"
+                      />
                     </AnchorTag>
                   </div>
                   <div className="pl-5 w-full relative">
@@ -92,9 +97,11 @@ function Cart() {
                         Sale
                       </span>
                     )}
-                    <div className="leading-3 text-xs">{item.metal}</div>
+                    <div className="leading-3 text-xs">
+                      {metalTypes[item.metal]}
+                    </div>
                     <div className="flex justify-between w-full items-center">
-                      <div className="mt-[10px] text-left">
+                      <div className="my-3 text-left">
                         <QuantityWidget itemId={item._id} />
                       </div>
                       <div className="mt-2 text-right text-xs leading-4">

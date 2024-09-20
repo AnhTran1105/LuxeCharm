@@ -25,7 +25,6 @@ import CheckoutError from "./pages/CheckoutError.jsx";
 import { fetchCart } from "./redux/cart/cartSlice.js";
 import OptionsModal from "./components/OptionsModal.jsx";
 import Layout from "./components/Layout.jsx";
-import AllJewelry from "./pages/AllJewelry.jsx";
 import SearchModal from "./components/SearchModal.jsx";
 
 export default function App() {
@@ -83,7 +82,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route element={<Layout />}>
             <Route path="/jewelry/:category" element={<Jewelry />} />
-            <Route path="/all-jewelry" element={<AllJewelry />} />
+            <Route path="/all-jewelry" element={<Jewelry />} />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/collections/bestsellers" element={<BestSellers />} />
             <Route path="/account/login" element={<Login />} />

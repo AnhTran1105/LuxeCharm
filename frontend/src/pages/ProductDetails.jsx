@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import { useSearchParams } from "react-router-dom";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { StockIcon, StripeIcon } from "../components/SVG";
+import { MinusIcon, PlusIcon, StockIcon, StripeIcon } from "../components/SVG";
 import { metalTypes, statusTypes } from "../constants";
 
 function ProductDetails() {
@@ -68,8 +68,6 @@ function ProductDetails() {
     }
   }, [metal, product]);
 
-  console.log(status === "lowStock");
-
   return (
     product && (
       <>
@@ -100,7 +98,7 @@ function ProductDetails() {
                   readonly={true}
                   allowFraction={true}
                 />
-                <div className="mt-1">
+                <div className="mt-1 text-sm text-text-secondary">
                   {product.rating.count}{" "}
                   {product.rating.count > 1 ? "Reviews" : "Review"}
                 </div>
@@ -120,7 +118,7 @@ function ProductDetails() {
               )}
               <div className="my-4">
                 <p className="text-sm text-text-secondary mb-3">Metal</p>
-                <div className="flex gap-3">
+                <div className="flex gap-2 lg:gap-3">
                   {product.metals.map((item) => (
                     <ButtonTag
                       key={item.type}
@@ -160,28 +158,15 @@ function ProductDetails() {
               <div className="my-4">
                 <p className="text-sm text-text-secondary mb-3">Quantity</p>
                 <div className="quantity">
-                  <button
+                  <ButtonTag
+                    buttonType="icon"
                     className={`quantity-button ${
                       quantity === 1 ? "opacity-30 cursor-not-allowed" : ""
                     }`}
                     onClick={handleDecrease}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      focusable="false"
-                      className={`w-[10px]`}
-                      fill="none"
-                      viewBox="0 0 10 2"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </button>
+                    <MinusIcon width={10} height={10} />
+                  </ButtonTag>
 
                   <input
                     className="quantity-input"
@@ -192,23 +177,13 @@ function ProductDetails() {
                     min={1}
                   />
 
-                  <button className="quantity-button" onClick={handleIncrease}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      focusable="false"
-                      className="w-[10px]"
-                      fill="none"
-                      viewBox="0 0 10 10"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </button>
+                  <ButtonTag
+                    buttonType="icon"
+                    className="quantity-button"
+                    onClick={handleIncrease}
+                  >
+                    <PlusIcon width={10} height={10} />
+                  </ButtonTag>
                 </div>
               </div>
               <div className="my-4 space-y-4 max-w-[440px]">

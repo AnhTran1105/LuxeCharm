@@ -502,3 +502,44 @@ export const StockIcon = ({ className, width = 15, height = 15 }) => (
     ></circle>
   </svg>
 );
+
+export const MinusIcon = ({ width, height, className, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    width={width}
+    height={height}
+    focusable="false"
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    fill="none"
+    viewBox="0 0 10 2"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z"
+      fill=""
+    ></path>
+  </svg>
+);
+
+export const PlusIcon = ({ width, height, className, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    width={width}
+    height={height}
+    focusable="false"
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    fill="none"
+    viewBox="0 0 10 10"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z"
+      fill="currentColor"
+    ></path>
+  </svg>
+);

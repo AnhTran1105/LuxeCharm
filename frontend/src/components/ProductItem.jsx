@@ -7,11 +7,11 @@ function ProductItem({ product }) {
   const dispatch = useDispatch();
 
   return (
-    <li
-      onClick={() => (window.location.href = `/products/${product._id}`)}
-      className="group cursor-pointer relative carousel-item"
-    >
-      <div className="relative overflow-hidden">
+    <li className="group cursor-pointer relative carousel-item">
+      <div
+        className="relative overflow-hidden"
+        onClick={() => (window.location.href = `/products/${product._id}`)}
+      >
         <img
           loading="lazy"
           alt={product.name}
@@ -23,7 +23,7 @@ function ProductItem({ product }) {
           src={product.metal.images.secondary}
           loading="lazy"
           className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
-        ></img>
+        />
       </div>
       {product.salePrice && (
         <div className="absolute top-3 left-3">
@@ -59,7 +59,7 @@ function ProductItem({ product }) {
           onClick={() =>
             dispatch(
               openOptionsModal({
-                productId: product._id,
+                productId: product._id.split("-")[0],
                 metal: product.metal,
               })
             )
@@ -73,7 +73,7 @@ function ProductItem({ product }) {
             dispatch(
               handleAddToCart({
                 ...product,
-                metal: product.metal.type,
+                metal: product.metal,
                 quantity: 1,
               })
             )

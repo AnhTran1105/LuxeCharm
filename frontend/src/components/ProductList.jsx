@@ -1,6 +1,7 @@
 import ProductItem from "./ProductItem";
 
 function ProductList({ products }) {
+  console.log(products);
   return (
     <ul
       role="list"

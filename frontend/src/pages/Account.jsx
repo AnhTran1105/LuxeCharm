@@ -64,7 +64,6 @@ function Account() {
           },
         });
         setOrders(ordersResponse);
-        console.log(ordersResponse);
       } catch (error) {
         console.error(error);
       }

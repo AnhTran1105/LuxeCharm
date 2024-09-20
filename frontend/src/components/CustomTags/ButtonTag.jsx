@@ -34,7 +34,7 @@ const ButtonTag = ({
       <button
         type="button"
         onClick={onClick}
-        className={`-:text-center -:w-full -:px-5 -:py-3 -:border -:border-solid -:hover:outline -:hover:outline-1 -:hover:text-text-primary -:text-[15px] -:transition-all -:duration-100 -:ease-linear ${className}`}
+        className={`-:text-center -:w-full -:px-5 -:py-[0.6rem] -:border -:border-solid -:hover:outline -:hover:outline-1 -:hover:text-text-primary -:text-sm -:transition-all -:duration-100 -:ease-linear ${className}`}
         {...props}
       >
         {children}

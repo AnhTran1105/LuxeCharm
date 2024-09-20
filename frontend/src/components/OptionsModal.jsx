@@ -4,23 +4,27 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import Button from "./Button";
+import ButtonTag from "./CustomTags/ButtonTag";
+import { StripeIcon, StockIcon, CloseIcon } from "./SVG";
 import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { closeOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 import { handleAddToCart } from "../redux/cart/cartSlice";
+import { metalTypes, statusTypes } from "../constants";
+import { Rating } from "react-simple-star-rating";
+import AnchorTag from "./CustomTags/AnchorTag";
 
 function OptionsModal() {
-  const { isOpened, productId, defaultMetal } = useSelector(
+  const { isOpened, productId, metal } = useSelector(
     (state) => state.optionsModal
   );
 
   const dispatch = useDispatch();
   const [product, setProduct] = useState();
-  const [metal, setMetal] = useState();
-
+  const [selectedMetal, setSelectedMetal] = useState(metal ? metal.type : "");
+  const [status, setStatus] = useState(metal ? metal.status : "");
   const [quantity, setQuantity] = useState(1);
 
   const handleIncrease = () => {
@@ -46,17 +50,18 @@ function OptionsModal() {
 
   useEffect(() => {
     if (productId) {
+      setSelectedMetal(metal.type);
+      setStatus(metal.status);
       (async () => {
         try {
-          const productResponse = await axios.get(`/products/${productId}`);
-          setProduct(productResponse);
-          setMetal(defaultMetal.metal);
+          const response = await axios.get(`/products/${productId}`);
+          setProduct(response);
         } catch (error) {
           console.error(error);
         }
       })();
     }
-  }, [productId, defaultMetal]);
+  }, [productId]);
 
   return (
     isOpened &&
@@ -67,141 +72,120 @@ function OptionsModal() {
         className="relative z-[9999]"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/70 duration-100 ease-out data-[closed]:opacity-0" />
-        <div className="fixed inset-0 my-[100px] flex w-screen items-center justify-center p-4">
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
             transition
-            className="w-[70%] h-full overflow-y-scroll bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+            className="w-full h-full sm:w-11/12 lg:w-5/6 xl:w-4/5 sm:h-1/2 md:h-3/5 lg:h-2/3 xl:h-3/4 2xl:h-5/6 overflow-y-scroll bg-white p-7 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
           >
-            <DialogTitle className="font-bold text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
-              <button
+            <DialogTitle className="text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
+              <ButtonTag
+                buttonType="icon"
                 onClick={() => dispatch(closeOptionsModal())}
-                className="absolute -top-4 -right-4 p-1 group"
+                className="absolute -top-7 -right-7 md:-top-5 md:-right-5 p-1 group"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 48 48"
-                  className="fill-foreground75 group-hover:fill-color-foreground group-hover:scale-105"
-                  id="close"
-                >
-                  <path d="M38 12.83 35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"></path>
-                  <path fill="none" d="M0 0h48v48H0z"></path>
-                </svg>
-              </button>
+                <CloseIcon width={20} height={20} />
+              </ButtonTag>
             </DialogTitle>
-            <div className="flex h-full">
-              <div className="w-[46%] h-full overflow-hidden flex justify-center">
-                <img
-                  src={
-                    product.metals.find((item) => item.metal === metal).images
-                      .primary
-                  }
-                  className="w-full"
-                  alt={product.name}
-                />
+            <div className="sm:flex max-sm:space-y-6">
+              <div className="w-full sm:w-[55%]">
+                <div className="flex justify-center">
+                  <img
+                    src={
+                      product.metals.find((item) => item.type === selectedMetal)
+                        .images.primary
+                    }
+                    className="w-full md:w-4/5 xl:w-3/4 aspect-[3/4]"
+                  />
+                </div>
               </div>
-              <div className="pl-[50px] max-w-[54%] w-[54%]">
-                <div className="mb-[15px]">
+              <div className="sm:pl-8 lg:pl-12 w-full sm:w-[45%]">
+                <div className="mb-4">
                   <h1 className="text-[22px]">{product.name}</h1>
                 </div>
+                <div className="my-4 flex items-center gap-3">
+                  <Rating
+                    transition={true}
+                    size={20}
+                    initialValue={
+                      Math.round(product.rating.avgRating * 10) / 10
+                    }
+                    fillColor="#a16854"
+                    SVGclassName={`inline-block`}
+                    readonly={true}
+                    allowFraction={true}
+                  />
+                  <div className="mt-1 text-sm text-text-secondary">
+                    {product.rating.count}{" "}
+                    {product.rating.count > 1 ? "Reviews" : "Review"}
+                  </div>
+                </div>
                 {product.salePrice ? (
-                  <div className="my-[15px] text-lg flex items-center">
-                    <span className="text-foreground75 line-through mr-4">
+                  <div className="my-4 flex items-center">
+                    <span className="text-text-secondary line-through mr-4">
                       ${product.price}.00
                     </span>
-                    <span className="mr-2">${product.salePrice}.00</span>
+                    <span className="mr-2 text-lg">
+                      ${product.salePrice}.00
+                    </span>
                     <span className="bg-primary w-fit px-3 py-1 rounded-full text-xs text-white">
                       Sale
                     </span>
                   </div>
                 ) : (
-                  <div className="my-[15px] text-lg">${product.price}.00</div>
+                  <div className="my-4">${product.price}.00</div>
                 )}
-                <div className="my-[15px]">
-                  <p className="text-[13px] text-foreground75 mb-3">Metal</p>
-                  <div className="flex gap-2">
+                <div className="my-4">
+                  <p className="text-sm text-text-secondary mb-3">Metal</p>
+                  <div className="flex gap-2 lg:gap-3">
                     {product.metals.map((item) => (
-                      <button
-                        className={`py-[10px] px-[20px] rounded-full border border-solid border-color-foreground/35 hover:border-color-foreground transition-[border] duration-100 tracking-[1px] leading-none text-sm ${
-                          item.metal === metal &&
-                          "bg-color-foreground text-white"
-                        }`}
-                        key={item.metal}
-                        onClick={() => setMetal(item.metal)}
+                      <ButtonTag
+                        key={item.type}
+                        buttonType="rounded"
+                        className={
+                          item.type === selectedMetal
+                            ? "bg-black text-white hover:text-white cursor-default"
+                            : ""
+                        }
+                        onClick={() => {
+                          setSelectedMetal(item.type);
+                        }}
                       >
-                        {item.metal}
-                      </button>
+                        {metalTypes[item.type]}
+                      </ButtonTag>
                     ))}
                   </div>
                 </div>
-                <div className="my-[15px]">
-                  {product.metals.find((item) => item.metal === metal)
-                    .quantity < 5 ? (
-                    <p
-                      className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-foreground75"
-                      role="status"
-                    >
-                      <svg width="15" height="15" aria-hidden="true">
-                        <circle
-                          cx="7.5"
-                          cy="7.5"
-                          r="7.5"
-                          className="fill-[#f19226]/30"
-                        ></circle>
-                        <circle
-                          cx="7.5"
-                          cy="7.5"
-                          r="5"
-                          stroke="rgb(255, 255, 255)"
-                          strokeWidth="1"
-                          className="fill-[#f19226]"
-                        ></circle>
-                      </svg>
-                      Low stock
-                    </p>
-                  ) : (
-                    <p
-                      className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-foreground75"
-                      role="status"
-                    >
-                      <svg
-                        width="15"
-                        height="15"
-                        aria-hidden="true"
-                        className="fill-[rgb(62,214,96)]"
-                      >
-                        <circle
-                          cx="7.5"
-                          cy="7.5"
-                          r="7.5"
-                          className="fill-[rgb(62,214,96,0.3)]"
-                        ></circle>
-                        <circle
-                          cx="7.5"
-                          cy="7.5"
-                          r="5"
-                          stroke="rgb(255, 255, 255)"
-                          strokeWidth="1"
-                          className="fill-[rgb(62,214,96)]"
-                        ></circle>
-                      </svg>
-                      {product.quantity <= 5 ? "Low stock" : "In stock"}
-                    </p>
-                  )}
+                <div className="my-4">
+                  <p
+                    className="flex gap-2 items-center uppercase text-[10px] tracking-[1.3px] text-text-secondary"
+                    role="status"
+                  >
+                    <StockIcon
+                      className={
+                        status === "inStock"
+                          ? "fill-[rgb(62,214,96)]"
+                          : status === "lowStock"
+                          ? "fill-[rgb(241,146,38)]"
+                          : "fill-[rgb(18,18,18)]"
+                      }
+                    />
+                    {statusTypes[status]}
+                  </p>
                 </div>
-                <div className="my-[15px]">
-                  <p className="text-[13px] text-foreground75 mb-3">Quantity</p>
+                <div className="my-4">
+                  <p className="text-sm text-text-secondary mb-3">Quantity</p>
                   <div className="quantity">
                     <button
-                      className="quantity-button"
+                      className={`quantity-button ${
+                        quantity === 1 ? "opacity-30 cursor-not-allowed" : ""
+                      }`}
                       onClick={handleDecrease}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         aria-hidden="true"
                         focusable="false"
-                        className="w-[10px]"
+                        className={`w-[10px]`}
                         fill="none"
                         viewBox="0 0 10 2"
                       >
@@ -245,43 +229,28 @@ function OptionsModal() {
                     </button>
                   </div>
                 </div>
-                <div className="my-[15px]">
-                  <Button
-                    title="Add to cart"
+                <div className="my-4 space-y-4 max-w-[440px]">
+                  <ButtonTag
                     onClick={() =>
-                      dispatch(
-                        handleAddToCart({ ...product, metal: metal, quantity })
-                      )
+                      dispatch(handleAddToCart({ ...product, metal, quantity }))
                     }
-                  />
-                </div>
-                <div className="my-[15px]">
-                  <Button
-                    title="Buy with"
+                  >
+                    Add to cart
+                  </ButtonTag>
+                  <ButtonTag
                     onClick={() =>
-                      dispatch(handleAddToCart({ ...product, quantity }))
+                      dispatch(handleAddToCart({ ...product, metal, quantity }))
                     }
-                    svgIcon={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width={48}
-                        height={48}
-                        id="stripe"
-                      >
-                        <path
-                          fill="#fff"
-                          d="M11.319 9.242h1.673v5.805h-1.673zM4.226 13.355c0-2.005-2.547-1.644-2.547-2.403l.001.002c0-.262.218-.364.567-.368a3.7 3.7 0 0 1 1.658.432V9.434a4.4 4.4 0 0 0-1.654-.307C.9 9.127 0 9.839 0 11.029c0 1.864 2.532 1.561 2.532 2.365 0 .31-.266.413-.638.413-.551 0-1.264-.231-1.823-.538v1.516a4.591 4.591 0 0 0 1.819.382c1.384-.001 2.336-.6 2.336-1.812zM11.314 8.732l1.673-.36V7l-1.673.36zM16.468 9.129a1.86 1.86 0 0 0-1.305.527l-.086-.417H13.61V17l1.665-.357.004-1.902c.24.178.596.425 1.178.425 1.193 0 2.28-.879 2.28-3.016.004-1.956-1.098-3.021-2.269-3.021zm-.397 4.641c-.391.001-.622-.143-.784-.318l-.011-2.501c.173-.193.413-.334.795-.334.607 0 1.027.69 1.027 1.569.005.906-.408 1.584-1.027 1.584zm5.521-4.641c-1.583 0-2.547 1.36-2.547 3.074 0 2.027 1.136 2.964 2.757 2.964.795 0 1.391-.182 1.845-.436v-1.266c-.454.231-.975.371-1.635.371-.649 0-1.219-.231-1.294-1.019h3.259c.007-.087.022-.44.022-.602H24c0-1.725-.825-3.086-2.408-3.086zm-.889 2.448c0-.758.462-1.076.878-1.076.409 0 .844.319.844 1.076h-1.722zm-13.251-.902V9.242H6.188l-.004-1.459-1.625.349-.007 5.396c0 .997.743 1.641 1.729 1.641.548 0 .949-.103 1.171-.224v-1.281c-.214.087-1.264.398-1.264-.595v-2.395h1.264zm3.465.114V9.243c-.225-.08-1.001-.227-1.391.496l-.102-.496h-1.44v5.805h1.662v-3.907c.394-.523 1.058-.42 1.271-.352z"
-                        ></path>
-                      </svg>
-                    }
-                    className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:!bg-[#5762c1]"
-                  />
+                    className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1] py-0"
+                  >
+                    Buy with
+                    <StripeIcon width={45.5} height={45.5} />
+                  </ButtonTag>
                 </div>
-                <div className="my-[15px]">
-                  <a
-                    href={`/products/${product._id}`}
-                    className="gap-3 items-center !text-sm link !flex"
+                <div className="my-4">
+                  <AnchorTag
+                    href={`/products/${product._id}?metal=${selectedMetal}`}
+                    className="gap-3 items-center flex"
                   >
                     View full details
                     <svg
@@ -301,7 +270,7 @@ function OptionsModal() {
                         fill="currentColor"
                       ></path>
                     </svg>
-                  </a>
+                  </AnchorTag>
                 </div>
               </div>
             </div>

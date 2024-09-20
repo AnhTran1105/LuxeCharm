@@ -3,7 +3,7 @@ import Product from "../models/product.model.js";
 import cloudinary from "cloudinary";
 import { metalTypes } from "../constants.js";
 
-export const getAllProducts = async (res, next) => {
+export const getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
     res.json(products);

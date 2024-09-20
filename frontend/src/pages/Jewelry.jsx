@@ -154,9 +154,9 @@ function Jewelry() {
             </p>
           </div>
         </div>
-        <div className="pt-[10px] w-full text-text-secondary text-sm">
-          <div className="w-full mb-5 flex justify-between">
-            <div className="flex justify-center items-center gap-5">
+        <div className="pt-4 w-full text-text-secondary text-sm">
+          <div className="w-full mb-5 md:flex justify-between max-md:space-y-2">
+            <div className="flex justify-start md:justify-center items-center gap-5">
               <h2 className="">Filter:</h2>
               <FilterDropdown
                 items={categories}
@@ -178,7 +178,7 @@ function Jewelry() {
                 highestPrice={productsInfo.highestPrice}
               />
             </div>
-            <div className="flex justify-center items-center gap-5">
+            <div className="flex justify-start md:justify-center items-center gap-5">
               <h2 className="">Sort by:</h2>
               <SortDropdown
                 items={sortingTypes}
