@@ -1,18 +1,18 @@
 import ProductList from "../components/ProductList";
 import { useState, useEffect } from "react";
 import axios from "../utils/axios";
-import AnchorTag from "../components/CustomTags/AnchorTag";
 import { useParams } from "react-router-dom";
 import FilterDropdown from "../components/FilterDropdown";
 import SortDropdown from "../components/SortDropdown";
 import PriceDropdown from "../components/PriceDropdown";
 import { CloseIcon } from "../components/SVG";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { categoryTypes, metalTypes } from "../constants";
+import { categoryTypes, jewelryDescriptions, metalTypes } from "../constants";
 
 const categories = ["bracelets", "charms", "earrings", "necklaces", "rings"];
 const metals = ["gold", "goldVermeil", "silver", "sterlingSilver"];
 const sortingTypes = [
+  "soldCount_desc",
   "rating_desc",
   "alphabetical_asc",
   "alphabetical_desc",
@@ -26,7 +26,9 @@ function Jewelry() {
   const { category } = useParams();
   const [productsInfo, setProductsInfo] = useState();
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(
+    category ? [category] : []
+  );
   const [selectedMetals, setSelectedMetals] = useState([]);
   const [selectedSortingType, setSelectedSortingType] = useState(
     sortingTypes[0]
@@ -82,75 +84,15 @@ function Jewelry() {
       <div className="mx-auto my-0 flex flex-col items-center justify-center">
         <div className="lg:max-w-[780px] md:max-w-[500px] text-center">
           <h1 className="text-[40px]">
-            {category[0].toUpperCase() + category.slice(1)}
+            {category
+              ? category[0].toUpperCase() + category.slice(1)
+              : "All Jewelry"}
           </h1>
           <div className="my-6">
-            <p className="text-text-secondary tracking-[0.6px] leading-7">
-              Create a look that's all your own with our affordable, everyday
-              jewelry. For a full layered look, stack our{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/silver"
-                className="text-base text-text-primary"
-              >
-                silver
-              </AnchorTag>{" "}
-              and gold{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/necklaces"
-                className="text-base text-text-primary"
-              >
-                necklaces
-              </AnchorTag>{" "}
-              or shop our{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/prestack-necklaces"
-                className="text-base text-text-primary"
-              >
-                prestack-necklaces
-              </AnchorTag>
-              . We also have everything you need for a killer ear stack —{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/simple"
-                className="text-base text-text-primary"
-              >
-                simple
-              </AnchorTag>{" "}
-              and{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/statement"
-                className="text-base text-text-primary"
-              >
-                statement
-              </AnchorTag>
-              <AnchorTag
-                type="underline"
-                href="/collections/earrings"
-                className="text-base text-text-primary"
-              >
-                &nbsp;earrings
-              </AnchorTag>
-              . If you need an arm candy look, simply stack up our{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/rings"
-                className="text-base text-text-primary"
-              >
-                rings
-              </AnchorTag>{" "}
-              and{" "}
-              <AnchorTag
-                type="underline"
-                href="/collections/bracelets"
-                className="text-base text-text-primary"
-              >
-                bracelets
-              </AnchorTag>
-              .
+            <p className="text-text-secondary tracking-wider leading-7">
+              {jewelryDescriptions[category]
+                ? jewelryDescriptions[category]
+                : "Create a look that's all your own with our affordable, everyday jewelry. For a full layered look, stack our silver and gold necklaces or shop our pre-stacked necklaces. We also have everything you need for a killer ear stack — simple and statement earrings. If you need an arm candy look, simply stack up our rings and bracelets."}
             </p>
           </div>
         </div>

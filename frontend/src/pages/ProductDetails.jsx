@@ -9,8 +9,9 @@ import { useDispatch } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import { useSearchParams } from "react-router-dom";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { MinusIcon, PlusIcon, StockIcon, StripeIcon } from "../components/SVG";
+import { StockIcon, StripeIcon } from "../components/SVG";
 import { metalTypes, statusTypes } from "../constants";
+import QuantityWidget from "../components/QuantityWidget";
 
 function ProductDetails() {
   const [product, setProduct] = useState();
@@ -21,27 +22,6 @@ function ProductDetails() {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setQuantity(value === "" ? "" : Math.max(1, Number(value)));
-  };
-
-  const handleBlur = () => {
-    if (quantity === "" || quantity < 1) {
-      setQuantity(1);
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -117,7 +97,7 @@ function ProductDetails() {
                 <div className="my-4">${product.price}.00</div>
               )}
               <div className="my-4">
-                <p className="text-sm text-text-secondary mb-3">Metal</p>
+                <p className="text-sm text-text-primary mb-3">Metal</p>
                 <div className="flex gap-2">
                   {product.metals.map((item) => (
                     <ButtonTag
@@ -156,35 +136,8 @@ function ProductDetails() {
                 </p>
               </div>
               <div className="my-4">
-                <p className="text-sm text-text-secondary mb-3">Quantity</p>
-                <div className="quantity">
-                  <ButtonTag
-                    buttonType="icon"
-                    className={`quantity-button ${
-                      quantity === 1 ? "opacity-30 cursor-not-allowed" : ""
-                    }`}
-                    onClick={handleDecrease}
-                  >
-                    <MinusIcon width={10} height={10} />
-                  </ButtonTag>
-
-                  <input
-                    className="quantity-input"
-                    type="number"
-                    value={quantity}
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    min={1}
-                  />
-
-                  <ButtonTag
-                    buttonType="icon"
-                    className="quantity-button"
-                    onClick={handleIncrease}
-                  >
-                    <PlusIcon width={10} height={10} />
-                  </ButtonTag>
-                </div>
+                <p className="text-sm text-text-primary mb-3">Quantity</p>
+                <QuantityWidget quantity={quantity} setQuantity={setQuantity} />
               </div>
               <div className="my-4 space-y-4 max-w-[440px]">
                 <ButtonTag

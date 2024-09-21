@@ -15,6 +15,7 @@ import { handleAddToCart } from "../redux/cart/cartSlice";
 import { metalTypes, statusTypes } from "../constants";
 import { Rating } from "react-simple-star-rating";
 import AnchorTag from "./CustomTags/AnchorTag";
+import QuantityWidget from "./QuantityWidget";
 
 function OptionsModal() {
   const { isOpened, productId, metal } = useSelector(
@@ -26,27 +27,6 @@ function OptionsModal() {
   const [selectedMetal, setSelectedMetal] = useState(metal ? metal.type : "");
   const [status, setStatus] = useState(metal ? metal.status : "");
   const [quantity, setQuantity] = useState(1);
-
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setQuantity(value === "" ? "" : Math.max(1, Number(value)));
-  };
-
-  const handleBlur = () => {
-    if (quantity === "" || quantity < 1) {
-      setQuantity(1);
-    }
-  };
 
   useEffect(() => {
     if (productId) {
@@ -135,7 +115,7 @@ function OptionsModal() {
                   <div className="my-4">${product.price}.00</div>
                 )}
                 <div className="my-4">
-                  <p className="text-sm text-text-secondary mb-3">Metal</p>
+                  <p className="text-sm text-text-primary mb-3">Metal</p>
                   <div className="flex gap-2">
                     {product.metals.map((item) => (
                       <ButtonTag
@@ -173,61 +153,11 @@ function OptionsModal() {
                   </p>
                 </div>
                 <div className="my-4">
-                  <p className="text-sm text-text-secondary mb-3">Quantity</p>
-                  <div className="quantity">
-                    <button
-                      className={`quantity-button ${
-                        quantity === 1 ? "opacity-30 cursor-not-allowed" : ""
-                      }`}
-                      onClick={handleDecrease}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        focusable="false"
-                        className={`w-[10px]`}
-                        fill="none"
-                        viewBox="0 0 10 2"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </button>
-
-                    <input
-                      className="quantity-input"
-                      type="number"
-                      value={quantity}
-                      onChange={handleInputChange}
-                      onBlur={handleBlur}
-                      min={1}
-                    />
-
-                    <button
-                      className="quantity-button"
-                      onClick={handleIncrease}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        focusable="false"
-                        className="w-[10px]"
-                        fill="none"
-                        viewBox="0 0 10 10"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
+                  <p className="text-sm text-text-primary mb-3">Quantity</p>
+                  <QuantityWidget
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                  />
                 </div>
                 <div className="my-4 space-y-4 max-w-[440px]">
                   <ButtonTag

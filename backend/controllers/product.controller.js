@@ -73,6 +73,8 @@ export const getFilteredProducts = async (req, res) => {
     }
 
     switch (sortBy) {
+      case "rating_desc":
+        sort = { "rating.avgRating": -1 };
       case "alphabetical_asc":
         sort = { name: 1 };
         break;
@@ -92,7 +94,7 @@ export const getFilteredProducts = async (req, res) => {
         sort = { createdAt: -1 };
         break;
       default:
-        sort = { "rating.avgRating": -1 };
+        sort = { soldCount: -1 };
     }
 
     const filteredProducts = await Product.find(query).sort(sort);
@@ -147,60 +149,6 @@ export const getFilteredProducts = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error filtering products", error: error.message });
-  }
-};
-
-export const getProductsInfo = async (req, res, next) => {
-  try {
-    const products = await Product.find();
-
-    const highestPrice = Math.max(
-      ...products.map((product) =>
-        Math.max(product.price, product.salePrice || product.price)
-      )
-    );
-
-    const categoryCount = {
-      bracelets: 0,
-      charms: 0,
-      earrings: 0,
-      necklaces: 0,
-      rings: 0,
-    };
-
-    const metalCount = {
-      gold: 0,
-      goldVermeil: 0,
-      silver: 0,
-      sterlingSilver: 0,
-    };
-
-    let totalProducts = 0;
-
-    products.forEach((product) => {
-      if (product.category in categoryCount) {
-        categoryCount[product.category] += product.metals.length;
-      }
-
-      product.metals.forEach((metal) => {
-        if (metal.type in metalCount) {
-          metalCount[metal.type]++;
-        }
-      });
-
-      totalProducts += product.metals.length;
-    });
-
-    const response = {
-      highestPrice,
-      categoryCount,
-      metalCount,
-      totalProducts,
-    };
-
-    res.json(response);
-  } catch (error) {
-    next(error);
   }
 };
 

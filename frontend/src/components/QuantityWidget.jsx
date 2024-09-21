@@ -1,55 +1,43 @@
-import { useDispatch, useSelector } from "react-redux";
-import { updateCartItemQuantity } from "../redux/cart/cartSlice";
+import ButtonTag from "./CustomTags/ButtonTag";
+import { MinusIcon, PlusIcon } from "./SVG";
 
-function QuantityWidget({ itemId }) {
-  const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.cart);
-
-  const item = items.find((item) => item._id === itemId);
-
-  const handleUpdateQuantity = (newQuantity) => {
-    dispatch(
-      updateCartItemQuantity({ cartItemId: itemId, quantity: newQuantity })
-    );
+function QuantityWidget({ quantity, setQuantity }) {
+  const handleIncrease = () => {
+    setQuantity((prev) => prev + 1);
   };
 
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value === "" ? "" : Math.max(1, Number(value)));
+  };
+
+  const handleBlur = () => {
+    if (quantity === "" || quantity < 1) {
+      setQuantity(1);
+    }
+  };
   return (
-    <div className="flex border-border-secondary border">
-      <button
-        disabled={item.quantity === 1}
-        onClick={() => handleUpdateQuantity(item.quantity - 1)}
-        className={`h-6 w-9 text-center leading-6 flex items-center justify-center ${
-          item.quantity === 1 ? "opacity-30" : "hover:bg-hoverMini"
-        }`}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 48 48"
-          id="minus"
-        >
-          <path d="M38 26H10v-4h28v4z"></path>
-          <path fill="none" d="M0 0h48v48H0z"></path>
-        </svg>
-      </button>
-      <span className="border-x border-border-secondary text-center leading-6 h-6 w-9 block text-xs">
-        {item.quantity}
-      </span>
-      <button
-        onClick={() => handleUpdateQuantity(item.quantity + 1)}
-        className="h-6 w-9 text-center leading-6 flex items-center justify-center hover:bg-hoverMini"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="7"
-          height="16"
-          id="plus"
-          className="scale-[135%]"
-        >
-          <path fillRule="evenodd" d="M4 7V4H3v3H0v1h3v3h1V8h3V7H4z"></path>
-        </svg>
-      </button>
+    <div className="border border-primary w-fit flex justify-center items-center">
+      <ButtonTag buttonType="icon" onClick={handleDecrease} className="p-4">
+        <MinusIcon width={12} height={12} />
+      </ButtonTag>
+      <input
+        className="w-14 text-center"
+        type="number"
+        value={quantity}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
+        min={1}
+      />
+      <ButtonTag buttonType="icon" onClick={handleIncrease} className="p-4">
+        <PlusIcon width={12} height={12} />
+      </ButtonTag>
     </div>
   );
 }

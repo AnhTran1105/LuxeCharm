@@ -6,7 +6,6 @@ import {
 } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
-import QuantityWidget from "./QuantityWidget";
 import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,7 @@ import ButtonTag from "./CustomTags/ButtonTag";
 import AnchorTag from "./CustomTags/AnchorTag";
 import { CloseIcon, TrashIcon } from "./SVG";
 import { metalTypes } from "../constants";
+import QuantityInput from "./QuantityInput";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -102,7 +102,8 @@ function Cart() {
                     </div>
                     <div className="flex justify-between w-full items-center">
                       <div className="my-3 text-left">
-                        <QuantityWidget itemId={item._id} />
+                        <QuantityInput itemId={item._id} />
+                        {/* <QuantityWidget itemId={item._id} /> */}
                       </div>
                       <div className="mt-2 text-right text-xs leading-4">
                         {item.salePrice ? (

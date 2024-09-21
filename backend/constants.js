@@ -29,4 +29,5 @@ export const sortingTypes = {
   price_desc: "Price, high to low",
   date_asc: "Date, old to new",
   date_desc: "Date, new to old",
+  soldCount_desc: "Best sellers",
 };
