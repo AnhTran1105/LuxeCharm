@@ -83,7 +83,7 @@ function Jewelry() {
     productsInfo && (
       <div className="mx-auto my-0 flex flex-col items-center justify-center">
         <div className="lg:max-w-[780px] md:max-w-[500px] text-center">
-          <h1 className="text-[40px]">
+          <h1 className="text-4xl">
             {category
               ? category[0].toUpperCase() + category.slice(1)
               : "All Jewelry"}

@@ -181,7 +181,7 @@ function ProductCreating() {
   return (
     <div className="flex justify-center items-center">
       <div className="w-[572px] py-9 px-[15px] text-center">
-        <h1 className="text-[40px]">Create Product</h1>
+        <h1 className="text-4xl">Create Product</h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mt-10 text-sm text-color-foreground/75"

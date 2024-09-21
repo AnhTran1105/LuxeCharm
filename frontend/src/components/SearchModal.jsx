@@ -87,11 +87,11 @@ function SearchModal() {
                       )}
                     </div>
                     {!loading ? (
-                      <div>
+                      <div className="py-2">
                         {products.map((product) => (
                           <a
                             key={product._id}
-                            href={`/products/${product._id}`}
+                            href={`/products/${product._id}?metal=${product.metals[0].type}`}
                             className="flex text-sm px-6 py-2 sm:py-4 hover:bg-background-secondary"
                           >
                             <div className="w-24">

@@ -33,7 +33,7 @@ function Reviews({ productId, avgRating }) {
                 <div className="mb-10 flex justify-center items-center">
                   <div className="border-r border-border-tertiary">
                     <div className="mr-10 flex gap-4">
-                      <div className="font-SofiaBold text-text-primary text-[40px]">
+                      <div className="font-SofiaBold text-text-primary text-4xl">
                         {Math.round(avgRating * 10) / 10}
                       </div>
                       <div>

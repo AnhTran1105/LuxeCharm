@@ -49,7 +49,7 @@ function Login() {
   return (
     <div className="flex justify-center items-center">
       <div className="max-w-[478px] py-9 px-[15px] text-center">
-        <h1 className="text-[40px]">Login</h1>
+        <h1 className="text-4xl">Login</h1>
         <div>
           <form
             onSubmit={handleSubmit(onSubmit)}

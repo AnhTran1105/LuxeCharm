@@ -68,7 +68,7 @@ function Register() {
 
   return (
     <div className="w-full max-w-[440px] text-center mx-auto">
-      <h1 className="text-[40px]">Register</h1>
+      <h1 className="text-4xl">Register</h1>
       <div>
         <form
           onSubmit={handleSubmit(onSubmit)}

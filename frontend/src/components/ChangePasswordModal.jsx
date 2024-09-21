@@ -9,10 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "../utils/axios";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import ButtonTag from "./CustomTags/ButtonTag";
+import ErrorMessage from "./ErrorMessage";
 
 const schema = yup
   .object({
@@ -26,7 +26,6 @@ const schema = yup
 
 function ChangePasswordModal({ isOpened, setIsOpened }) {
   const dispatch = useDispatch();
-  const [isVisible, setVisible] = useState(false);
 
   const {
     register,
@@ -71,13 +70,13 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
             transition
-            className=" overflow-y-scroll bg-white p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+            className="w-full sm:w-2/3 lg:w-1/2 overflow-y-scroll bg-white p-4 lg:p-6 duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
           >
-            <DialogTitle className="font-bold text-center uppercase font-SofiaBold text-sm leading-[30px] relative">
+            <DialogTitle className="text-center uppercase font-SofiaBold text-sm leading-7 relative">
               Change Password
               <button
                 onClick={() => setIsOpened(false)}
-                className="absolute -top-4 -right-4 p-1 group"
+                className="absolute -top-3 -right-3 p-1 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,31 +105,12 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
                   placeholder="currentPassword"
                   autoCorrect="off"
                   {...register("currentPassword")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-color-foreground"
                 />
                 <label htmlFor="currentPassword">Current password*</label>
               </div>
               {errors.currentPassword && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    enableBackground="new 0 0 24 24"
-                    className="fill-red mr-2"
-                    width={20}
-                    height={20}
-                    viewBox="0 0 24 24"
-                    id="exclamation-mark"
-                  >
-                    <path
-                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                    ></path>
-                  </svg>
-
-                  <span className="first-letter:capitalize flex">
-                    {errors.currentPassword?.message}
-                  </span>
-                </p>
+                <ErrorMessage message={errors.currentPassword?.message} />
               )}
               <div className="field">
                 <input
@@ -142,137 +122,32 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
                   placeholder="newPassword"
                   autoCorrect="off"
                   {...register("newPassword")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-color-foreground"
                 />
                 <label htmlFor="newPassword">New password*</label>
               </div>
               {errors.newPassword && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    enableBackground="new 0 0 24 24"
-                    className="fill-red mr-2"
-                    width={20}
-                    height={20}
-                    viewBox="0 0 24 24"
-                    id="exclamation-mark"
-                  >
-                    <path
-                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                    ></path>
-                  </svg>
-
-                  <span className="first-letter:capitalize flex">
-                    {errors.newPassword?.message}
-                  </span>
-                </p>
+                <ErrorMessage message={errors.newPassword?.message} />
               )}
               <div className="field relative">
                 <input
                   id="newPasswordConfirmation"
                   autoComplete="newPasswordConfirmation"
                   required
-                  type={isVisible ? "text" : "password"}
                   autoCapitalize="off"
                   placeholder="newPasswordConfirmation"
                   autoCorrect="off"
                   {...register("newPasswordConfirmation")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-w-[446px] min-h-[45px] text-base text-color-foreground"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-color-foreground"
                 />
                 <label htmlFor="newPasswordConfirmation">
                   Confirm password*
                 </label>
-                <button
-                  type="button"
-                  className="absolute top-3 right-[15px]"
-                  onClick={() => setVisible(!isVisible)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    id="eye-closed"
-                    className={`${isVisible && "rotate-180"}`}
-                    width={24}
-                    height={24}
-                  >
-                    <rect width="256" height="256" fill="none"></rect>
-                    <line
-                      x1="201.15"
-                      x2="223.96"
-                      y1="127.305"
-                      y2="166.813"
-                      fill="none"
-                      stroke="#000"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="12"
-                    ></line>
-                    <line
-                      x1="154.182"
-                      x2="161.296"
-                      y1="149.263"
-                      y2="189.607"
-                      fill="none"
-                      stroke="#000"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="12"
-                    ></line>
-                    <line
-                      x1="101.73"
-                      x2="94.615"
-                      y1="149.244"
-                      y2="189.594"
-                      fill="none"
-                      stroke="#000"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="12"
-                    ></line>
-                    <line
-                      x1="54.809"
-                      x2="31.889"
-                      y1="127.272"
-                      y2="166.971"
-                      fill="none"
-                      stroke="#000"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="12"
-                    ></line>
-                    <path
-                      fill="none"
-                      stroke="#000"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="12"
-                      d="M31.99943,104.87509C48.81193,125.68556,79.63353,152,128,152c48.36629,0,79.18784-26.31424,96.00039-47.12468"
-                    ></path>
-                  </svg>
-                </button>
               </div>
               {errors.newPasswordConfirmation && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    enableBackground="new 0 0 24 24"
-                    className="fill-red mr-2"
-                    width={20}
-                    height={20}
-                    viewBox="0 0 24 24"
-                    id="exclamation-mark"
-                  >
-                    <path
-                      d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                    ></path>
-                  </svg>
-
-                  <span className="first-letter:capitalize flex">
-                    {errors.newPasswordConfirmation?.message}
-                  </span>
-                </p>
+                <ErrorMessage
+                  message={errors.newPasswordConfirmation?.message}
+                />
               )}
               <ButtonTag type="submit" className="mt-5">
                 Change password

@@ -24,8 +24,6 @@ function HeaderMenu({ isOpened, setIsOpened }) {
     })();
   }, []);
 
-  console.log(userInfo);
-
   return (
     isOpened && (
       <Dialog

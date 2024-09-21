@@ -55,7 +55,7 @@ function Login() {
 
   return (
     <div className="w-full max-w-[440px] text-center mx-auto">
-      <h1 className="text-[40px]">Login</h1>
+      <h1 className="text-4xl">Login</h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
