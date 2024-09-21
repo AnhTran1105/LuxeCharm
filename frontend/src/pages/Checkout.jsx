@@ -7,11 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { fetchCart } from "../redux/cart/cartSlice";
-import QuantityWidget from "../components/QuantityWidget";
 import { removeFromCart } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { WarningIcon, StripeIcon, TrashIcon } from "../components/SVG";
+import { StripeIcon, TrashIcon } from "../components/SVG";
 import AnchorTag from "../components/CustomTags/AnchorTag";
+import ErrorMessage from "../components/ErrorMessage";
+import QuantityInput from "../components/QuantityInput";
+import { metalTypes } from "../constants";
+import CartItem from "../components/CartItem";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -94,12 +97,12 @@ function Checkout() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center py-10 px-[50px]">
+    <section className="w-full text-center">
       <h1 className="text-4xl">Checkout</h1>
-      <div className="mx-auto w-4/5 grid grid-cols-2 gap-12 mt-10">
+      <div className="mx-auto w-full sm:w-4/5 md:w-full xl:w-4/5 grid grid-cols-1 md:grid-cols-2 gap-10 mt-6">
         <div className="">
           <div className="text-center border border-border-primary">
-            <div className="border-b border-border-primary py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+            <div className="border-b border-border-primary py-2 px-5 text-center uppercase font-SofiaBold text-sm leading-7">
               Delivery Information
             </div>
             <form className="p-5 text-sm text-text-secondary">
@@ -113,20 +116,13 @@ function Checkout() {
                   disabled
                   autoCorrect="off"
                   {...register("email")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-text-primary"
                 />
                 <label htmlFor="email">Your account</label>
               </div>
-              {errors.email && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <WarningIcon width={20} height={20} />
-                  <span className="first-letter:capitalize">
-                    {errors.email?.message}
-                  </span>
-                </p>
-              )}
-              <div className="flex gap-3">
-                <div className="field !mt-5">
+              {errors.email && <ErrorMessage message={errors.email?.message} />}
+              <div className="double-field mt-5">
+                <div className="field">
                   <input
                     id="firstName"
                     autoComplete="firstName"
@@ -135,17 +131,12 @@ function Checkout() {
                     placeholder="firstName"
                     autoCorrect="off"
                     {...register("firstName")}
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-text-primary"
                   />
                   <label htmlFor="firstName">First name*</label>
                 </div>
                 {errors.firstName && (
-                  <p className="text-left px-4 pt-2 flex items-center">
-                    <WarningIcon width={20} height={20} />
-                    <span className="first-letter:capitalize">
-                      {errors.firstName?.message}
-                    </span>
-                  </p>
+                  <ErrorMessage message={errors.firstName?.message} />
                 )}
                 <div className="field">
                   <input
@@ -156,17 +147,12 @@ function Checkout() {
                     placeholder="lastName"
                     autoCorrect="off"
                     {...register("lastName")}
-                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                    className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-text-primary"
                   />
                   <label htmlFor="lastName">Last name*</label>
                 </div>
                 {errors.lastName && (
-                  <p className="text-left px-4 pt-2 flex items-center">
-                    <WarningIcon width={20} height={20} />
-                    <span className="first-letter:capitalize">
-                      {errors.lastName?.message}
-                    </span>
-                  </p>
+                  <ErrorMessage message={errors.lastName?.message} />
                 )}
               </div>
               <div className="field">
@@ -178,17 +164,12 @@ function Checkout() {
                   placeholder="address"
                   autoCorrect="off"
                   {...register("address")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-text-primary"
                 />
                 <label htmlFor="address">Address*</label>
               </div>
               {errors.address && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <WarningIcon width={20} height={20} />
-                  <span className="first-letter:capitalize">
-                    {errors.address?.message}
-                  </span>
-                </p>
+                <ErrorMessage message={errors.address?.message} />
               )}
               <div className="field">
                 <input
@@ -199,17 +180,12 @@ function Checkout() {
                   placeholder="phoneNumber"
                   autoCorrect="off"
                   {...register("phoneNumber")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative tracking-[0.4px] text-base text-text-primary"
                 />
                 <label htmlFor="phoneNumber">Phone number*</label>
               </div>
               {errors.phoneNumber && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <WarningIcon width={20} height={20} />
-                  <span className="first-letter:capitalize">
-                    {errors.phoneNumber?.message}
-                  </span>
-                </p>
+                <ErrorMessage message={errors.phoneNumber?.message} />
               )}
               <div className="field">
                 <textarea
@@ -221,83 +197,23 @@ function Checkout() {
                   placeholder="notes"
                   autoCorrect="off"
                   {...register("notes")}
-                  className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-text-primary"
+                  className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] text-base text-text-primary"
                 />
                 <label htmlFor="notes">Order notes</label>
               </div>
-              {errors.notes && (
-                <p className="text-left px-4 pt-2 flex items-center">
-                  <WarningIcon width={20} height={20} />
-                  <span className="first-letter:capitalize">
-                    {errors.notes?.message}
-                  </span>
-                </p>
-              )}
+              {errors.notes && <ErrorMessage message={errors.notes?.message} />}
             </form>
             <p className="mb-5 text-sm">* indicates a required field</p>
           </div>
         </div>
         <div className="">
           <div className="text-center border border-border-primary">
-            <div className="border-b border-border-primary py-[10px] px-5 text-center uppercase font-SofiaBold text-sm leading-[30px]">
+            <div className="border-b border-border-primary py-2 px-5 text-center uppercase font-SofiaBold text-sm leading-7">
               Your cart
             </div>
             <ul role="list" className="">
               {[...items].reverse().map((item) => (
-                <li
-                  key={item._id}
-                  className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-secondary flex items-center"
-                >
-                  <div className="w-[90px]">
-                    <AnchorTag
-                      href={`/products/${item._id}?metal=${item.metal}`}
-                    >
-                      <img src={item.imageUrl} alt={item.name} />
-                    </AnchorTag>
-                  </div>
-                  <div className="pl-5 w-full relative text-left">
-                    <ButtonTag
-                      buttonType="icon"
-                      onClick={() => {
-                        dispatch(removeFromCart(item._id));
-                      }}
-                      className="absolute top-0 right-0"
-                    >
-                      <TrashIcon width={16} height={16} />
-                    </ButtonTag>
-                    <AnchorTag
-                      href={`/products/${item._id}?metal=${item.metal}`}
-                      className="font-SofiaBold leading-5 text-text-primary"
-                    >
-                      {item.name}
-                    </AnchorTag>
-                    {item.salePrice && (
-                      <span className="ml-2 bg-background-primary w-fit px-3 py-1 rounded-full text-xs text-white">
-                        Sale
-                      </span>
-                    )}
-                    <div className="leading-3 text-xs">{item.metal}</div>
-                    <div className="flex justify-between w-full items-center">
-                      <div className="mt-[10px] text-left">
-                        <QuantityWidget itemId={item._id} />
-                      </div>
-                      <div className="mt-2 text-right text-xs leading-4">
-                        {item.salePrice ? (
-                          <>
-                            <span className="text-text-secondary line-through mr-2">
-                              ${item.price}.00
-                            </span>
-                            <span className="text-sm">
-                              ${item.salePrice}.00
-                            </span>
-                          </>
-                        ) : (
-                          <span> ${item.price}.00</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <CartItem key={item._id} item={item} />
               ))}
             </ul>
             <div className="border-t border-border p-5">
@@ -335,7 +251,7 @@ function Checkout() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

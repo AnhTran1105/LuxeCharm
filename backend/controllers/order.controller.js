@@ -84,7 +84,8 @@ export const verifyOrder = async (req, res, next) => {
     if (success) {
       const order = await Order.findOneAndUpdate(
         { userId, status: "Pending" },
-        { status: "Paid" }
+        { status: "Paid" },
+        { new: true }
       );
 
       if (!order) {
@@ -95,15 +96,23 @@ export const verifyOrder = async (req, res, next) => {
       }
 
       for (let item of order.cartItems) {
-        await Product.findOneAndUpdate(
-          { _id: item.productId, "metals.metal": item.metal },
+        const updatedProduct = await Product.findOneAndUpdate(
+          { _id: item.productId, "metals.type": item.metal },
           {
             $inc: {
               "metals.$.quantity": -item.quantity,
-              soldCount: item.quantity,
+              "metals.$.soldCount": item.quantity,
             },
-          }
+          },
+          { new: true }
         );
+
+        if (!updatedProduct) {
+          return res.status(404).json({
+            success: false,
+            message: `Product with ID ${item.productId} and metal ${item.metal} not found.`,
+          });
+        }
       }
 
       const cart = await Cart.findOneAndUpdate(

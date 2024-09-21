@@ -44,14 +44,7 @@ const cartItemSchema = new mongoose.Schema({
   metal: {
     type: String,
     required: true,
-    enum: [
-      "Gold",
-      "Gold Vermeil",
-      "Mixed Metal",
-      "Rose Gold",
-      "Silver",
-      "Sterling Silver",
-    ],
+    enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
   },
 });
 

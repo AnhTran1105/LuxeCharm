@@ -142,7 +142,13 @@ function ProductDetails() {
               <div className="my-4 space-y-4 max-w-[440px]">
                 <ButtonTag
                   onClick={() =>
-                    dispatch(handleAddToCart({ ...product, metal, quantity }))
+                    dispatch(
+                      handleAddToCart({
+                        ...product,
+                        metal: product.metals.find((m) => m.type === metal),
+                        quantity,
+                      })
+                    )
                   }
                 >
                   Add to cart

@@ -6,14 +6,12 @@ import {
 } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
-import { fetchCart, removeFromCart } from "../redux/cart/cartSlice";
+import { fetchCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
-import AnchorTag from "./CustomTags/AnchorTag";
-import { CloseIcon, TrashIcon } from "./SVG";
-import { metalTypes } from "../constants";
-import QuantityInput from "./QuantityInput";
+import { CloseIcon } from "./SVG";
+import CartItem from "./CartItem";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
@@ -61,65 +59,7 @@ function Cart() {
               className="max-h-[calc(100%-165px)] overflow-y-auto"
             >
               {[...items].reverse().map((item) => (
-                <li
-                  key={item._id}
-                  className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-primary/15 flex items-center"
-                >
-                  <div className="w-24">
-                    <AnchorTag
-                      href={`/products/${item._id}?metal=${item.metal}`}
-                    >
-                      <img
-                        src={item.imageUrl}
-                        alt={item.name}
-                        className="border border-border-primary/15"
-                      />
-                    </AnchorTag>
-                  </div>
-                  <div className="pl-5 w-full relative">
-                    <ButtonTag
-                      buttonType="icon"
-                      onClick={() => {
-                        dispatch(removeFromCart(item._id));
-                      }}
-                      className="absolute top-0 right-0"
-                    >
-                      <TrashIcon width={16} height={16} />
-                    </ButtonTag>
-                    <AnchorTag
-                      href={`/products/${item._id}?metal=${item.metal}`}
-                      className="font-SofiaBold leading-5 text-text-primary"
-                    >
-                      {item.name}
-                    </AnchorTag>
-                    {item.salePrice && (
-                      <span className="ml-2 bg-background-primary w-fit px-3 py-1 rounded-full text-xs text-white">
-                        Sale
-                      </span>
-                    )}
-                    <div className="leading-3 text-xs">
-                      {metalTypes[item.metal]}
-                    </div>
-                    <div className="flex justify-between w-full items-center">
-                      <div className="my-3 text-left">
-                        <QuantityInput itemId={item._id} />
-                        {/* <QuantityWidget itemId={item._id} /> */}
-                      </div>
-                      <div className="mt-2 text-right text-xs leading-4">
-                        {item.salePrice ? (
-                          <>
-                            <span className="text-text-secondary line-through mr-2">
-                              ${item.price}.00
-                            </span>
-                            <span className="">${item.salePrice}.00</span>
-                          </>
-                        ) : (
-                          <span> ${item.price}.00</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <CartItem key={item._id} item={item} />
               ))}
             </ul>
           )}
@@ -137,7 +77,7 @@ function Cart() {
             <ButtonTag
               onClick={() => {
                 dispatch(hideCart());
-                navigate("/checkout");
+                window.location.href = "/checkout";
               }}
               className="py-2"
             >

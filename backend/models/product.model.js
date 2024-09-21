@@ -62,6 +62,10 @@ const metalSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  soldCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const productSchema = new mongoose.Schema(
@@ -120,15 +124,12 @@ const productSchema = new mongoose.Schema(
         default: 0,
       },
     },
-    soldCount: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );
 
 productSchema.pre("save", function (next) {
+  console.log(this.metals);
   this.metals.forEach((metal) => {
     if (metal.quantity > 10) {
       metal.status = "inStock";
@@ -141,16 +142,24 @@ productSchema.pre("save", function (next) {
   next();
 });
 
-productSchema.pre("findOneAndUpdate", function (next) {
-  this.metals.forEach((metal) => {
-    if (metal.quantity > 10) {
-      metal.status = "inStock";
-    } else if (metal.quantity > 0) {
-      metal.status = "lowStock";
-    } else {
-      metal.status = "outOfStock";
-    }
-  });
+productSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate();
+
+  if (update.metals) {
+    update.metals.forEach((metal, index) => {
+      if (metal.quantity > 10) {
+        update[`metals.${index}.status`] = "inStock";
+      } else if (metal.quantity > 0) {
+        update[`metals.${index}.status`] = "lowStock";
+      } else {
+        update[`metals.${index}.status`] = "outOfStock";
+      }
+    });
+
+    delete update.metals;
+  }
+
+  this.setUpdate(update);
   next();
 });
 

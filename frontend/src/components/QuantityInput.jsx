@@ -10,9 +10,11 @@ function QuantityInput({ itemId }) {
   const item = items.find((item) => item._id === itemId);
 
   const handleUpdateQuantity = (newQuantity) => {
-    dispatch(
-      updateCartItemQuantity({ cartItemId: itemId, quantity: newQuantity })
-    );
+    if (newQuantity >= 1) {
+      dispatch(
+        updateCartItemQuantity({ cartItemId: itemId, quantity: newQuantity })
+      );
+    }
   };
 
   return (
@@ -37,6 +39,7 @@ function QuantityInput({ itemId }) {
         className="w-8 text-center text-xs"
         type="number"
         value={item.quantity}
+        onChange={(e) => handleUpdateQuantity(Number(e.target.value))}
         min={1}
       />
       <ButtonTag

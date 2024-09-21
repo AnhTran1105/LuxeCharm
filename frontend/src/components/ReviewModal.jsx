@@ -15,6 +15,7 @@ import { Rating } from "react-simple-star-rating";
 import { useState } from "react";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { CloseIcon } from "./SVG";
+import ErrorMessage from "./ErrorMessage";
 
 const schema = yup
   .object({
@@ -81,8 +82,8 @@ function ReviewModal({ isOpened, setOpened, productId }) {
               <CloseIcon width={20} height={20} />
             </button>
           </DialogTitle>
-          <div className="flex items-center gap-3">
-            Rate your experience:
+          <div className="sm:flex items-center gap-3">
+            <div>Rate your experience:</div>
             <Rating
               transition={true}
               size={24}
@@ -96,45 +97,26 @@ function ReviewModal({ isOpened, setOpened, productId }) {
               tooltipClassName="!bg-white !text-color-foreground !p-0 mt-1"
             />
           </div>
-          <div className="field">
-            <textarea
-              rows="4"
-              id="content"
-              autoComplete="content"
-              required
-              autoCapitalize="off"
-              placeholder="content"
-              autoCorrect="off"
-              {...register("content")}
-              className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] min-h-[45px] text-base text-color-foreground"
-            />
-            <label htmlFor="content">Your thoughts*</label>
-          </div>
-          {errors.content && (
-            <p className="text-left px-4 pt-2 flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                enableBackground="new 0 0 24 24"
-                className="fill-red mr-2"
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-                id="exclamation-mark"
-              >
-                <path
-                  d="M12,2C12,2,12,2,12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,17c-0.6,0-1-0.4-1-1s0.4-1,1-1
-	s1,0.4,1,1S12.6,17,12,17z M13,12c0,0.6-0.4,1-1,1s-1-0.4-1-1V8c0-0.6,0.4-1,1-1s1,0.4,1,1V12z"
-                ></path>
-              </svg>
-
-              <span className="first-letter:capitalize">
-                {errors.content?.message}
-              </span>
-            </p>
-          )}
-          <ButtonTag onClick={handleSubmit(onSubmit)} className="py-2">
-            Write a review
-          </ButtonTag>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="field">
+              <textarea
+                rows="4"
+                id="content"
+                autoComplete="content"
+                required
+                autoCapitalize="off"
+                placeholder="content"
+                autoCorrect="off"
+                {...register("content")}
+                className="appearance-none p-[15px] m-[1px] text-left w-full relative tracking-[0.4px] text-base text-color-foreground"
+              />
+              <label htmlFor="content">Your thoughts*</label>
+            </div>
+            {errors.content && (
+              <ErrorMessage message={errors.content?.message} />
+            )}
+            <ButtonTag type="submit">Write a review</ButtonTag>
+          </form>
         </DialogPanel>
       </div>
     </Dialog>

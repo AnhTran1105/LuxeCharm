@@ -101,7 +101,7 @@ function SearchModal() {
                                 className="outline outline-[1px] outline-border-secondary"
                               />
                             </div>
-                            <div className="pl-5 w-full relative">
+                            <div className="pl-5 w-full relative flex flex-col justify-center">
                               <div className="flex items-center">
                                 <h3 className="font-SofiaBold leading-5 text-text-primary">
                                   {product.name}

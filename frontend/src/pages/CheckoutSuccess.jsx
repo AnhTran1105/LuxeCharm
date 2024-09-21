@@ -24,8 +24,8 @@ function CheckoutSuccess() {
 
   return (
     order && (
-      <div className="m-[50px] flex justify-center">
-        <div className="w-4/5 flex flex-col justify-center items-center">
+      <div className="my-10 flex justify-center">
+        <div className="w-full lg:w-4/5 flex flex-col justify-center items-center">
           <div className="flex flex-col gap-4 items-center">
             <i>
               <svg
@@ -44,8 +44,10 @@ function CheckoutSuccess() {
                 <polygon points="25.3 37.3 17.1 29.2 15.7 30.6 25.3 40.2 44.3 21.2 42.9 19.8"></polygon>
               </svg>
             </i>
-            <div className="mt-4 text-xl">Thank you for your purchase!</div>
-            <div className="text-foreground75 text-sm">
+            <div className="mt-4 text-xl text-center">
+              Thank you for your purchase!
+            </div>
+            <div className="text-text-secondary text-sm text-center">
               We will email you an order confirmation with details and tracking
               info.
             </div>
