@@ -8,7 +8,7 @@ function InfoDisclosure({ title, content }) {
   return (
     <div className="border-b border-border-primary/15">
       <Disclosure as="div" className="w-full text-text-secondary">
-        <DisclosureButton className="group w-full py-4 text-sm text-text-primary flex justify-between items-center text-left">
+        <DisclosureButton className="group w-full py-4 text-base text-text-primary flex justify-between items-center text-left">
           {title}
           <svg
             className="h-3 w-3 mr-4 group-data-[open]:rotate-180 stroke-text-primary"
@@ -29,7 +29,10 @@ function InfoDisclosure({ title, content }) {
             className="origin-top transition duration-200 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0"
           >
             {content.map((item) => (
-              <p key={item.key} className="text-xs last:mb-4 tracking-[0.6px]">
+              <p
+                key={item.key}
+                className="text-[0.8rem] last:mb-4 tracking-[0.6px]"
+              >
                 <strong className="font-SofiaBold">{item.key}</strong>:{" "}
                 {item.value}
               </p>

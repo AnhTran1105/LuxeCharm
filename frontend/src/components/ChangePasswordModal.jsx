@@ -4,7 +4,6 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import Button from "./Button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -13,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
+import ButtonTag from "./CustomTags/ButtonTag";
 
 const schema = yup
   .object({
@@ -274,7 +274,9 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
                   </span>
                 </p>
               )}
-              <Button title="Change password" type="submit" className="mt-5" />
+              <ButtonTag type="submit" className="mt-5">
+                Change password
+              </ButtonTag>
             </form>
           </DialogPanel>
         </div>

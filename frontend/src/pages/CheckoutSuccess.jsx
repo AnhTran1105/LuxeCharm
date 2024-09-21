@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Button from "../components/Button";
+import ButtonTag from "../components/CustomTags/ButtonTag";
 import axios from "../utils/axios";
 import { useParams } from "react-router-dom";
 
@@ -50,11 +50,11 @@ function CheckoutSuccess() {
               info.
             </div>
             <div>
-              <Button
-                title="Continue shopping"
-                onClick={() => (window.location.href = "/")}
-                className="px-5"
-              />
+              <ButtonTag
+                onClick={() => (window.location.href = "/all-jewelry")}
+              >
+                Continue shopping
+              </ButtonTag>
             </div>
           </div>
         </div>

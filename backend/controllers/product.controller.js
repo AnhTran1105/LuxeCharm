@@ -6,7 +6,23 @@ import { metalTypes } from "../constants.js";
 export const getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+
+    const expandedProducts = products.flatMap((product) => {
+      const totalMetals = product.metals.length;
+      return product.metals.map((metal) => ({
+        _id: product._id,
+        name: `${product.name} ${
+          totalMetals > 1 ? `- ${metalTypes[metal.type]}` : ""
+        }`,
+        price: product.price,
+        salePrice: product.salePrice,
+        metal: metal,
+        category: product.category,
+        totalMetals,
+      }));
+    });
+
+    res.json(expandedProducts);
   } catch (error) {
     next(error);
   }
@@ -108,7 +124,7 @@ export const getFilteredProducts = async (req, res) => {
       const totalMetals = filteredMetals.length;
 
       return filteredMetals.map((metal) => ({
-        _id: `${product._id}${totalMetals > 1 ? `-${metal.type}` : ""}`,
+        _id: product._id,
         name: `${product.name} ${
           totalMetals > 1 ? `- ${metalTypes[metal.type]}` : ""
         }`,

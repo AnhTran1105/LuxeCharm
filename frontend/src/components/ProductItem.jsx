@@ -10,7 +10,9 @@ function ProductItem({ product }) {
     <li className="group cursor-pointer relative carousel-item">
       <div
         className="relative overflow-hidden"
-        onClick={() => (window.location.href = `/products/${product._id}`)}
+        onClick={() =>
+          (window.location.href = `/products/${product._id}?metal=${product.metal.type}`)
+        }
       >
         <img
           loading="lazy"

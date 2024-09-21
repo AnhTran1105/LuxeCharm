@@ -136,7 +136,7 @@ function OptionsModal() {
                 )}
                 <div className="my-4">
                   <p className="text-sm text-text-secondary mb-3">Metal</p>
-                  <div className="flex gap-2 lg:gap-3">
+                  <div className="flex gap-2">
                     {product.metals.map((item) => (
                       <ButtonTag
                         key={item.type}
