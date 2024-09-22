@@ -30,9 +30,9 @@ function Reviews({ productId, avgRating }) {
             <>
               <div className="my-16"></div>
               <div>
-                <div className="mb-10 flex justify-center items-center">
+                <div className="flex justify-center items-center">
                   <div className="border-r border-border-tertiary">
-                    <div className="mr-10 flex gap-4">
+                    <div className="mr-6 md:mr-10 flex gap-4">
                       <div className="font-SofiaBold text-text-primary text-4xl">
                         {Math.round(avgRating * 10) / 10}
                       </div>
@@ -57,7 +57,7 @@ function Reviews({ productId, avgRating }) {
                     <ButtonTag
                       onClick={() => setOpened(true)}
                       buttonType="rounded"
-                      className="ml-10"
+                      className="ml-7 md:ml-11"
                     >
                       Write a review
                     </ButtonTag>
@@ -68,7 +68,7 @@ function Reviews({ productId, avgRating }) {
           )}
           <div className="">
             {reviews.length > 0 ? (
-              <ul role="list" className="mt-20">
+              <ul role="list" className="mt-10">
                 {reviews.map((review) => (
                   <li
                     key={review._id}

@@ -5,14 +5,20 @@ const ButtonTag = ({
   className = "",
   children,
   buttonType = "squared",
+  disabled = false,
   ...props
 }) => {
   if (buttonType === "rounded")
     return (
       <button
+        disabled={disabled}
         type="button"
         onClick={onClick}
-        className={`-:rounded-full -:text-sm -:px-5 -:py-2 -:hover:outline -:hover:outline-1 -:border -:border-solid -:transition-all -:duration-100 -:ease-linear -:hover:text-text-primary ${className}`}
+        className={`${
+          disabled
+            ? "opacity-30 cursor-not-allowed"
+            : "-:hover:outline -:hover:outline-1 -:hover:text-text-primary"
+        } -:rounded-full -:text-sm -:px-5 -:py-2 -:border -:border-solid -:transition-all -:duration-100 -:ease-linear ${className}`}
         {...props}
       >
         {children}
@@ -21,9 +27,12 @@ const ButtonTag = ({
   else if (buttonType === "icon")
     return (
       <button
+        disabled={disabled}
         type="button"
         onClick={onClick}
-        className={`group -:p-1 -:transition-all -:duration-100 -:ease-linear ${className}`}
+        className={`${
+          disabled ? "opacity-30 cursor-not-allowed" : "group"
+        } -:p-1 -:transition-all -:duration-100 -:ease-linear ${className}`}
         {...props}
       >
         {children}
@@ -33,8 +42,13 @@ const ButtonTag = ({
     return (
       <button
         type="button"
+        disabled={disabled}
         onClick={onClick}
-        className={`-:text-center -:w-full -:px-5 -:py-3 -:border -:border-solid -:hover:outline -:hover:outline-1 -:hover:text-text-primary -:text-[0.95rem] -:transition-all -:duration-100 -:ease-linear ${className}`}
+        className={`${
+          disabled
+            ? "opacity-30 cursor-not-allowed"
+            : "-:hover:outline -:hover:outline-1 -:hover:text-text-primary"
+        } -:text-center -:w-full -:px-5 -:py-3 -:border -:border-solid -:text-[0.95rem] -:transition-all -:duration-100 -:ease-linear ${className}`}
         {...props}
       >
         {children}
@@ -46,6 +60,7 @@ ButtonTag.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
+  disabled: PropTypes.bool,
   buttonType: PropTypes.oneOf(["squared", "rounded", "icon"]),
 };
 

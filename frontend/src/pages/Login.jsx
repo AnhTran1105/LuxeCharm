@@ -4,14 +4,14 @@ import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { setToken } from "../redux/auth/authSlice";
-import { sendMessage } from "../redux/notification/notificationSlice";
 import axios from "../utils/axios";
-import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import AnchorTag from "../components/CustomTags/AnchorTag";
 import ErrorMessage from "../components/ErrorMessage";
+import { useState } from "react";
+import { WarningIcon } from "../components/SVG";
 
 const schema = yup
   .object({
@@ -30,8 +30,7 @@ function Login() {
   });
 
   const dispatch = useDispatch();
-
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (formData) => {
     dispatch(startLoading());
@@ -44,24 +43,27 @@ function Login() {
       dispatch(setToken(access_token));
       dispatch(setIsLoggedIn(true));
       dispatch(syncCartAfterLogin());
-      dispatch(sendMessage({ message: response.message, type: "success" }));
-      navigate("/");
+      window.location.href = "/";
     } catch (error) {
-      dispatch(sendMessage({ message: error.message, type: "error" }));
-    } finally {
       dispatch(stopLoading());
+      setErrorMessage(error.message);
     }
   };
 
   return (
     <div className="w-full max-w-[440px] text-center mx-auto">
       <h1 className="text-4xl">Login</h1>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mt-6 text-sm text-text-secondary"
       >
         <p className="my-3">* indicates a required field</p>
+        {errorMessage && (
+          <p className="text-left pb-2 flex items-center">
+            <WarningIcon width={20} height={20} />
+            <span className="first-letter:capitalize">{errorMessage}</span>
+          </p>
+        )}
         <div className="field">
           <input
             id="email"

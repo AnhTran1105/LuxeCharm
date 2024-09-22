@@ -294,7 +294,7 @@ function Account() {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel className="pt-8">
+            <TabPanel className="pt-6">
               <div className="text-center border border-border-secondary">
                 <ul role="list" className="">
                   {orders && orders.length > 0 ? (
@@ -331,7 +331,7 @@ function Account() {
                           {item.notes && <div>Notes: {item.notes}</div>}
                         </div>
                         {item.cartItems.map((cartItem) => (
-                          <li
+                          <div
                             key={cartItem._id}
                             className="mx-5 py-5 [&:not(:last-child)]:border-b border-border-tertiary flex items-center"
                           >
@@ -373,7 +373,7 @@ function Account() {
                                 </div>
                               </div>
                             </div>
-                          </li>
+                          </div>
                         ))}
                       </li>
                     ))

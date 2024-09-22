@@ -58,8 +58,8 @@ export const StripeIcon = ({ width, height, className, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    width={width}
-    height={height}
+    width="2.88rem"
+    height="2.88rem"
     className={`${className}`}
     {...props}
   >
@@ -247,82 +247,16 @@ export const AccountIcon = ({ width, height, className, ...props }) => (
 
 export const CartIcon = ({ width, height, className, ...props }) => (
   <svg
-    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
-    x="0px"
-    y="0px"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlSpace="preserve"
     width={width}
     height={height}
-    viewBox="0.218 4.167 17.24 15.822"
-    enableBackground="new 0.218 4.167 17.24 15.822"
-    xmlSpace="preserve"
-    aria-hidden="true"
-    focusable="false"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
+    viewBox="0 0 512 512"
+    className={`-:fill-text-secondary -:group-hover:fill-text-primary -:group-hover:scale-105 ${className}`}
+    id="bag"
     {...props}
   >
-    <g>
-      <polyline
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        points="0.218,4.664 2.864,4.664 5.335,15.42 15.22,15.42 	"
-      ></polyline>
-      <polyline
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        points="3.321,6.655 16.856,6.655 15.429,13.262 4.906,13.262 	"
-      ></polyline>
-      <path
-        fill="#231F20"
-        d="M7.433,17.419c0.433,0,0.785,0.351,0.785,0.785s-0.351,0.785-0.785,0.785s-0.785-0.351-0.785-0.785l0,0
-    		C6.648,17.771,7,17.419,7.433,17.419 M7.433,16.419c-0.986,0-1.785,0.799-1.785,1.785c0,0.986,0.799,1.785,1.785,1.785
-    		c0.986,0,1.785-0.799,1.785-1.785C9.217,17.219,8.418,16.421,7.433,16.419z"
-      ></path>
-      <path
-        fill="#231F20"
-        d="M13.37,17.419c0.433,0,0.785,0.351,0.785,0.785s-0.351,0.785-0.785,0.785c-0.433,0-0.785-0.351-0.785-0.785
-    		l0,0C12.585,17.771,12.937,17.419,13.37,17.419 M13.37,16.419c-0.986,0-1.785,0.799-1.785,1.785c0,0.986,0.799,1.785,1.785,1.785
-    		c0.986,0,1.785-0.799,1.785-1.785C15.154,17.219,14.355,16.421,13.37,16.419z"
-      ></path>
-      <line
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        x1="4.091"
-        y1="10.004"
-        x2="16.133"
-        y2="10.004"
-      ></line>
-      <line
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        x1="6.604"
-        y1="6.655"
-        x2="7.433"
-        y2="13.262"
-      ></line>
-      <line
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        x1="10.291"
-        y1="6.712"
-        x2="10.291"
-        y2="13.156"
-      ></line>
-      <line
-        fill="none"
-        stroke="#231F20"
-        strokeMiterlimit="10"
-        x1="14.009"
-        y1="6.712"
-        x2="12.731"
-        y2="13.262"
-      ></line>
-    </g>
+    <path d="M448 160h-64v-4.5C384 87 329 32 260.5 32h-8C184 32 128 87 128 155.5v4.5H64L32 480h448l-32-320zm-288-4.5c0-50.7 41.8-91.5 92.5-91.5h8c50.7 0 91.5 40.8 91.5 91.5v4.5H160v-4.5zM67.8 448l24.9-256H128v36.3c-9.6 5.5-16 15.9-16 27.7 0 17.7 14.3 32 32 32s32-14.3 32-32c0-11.8-6.4-22.2-16-27.7V192h192v36.3c-9.6 5.5-16 15.9-16 27.7 0 17.7 14.3 32 32 32s32-14.3 32-32c0-11.8-6.4-22.2-16-27.7V192h35.4l24.9 256H67.8z"></path>
   </svg>
 );
 

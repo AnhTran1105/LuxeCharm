@@ -137,7 +137,13 @@ function ProductDetails() {
               </div>
               <div className="my-4">
                 <p className="text-sm text-text-primary mb-3">Quantity</p>
-                <QuantityWidget quantity={quantity} setQuantity={setQuantity} />
+                <QuantityWidget
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  maxQuantity={
+                    product.metals.find((m) => m.type === metal).quantity
+                  }
+                />
               </div>
               <div className="my-4 space-y-4 max-w-[440px]">
                 <ButtonTag

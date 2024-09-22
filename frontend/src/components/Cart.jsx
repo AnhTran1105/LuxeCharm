@@ -8,14 +8,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { hideCart } from "../redux/cartModal/cartModalSlice";
 import { fetchCart } from "../redux/cart/cartSlice";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { CloseIcon } from "./SVG";
 import CartItem from "./CartItem";
 
 function Cart() {
   const { isShow } = useSelector((state) => state.cartModal);
-  const navigate = useNavigate();
   const { items, totalPrice } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
@@ -25,6 +23,8 @@ function Cart() {
       dispatch(fetchCart());
     }
   }, [isShow, dispatch]);
+
+  console.log(items);
 
   return (
     isShow && (
@@ -75,11 +75,12 @@ function Cart() {
               <div>${totalPrice}.00</div>
             </div>
             <ButtonTag
+              disabled={items.length === 0}
               onClick={() => {
                 dispatch(hideCart());
                 window.location.href = "/checkout";
               }}
-              className="py-2"
+              className={`py-2`}
             >
               Check out
             </ButtonTag>

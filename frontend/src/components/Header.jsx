@@ -88,7 +88,7 @@ function Header() {
             } transition-[width] duration-300 ease`}
           />
         </AnchorTag>
-        <div className="flex justify-end items-center gap-6 max-md:gap-4">
+        <div className="flex justify-end items-center gap-6 max-sm:gap-4">
           <ButtonTag
             onClick={() => dispatch(openSearchModal())}
             buttonType="icon"
@@ -109,7 +109,7 @@ function Header() {
           >
             <CartIcon width={20} height={20} />
             {items.length > 0 && (
-              <div className="absolute top-4 -right-2 bg-background-primary rounded-full text-white w-4 h-4 text-center leading-[1.05rem] text-[0.6rem]">
+              <div className="absolute top-5 -right-2 bg-background-primary rounded-full text-white w-4 h-4 text-center leading-[1.05rem] text-[0.6rem]">
                 {items.reduce((total, item) => {
                   return total + item.quantity;
                 }, 0)}

@@ -2,15 +2,14 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
-import { sendMessage } from "../redux/notification/notificationSlice";
 import { useState } from "react";
 import AnchorTag from "../components/CustomTags/AnchorTag";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import ErrorMessage from "../components/ErrorMessage";
 import { EyeIcon } from "../components/SVG";
+import { WarningIcon } from "../components/SVG";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -31,9 +30,9 @@ const schema = yup
 
 function Register() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const {
     register,
     handleSubmit,
@@ -44,7 +43,7 @@ function Register() {
   const onSubmit = async (formData) => {
     dispatch(startLoading());
     try {
-      const response = await axios.post("auth/register", {
+      await axios.post("auth/register", {
         firstName: formData.firstName,
         lastName: formData.lastName,
         address: formData.address,
@@ -52,17 +51,10 @@ function Register() {
         password: formData.password,
         phoneNumber: formData.phoneNumber,
       });
-      dispatch(
-        sendMessage({
-          message: response.message,
-          type: "success",
-        })
-      );
-      navigate("/account/login");
+      window.location.href = "/account/login";
     } catch (error) {
-      dispatch(sendMessage({ message: error.message, type: "error" }));
-    } finally {
       dispatch(stopLoading());
+      setErrorMessage(error.message);
     }
   };
 
@@ -75,37 +67,47 @@ function Register() {
           className="mt-6 text-sm text-text-secondary"
         >
           <p className="my-3">* indicates a required field</p>
+          {errorMessage && (
+            <p className="text-left pb-2 flex items-center">
+              <WarningIcon width={20} height={20} />
+              <span className="first-letter:capitalize">{errorMessage}</span>
+            </p>
+          )}
           <div className="double-field">
-            <div className="field">
-              <input
-                id="firstName"
-                autoComplete="firstName"
-                autoCapitalize="off"
-                placeholder="firstName"
-                autoCorrect="off"
-                {...register("firstName")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative text-text-primary"
-              />
-              <label htmlFor="firstName">First name*</label>
+            <div>
+              <div className="field">
+                <input
+                  id="firstName"
+                  autoComplete="firstName"
+                  autoCapitalize="off"
+                  placeholder="firstName"
+                  autoCorrect="off"
+                  {...register("firstName")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative text-text-primary"
+                />
+                <label htmlFor="firstName">First name*</label>
+              </div>
+              {errors.firstName && (
+                <ErrorMessage message={errors.firstName?.message} />
+              )}
             </div>
-            {errors.firstName && (
-              <ErrorMessage message={errors.firstName?.message} />
-            )}
-            <div className="field">
-              <input
-                id="lastName"
-                autoComplete="lastName"
-                autoCapitalize="off"
-                placeholder="lastName"
-                autoCorrect="off"
-                {...register("lastName")}
-                className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative text-text-primary"
-              />
-              <label htmlFor="lastName">Last name*</label>
+            <div>
+              <div className="field">
+                <input
+                  id="lastName"
+                  autoComplete="lastName"
+                  autoCapitalize="off"
+                  placeholder="lastName"
+                  autoCorrect="off"
+                  {...register("lastName")}
+                  className="appearance-none p-[15px] m-[1px] text-left w-full h-[45px] relative text-text-primary"
+                />
+                <label htmlFor="lastName">Last name*</label>
+              </div>
+              {errors.lastName && (
+                <ErrorMessage message={errors.lastName?.message} />
+              )}
             </div>
-            {errors.lastName && (
-              <ErrorMessage message={errors.lastName?.message} />
-            )}
           </div>
           <div className="field">
             <input

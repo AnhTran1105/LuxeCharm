@@ -35,7 +35,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
 
         <DialogPanel
           transition
-          className={`fixed md:w-2/5 w-3/5 top-0 left-0 bottom-0 bg-white overflow-hidden transform transition-transform duration-300 ease 
+          className={`fixed sm:w-2/5 md:w-1/2 w-3/5 top-0 left-0 bottom-0 bg-white overflow-hidden transform transition-transform duration-300 ease 
          ${isOpened ? "translate-x-0" : "-translate-x-full"}`}
         >
           <ButtonTag
@@ -47,7 +47,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
           </ButtonTag>
           <AnchorTag
             href={`${userInfo ? "/account" : "/account/login"}`}
-            className="p-0 flex items-center group pt-12 pb-6 px-6 gap-2 text-base border-b border-border-tertiary md:hidden"
+            className="p-0 flex items-center group pt-12 pb-6 px-6 gap-2 text-sm border-b border-border-tertiary md:hidden"
           >
             <AccountIcon width={20} height={20} />
             {userInfo ? userInfo.email : "Login"}

@@ -134,6 +134,7 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
                   id="newPasswordConfirmation"
                   autoComplete="newPasswordConfirmation"
                   required
+                  type="password"
                   autoCapitalize="off"
                   placeholder="newPasswordConfirmation"
                   autoCorrect="off"

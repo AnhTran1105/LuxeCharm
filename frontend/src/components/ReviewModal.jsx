@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { Rating } from "react-simple-star-rating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonTag from "./CustomTags/ButtonTag";
 import { CloseIcon } from "./SVG";
 import ErrorMessage from "./ErrorMessage";
@@ -30,6 +30,7 @@ function ReviewModal({ isOpened, setOpened, productId }) {
     setRating(rate);
   };
   const dispatch = useDispatch();
+  const [isRefresh, setIsRefresh] = useState(false);
   const {
     register,
     handleSubmit,
@@ -47,13 +48,14 @@ function ReviewModal({ isOpened, setOpened, productId }) {
 
     (async () => {
       try {
-        const response = await axios.post(`reviews/${productId}`, data, {
+        await axios.post(`reviews/${productId}`, data, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
         dispatch(stopLoading());
-        dispatch(sendMessage({ message: response.message, type: "success" }));
+        setOpened(false);
+        setIsRefresh(!isRefresh);
       } catch (error) {
         dispatch(stopLoading());
         dispatch(sendMessage({ message: error.message, type: "error" }));

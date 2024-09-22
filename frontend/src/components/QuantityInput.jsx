@@ -25,15 +25,7 @@ function QuantityInput({ itemId }) {
         disabled={item.quantity === 1}
         className="p-3"
       >
-        <MinusIcon
-          width={10}
-          height={10}
-          className={`${
-            item.quantity === 1
-              ? "opacity-30 group-hover:scale-100 group-hover:text-text-secondary"
-              : ""
-          }`}
-        />
+        <MinusIcon width={10} height={10} />
       </ButtonTag>
       <input
         className="w-8 text-center text-xs"

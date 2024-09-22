@@ -97,7 +97,7 @@ function Jewelry() {
           </div>
         </div>
         <div className="pt-4 w-full text-text-secondary text-sm">
-          <div className="w-full mb-5 md:flex justify-between max-md:space-y-2">
+          <div className="w-full mb-3 md:flex justify-between max-md:space-y-2">
             <div className="flex justify-start md:justify-center items-center gap-5">
               <h2 className="">Filter:</h2>
               <FilterDropdown
@@ -136,54 +136,53 @@ function Jewelry() {
               </h2>
             </div>
           </div>
-          <div className="flex gap-4 items-center">
-            <ul role="list" className="flex gap-4">
-              {selectedCategories.map((category) => (
-                <li
-                  key={category}
-                  className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
-                >
-                  Category: {categoryTypes[category]}
-                  <ButtonTag
-                    buttonType="icon"
-                    onClick={() => handleRemoveFilter("category", category)}
-                    className="p-0"
-                  >
-                    <CloseIcon width={14} height={14} />
-                  </ButtonTag>
-                </li>
-              ))}
 
-              {selectedMetals.map((metal) => (
-                <li
-                  key={metal}
-                  className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
+          <ul role="list" className="flex gap-4 flex-wrap items-center">
+            {selectedCategories.map((category) => (
+              <li
+                key={category}
+                className="border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
+              >
+                Category: {categoryTypes[category]}
+                <ButtonTag
+                  buttonType="icon"
+                  onClick={() => handleRemoveFilter("category", category)}
+                  className="p-0"
                 >
-                  Metal: {metalTypes[metal]}
-                  <ButtonTag
-                    buttonType="icon"
-                    onClick={() => handleRemoveFilter("metal", metal)}
-                    className="p-0"
-                  >
-                    <CloseIcon width={14} height={14} />
-                  </ButtonTag>
-                </li>
-              ))}
+                  <CloseIcon width={14} height={14} />
+                </ButtonTag>
+              </li>
+            ))}
 
-              {(minPrice || maxPrice) && (
-                <li className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center">
-                  Price: ${minPrice}.00 - $
-                  {maxPrice || productsInfo.highestPrice}.00
-                  <ButtonTag
-                    buttonType="icon"
-                    onClick={() => handleRemoveFilter("price")}
-                    className="p-0"
-                  >
-                    <CloseIcon width={14} height={14} />
-                  </ButtonTag>
-                </li>
-              )}
-            </ul>
+            {selectedMetals.map((metal) => (
+              <li
+                key={metal}
+                className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center"
+              >
+                Metal: {metalTypes[metal]}
+                <ButtonTag
+                  buttonType="icon"
+                  onClick={() => handleRemoveFilter("metal", metal)}
+                  className="p-0"
+                >
+                  <CloseIcon width={14} height={14} />
+                </ButtonTag>
+              </li>
+            ))}
+
+            {(minPrice || maxPrice) && (
+              <li className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center">
+                Price: ${minPrice}.00 - ${maxPrice || productsInfo.highestPrice}
+                .00
+                <ButtonTag
+                  buttonType="icon"
+                  onClick={() => handleRemoveFilter("price")}
+                  className="p-0"
+                >
+                  <CloseIcon width={14} height={14} />
+                </ButtonTag>
+              </li>
+            )}
             {(selectedCategories.length > 0 ||
               selectedMetals.length > 0 ||
               minPrice ||
@@ -191,14 +190,16 @@ function Jewelry() {
               <ButtonTag
                 buttonType="icon"
                 onClick={handleRemoveAllFilters}
-                className="mb-5 hover:text-text-primary"
+                className="hover:text-text-primary"
               >
                 Remove all
               </ButtonTag>
             )}
-          </div>
+          </ul>
         </div>
-        <ProductList products={productsInfo.products} />
+        <div className="mt-3">
+          <ProductList products={productsInfo.products} />
+        </div>
         <nav className="mt-[50px]">
           <ul role="list" className="flex justify-center items-center">
             <li className="max-w-[44px] mr-[10px] group">
