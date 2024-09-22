@@ -8,7 +8,7 @@ function ProductList({ products }) {
     >
       {products.map((product) => (
         <ProductItem
-          key={`${product._id}-${product.metal.type}`}
+          key={`${product._id}-${product.metalVariant.metalType}`}
           product={product}
         />
       ))}

@@ -8,17 +8,17 @@ export const getAllProducts = async (req, res, next) => {
     const products = await Product.find().sort({ createdAt: -1 });
 
     const expandedProducts = products.flatMap((product) => {
-      const totalMetals = product.metals.length;
-      return product.metals.map((metal) => ({
+      const totalVariants = product.metalVariants.length;
+      return product.metalVariants.map((metalVariant) => ({
         _id: product._id,
         name: `${product.name} ${
-          totalMetals > 1 ? `- ${metalTypes[metal.type]}` : ""
+          totalVariants > 1 ? `- ${metalTypes[metalVariant.metalType]}` : ""
         }`,
         price: product.price,
         salePrice: product.salePrice,
-        metal: metal,
+        metalVariant: metalVariant,
         category: product.category,
-        totalMetals,
+        totalVariants,
       }));
     });
 
@@ -40,7 +40,7 @@ export const getFilteredProducts = async (req, res) => {
     }
 
     if (metals) {
-      query["metals.type"] = { $in: metals.split(",") };
+      query["metalVariants.metalType"] = { $in: metals.split(",") };
     }
 
     if (minPrice !== undefined || maxPrice !== undefined) {
@@ -117,24 +117,25 @@ export const getFilteredProducts = async (req, res) => {
     }
 
     const expandedProducts = filteredProducts.flatMap((product) => {
-      const filteredMetals = product.metals.filter(
-        (metal) => !metals || metals.split(",").includes(metal.type)
+      const filteredVariants = product.metalVariants.filter(
+        (metalVariant) =>
+          !metals || metals.split(",").includes(metalVariant.metalType)
       );
 
-      if (filteredMetals.length === 0) return [];
+      if (filteredVariants.length === 0) return [];
 
-      const totalMetals = filteredMetals.length;
+      const totalVariants = filteredVariants.length;
 
-      return filteredMetals.map((metal) => ({
+      return filteredVariants.map((metalVariant) => ({
         _id: product._id,
         name: `${product.name} ${
-          totalMetals > 1 ? `- ${metalTypes[metal.type]}` : ""
+          totalVariants > 1 ? `- ${metalTypes[metalVariant.metalType]}` : ""
         }`,
         price: product.price,
         salePrice: product.salePrice,
-        metal: metal,
+        metalVariant: metalVariant,
         category: product.category,
-        totalMetals: totalMetals,
+        totalVariants: totalVariants,
       }));
     });
 
@@ -142,7 +143,7 @@ export const getFilteredProducts = async (req, res) => {
       products: expandedProducts,
       highestPrice,
       totalProducts: allProducts.reduce((total, product) => {
-        return total + product.metals.length;
+        return total + product.metalVariants.length;
       }, 0),
     });
   } catch (error) {
@@ -154,19 +155,19 @@ export const getFilteredProducts = async (req, res) => {
 
 export const createProduct = async (req, res, next) => {
   try {
-    const metals = [];
+    const metalVariants = [];
 
     for (const key in req.body) {
-      const match = key.match(/metals\.(\d+)\.(\w+)/);
+      const match = key.match(/metalVariants\.(\d+)\.(\w+)/);
       if (match) {
         const index = parseInt(match[1]);
         const field = match[2];
 
-        if (!metals[index]) {
-          metals[index] = {
-            metal: "",
+        if (!metalVariants[index]) {
+          metalVariants[index] = {
+            metalType: "",
             quantity: 0,
-            material: "",
+            materialDescription: "",
             images: {
               primary: "",
               secondary: "",
@@ -175,7 +176,7 @@ export const createProduct = async (req, res, next) => {
           };
         }
 
-        metals[index][field] = req.body[key];
+        metalVariants[index][field] = req.body[key];
       }
     }
 
@@ -199,12 +200,12 @@ export const createProduct = async (req, res, next) => {
       }
     }
 
-    for (let i = 0; i < metals.length; i++) {
-      const metal = metals[i];
+    for (let i = 0; i < metalVariants.length; i++) {
+      const metal = metalVariants[i];
 
-      const primaryFile = req.files[`metals.${i}.images.primary`];
-      const secondaryFile = req.files[`metals.${i}.images.secondary`];
-      const otherFiles = req.files[`metals.${i}.images.others`];
+      const primaryFile = req.files[`metalVariants.${i}.images.primary`];
+      const secondaryFile = req.files[`metalVariants.${i}.images.secondary`];
+      const otherFiles = req.files[`metalVariants.${i}.images.others`];
 
       if (primaryFile) {
         const primaryResult = await cloudinary.v2.uploader.upload(
@@ -244,7 +245,7 @@ export const createProduct = async (req, res, next) => {
       description: req.body.description,
       price: req.body.price,
       salePrice: req.body.salePrice,
-      metals: metals,
+      metalVariants: metalVariants,
       dimensions: dimensions,
       careInstructions: careInstructions,
     });

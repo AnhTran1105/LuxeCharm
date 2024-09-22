@@ -1,31 +1,10 @@
 import mongoose from "mongoose";
+import Product from "./product.model.js";
 
 const cartItemSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  salePrice: {
-    type: Number,
-    default: null,
-    validate: {
-      validator: function (value) {
-        return value == null || value < this.price;
-      },
-      message: "Sale price must be lower than the original price",
-    },
-  },
-  imageUrl: {
-    type: String,
     required: true,
   },
   quantity: {
@@ -34,10 +13,22 @@ const cartItemSchema = new mongoose.Schema({
     min: 1,
     default: 1,
   },
-  metal: {
+  metalType: {
     type: String,
     required: true,
     enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
+  },
+  priceAtPurchase: {
+    type: Number,
+    required: true,
+  },
+  salePriceAtPurchase: {
+    type: Number,
+    default: null,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
   },
 });
 
@@ -61,7 +52,23 @@ cartSchema.pre("save", async function (next) {
   let total = 0;
 
   for (const item of cart.items) {
-    total += (item.salePrice || item.price) * item.quantity;
+    const product = await Product.findById(item.productId);
+
+    if (!product) {
+      throw new Error(`Product with ID ${item.productId} not found.`);
+    }
+
+    const metalVariant = product.metalVariants.find(
+      (variant) => variant.metalType === item.metalType
+    );
+
+    if (!metalVariant || metalVariant.quantity < item.quantity) {
+      throw new Error(
+        `Insufficient stock for ${product.name} in ${item.metalType}.`
+      );
+    }
+
+    total += (item.salePriceAtPurchase || item.priceAtPurchase) * item.quantity;
   }
 
   cart.totalPrice = total;

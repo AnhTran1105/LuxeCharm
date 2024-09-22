@@ -28,11 +28,15 @@ function ProductDetails() {
       try {
         const productResponse = await axios.get(`/products/${id}`);
         setProduct(productResponse);
-        setMetal(searchParams.get("metal") || productResponse.metals[0].type);
-        setStatus(productResponse.metals[0].status);
+        setMetal(
+          searchParams.get("metal") ||
+            productResponse.metalVariants[0].metalType
+        );
+        setStatus(productResponse.metalVariants[0].status);
         setMetalImages(
-          productResponse.metals.find(
-            (item) => item.type === productResponse.metals[0].type
+          productResponse.metalVariants.find(
+            (variant) =>
+              variant.metalType === productResponse.metalVariants[0].metalType
           ).images
         );
       } catch (error) {
@@ -43,8 +47,14 @@ function ProductDetails() {
 
   useEffect(() => {
     if (metal) {
-      setMetalImages(product.metals.find((item) => item.type === metal).images);
-      setStatus(product.metals.find((item) => item.type === metal).status);
+      setMetalImages(
+        product.metalVariants.find((variant) => variant.metalType === metal)
+          .images
+      );
+      setStatus(
+        product.metalVariants.find((variant) => variant.metalType === metal)
+          .status
+      );
     }
   }, [metal, product]);
 
@@ -99,21 +109,21 @@ function ProductDetails() {
               <div className="my-4">
                 <p className="text-sm text-text-primary mb-3">Metal</p>
                 <div className="flex gap-2">
-                  {product.metals.map((item) => (
+                  {product.metalVariants.map((variant) => (
                     <ButtonTag
-                      key={item.type}
+                      key={variant.metalType}
                       buttonType="rounded"
                       className={
-                        item.type === metal
+                        variant.metalType === metal
                           ? "bg-black text-white hover:text-white cursor-default"
                           : ""
                       }
                       onClick={() => {
-                        setMetal(item.type);
-                        setSearchParams(`metal=${item.type}`);
+                        setMetal(variant.metalType);
+                        setSearchParams(`metal=${variant.metalType}`);
                       }}
                     >
-                      {metalTypes[item.type]}
+                      {metalTypes[variant.metalType]}
                     </ButtonTag>
                   ))}
                 </div>
@@ -141,7 +151,9 @@ function ProductDetails() {
                   quantity={quantity}
                   setQuantity={setQuantity}
                   maxQuantity={
-                    product.metals.find((m) => m.type === metal).quantity
+                    product.metalVariants.find(
+                      (variant) => variant.metalType === metal
+                    ).quantity
                   }
                 />
               </div>
@@ -151,7 +163,9 @@ function ProductDetails() {
                     dispatch(
                       handleAddToCart({
                         ...product,
-                        metal: product.metals.find((m) => m.type === metal),
+                        metal: product.metalVariants.find(
+                          (m) => m.type === metal
+                        ),
                         quantity,
                       })
                     )
@@ -176,9 +190,9 @@ function ProductDetails() {
               </div>
               <InfoDisclosure
                 title="Materials"
-                content={product.metals.map((item) => ({
-                  key: metalTypes[item.type],
-                  value: item.material,
+                content={product.metalVariants.map((variant) => ({
+                  key: metalTypes[variant.metalType],
+                  value: variant.materialDescription,
                 }))}
               />
               <InfoDisclosure

@@ -10,7 +10,6 @@ import reviewRouter from "./routes/review.route.js";
 import orderRouter from "./routes/order.route.js";
 import cors from "cors";
 import cloudinary from "cloudinary";
-import { createAdminAccount } from "./controllers/admin.controller.js";
 
 dotenv.config();
 

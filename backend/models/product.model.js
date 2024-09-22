@@ -27,7 +27,7 @@ const dimensionSchema = new mongoose.Schema({
 });
 
 const metalSchema = new mongoose.Schema({
-  type: {
+  metalType: {
     type: String,
     required: true,
     enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
@@ -42,22 +42,11 @@ const metalSchema = new mongoose.Schema({
     enum: ["inStock", "outOfStock", "lowStock"],
   },
   images: {
-    primary: {
-      type: String,
-      required: true,
-    },
-    secondary: {
-      type: String,
-      required: true,
-    },
-    others: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    primary: { type: String, required: true },
+    secondary: { type: String, required: true },
+    others: [{ type: String, required: true }],
   },
-  material: {
+  materialDescription: {
     type: String,
     required: true,
     trim: true,
@@ -101,13 +90,13 @@ const productSchema = new mongoose.Schema(
         message: "Sale price must be lower than the original price",
       },
     },
-    metals: {
+    metalVariants: {
       type: [metalSchema],
       validate: {
-        validator: function (metals) {
-          return metals.length > 0;
+        validator: function (variants) {
+          return variants.length > 0;
         },
-        message: "At least one metal must be specified",
+        message: "At least one metal variant must be specified",
       },
     },
     careInstructions: [careInstructionSchema],
@@ -129,8 +118,7 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.pre("save", function (next) {
-  console.log(this.metals);
-  this.metals.forEach((metal) => {
+  this.metalVariants.forEach((metal) => {
     if (metal.quantity > 10) {
       metal.status = "inStock";
     } else if (metal.quantity > 0) {
@@ -145,18 +133,18 @@ productSchema.pre("save", function (next) {
 productSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
 
-  if (update.metals) {
-    update.metals.forEach((metal, index) => {
+  if (update.metalVariants) {
+    update.metalVariants.forEach((metal, index) => {
       if (metal.quantity > 10) {
-        update[`metals.${index}.status`] = "inStock";
+        update[`metalVariants.${index}.status`] = "inStock";
       } else if (metal.quantity > 0) {
-        update[`metals.${index}.status`] = "lowStock";
+        update[`metalVariants.${index}.status`] = "lowStock";
       } else {
-        update[`metals.${index}.status`] = "outOfStock";
+        update[`metalVariants.${index}.status`] = "outOfStock";
       }
     });
 
-    delete update.metals;
+    delete update.metalVariants;
   }
 
   this.setUpdate(update);

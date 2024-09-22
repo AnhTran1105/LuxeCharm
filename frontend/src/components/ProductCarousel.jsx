@@ -67,7 +67,7 @@ function ProductCarousel({ products }) {
         <Slider ref={setSliderRef} {...settings} className="-mx-[6px] carousel">
           {products.map((product) => (
             <ProductItem
-              key={`${product._id}-${product.metal.type}`}
+              key={`${product._id}-${product.metalVariant.metalType}`}
               product={product}
             />
           ))}

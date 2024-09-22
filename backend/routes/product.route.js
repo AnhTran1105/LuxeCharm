@@ -26,9 +26,9 @@ router.get(
 router.get("/products", getAllProducts);
 
 const metalFields = Array.from({ length: 10 }, (_, index) => [
-  { name: `metals.${index}.images.primary`, maxCount: 1 },
-  { name: `metals.${index}.images.secondary`, maxCount: 1 },
-  { name: `metals.${index}.images.others`, maxCount: 5 },
+  { name: `metalVariants.${index}.images.primary`, maxCount: 1 },
+  { name: `metalVariants.${index}.images.secondary`, maxCount: 1 },
+  { name: `metalVariants.${index}.images.others`, maxCount: 5 },
 ]).flat();
 
 router.post(

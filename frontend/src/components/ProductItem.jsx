@@ -11,18 +11,18 @@ function ProductItem({ product }) {
       <div
         className="relative overflow-hidden"
         onClick={() =>
-          (window.location.href = `/products/${product._id}?metal=${product.metal.type}`)
+          (window.location.href = `/products/${product._id}?metal=${product.metalVariant.metalType}`)
         }
       >
         <img
           loading="lazy"
           alt={product.name}
-          src={product.metal.images.primary}
+          src={product.metalVariant.images.primary}
           className="aspect-[4/5] hover:opacity-0 absolute top-0 left-0 w-full"
         />
         <img
           alt={product.name}
-          src={product.metal.images.secondary}
+          src={product.metalVariant.images.secondary}
           loading="lazy"
           className="aspect-[4/5] opacity-0 group-hover:scale-[1.05] group-hover:opacity-100 transition-all duration-[300ms] ease-linear"
         />
@@ -56,7 +56,7 @@ function ProductItem({ product }) {
           )}
         </div>
       </div>
-      {product.totalMetals > 1 ? (
+      {product.totalVariants > 1 ? (
         <ButtonTag
           onClick={() =>
             dispatch(

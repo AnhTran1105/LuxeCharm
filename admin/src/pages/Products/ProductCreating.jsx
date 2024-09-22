@@ -144,19 +144,25 @@ function ProductCreating() {
     });
 
     formData.metals.forEach((metal, index) => {
-      data.append(`metals.${index}.type`, metal.type);
-      data.append(`metals.${index}.quantity`, metal.quantity);
-      data.append(`metals.${index}.material`, metal.material);
+      data.append(`metalVariants.${index}.metalType`, metal.type);
+      data.append(`metalVariants.${index}.quantity`, metal.quantity);
+      data.append(`metalVariants.${index}.materialDescription`, metal.material);
 
       if (metal.images) {
-        data.append(`metals.${index}.images.primary`, metal.images.primary[0]);
         data.append(
-          `metals.${index}.images.secondary`,
+          `metalVariants.${index}.images.primary`,
+          metal.images.primary[0]
+        );
+        data.append(
+          `metalVariants.${index}.images.secondary`,
           metal.images.secondary[0]
         );
 
         for (let i = 0; i < metal.images.others.length; i++) {
-          data.append(`metals.${index}.images.others`, metal.images.others[i]);
+          data.append(
+            `metalVariants.${index}.images.others`,
+            metal.images.others[i]
+          );
         }
       }
     });
