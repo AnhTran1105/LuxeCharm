@@ -13,10 +13,9 @@ const cartItemSchema = new mongoose.Schema({
     min: 1,
     default: 1,
   },
-  metalType: {
-    type: String,
+  metalVariantId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
   },
   priceAtPurchase: {
     type: Number,
@@ -54,13 +53,11 @@ cartSchema.pre("save", async function (next) {
       throw new Error(`Product with ID ${item.productId} not found.`);
     }
 
-    const metalVariant = product.metalVariants.find(
-      (variant) => variant.metalType === item.metalType
-    );
+    const metalVariant = product.metalVariants.id(item.metalVariantId);
 
     if (!metalVariant || metalVariant.quantity < item.quantity) {
       throw new Error(
-        `Insufficient stock for ${product.name} in ${item.metalType}.`
+        `Insufficient stock for ${product.name} in the selected metal variant.`
       );
     }
 

@@ -6,12 +6,14 @@ import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 function ProductItem({ product }) {
   const dispatch = useDispatch();
 
+  console.log(product);
+
   return (
     <li className="group cursor-pointer relative carousel-item">
       <div
         className="relative overflow-hidden"
         onClick={() =>
-          (window.location.href = `/products/${product._id}?metal=${product.metalVariant.metalType}`)
+          (window.location.href = `/products/${product._id}?variant=${product.metalVariant._id}`)
         }
       >
         <img
@@ -76,7 +78,7 @@ function ProductItem({ product }) {
               handleAddToCart({
                 productId: product._id,
                 quantity: 1,
-                metalType: product.metalVariant.metalType,
+                metalVariantId: product.metalVariant._id,
                 priceAtPurchase: product.price,
                 salePriceAtPurchase: product.salePrice,
               })

@@ -24,6 +24,8 @@ function Cart() {
     }
   }, [isShow, dispatch]);
 
+  // console.log(items);
+
   return (
     isShow && (
       <Dialog
@@ -57,7 +59,7 @@ function Cart() {
               className="max-h-[calc(100%-165px)] overflow-y-auto"
             >
               {[...items].reverse().map((item) => (
-                <CartItem key={item._id} item={item} />
+                <CartItem key={item.metalVariantId} item={item} />
               ))}
             </ul>
           )}
@@ -67,7 +69,13 @@ function Cart() {
               <div>
                 {`Subtotal (${items.reduce((total, item) => {
                   return total + item.quantity;
-                }, 0)} ${items.length > 1 ? "items" : "item"})`}
+                }, 0)} ${
+                  items.reduce((total, item) => {
+                    return total + item.quantity;
+                  }, 0) > 1
+                    ? "items"
+                    : "item"
+                })`}
                 :
               </div>
               <div>${totalPrice}.00</div>

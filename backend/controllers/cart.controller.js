@@ -1,20 +1,25 @@
-import Product from "../models/product.model.js";
 import Cart from "../models/cart.model.js";
 
-export const getCart = async (req, res) => {
+export const getCart = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
 
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    if (!cart) return res.status(404).json({ message: "Cart not found!" });
 
     res.status(200).json(cart);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 export const addToCart = async (req, res, next) => {
-  const cartItem = req.body;
+  const {
+    productId,
+    quantity,
+    metalVariantId,
+    priceAtPurchase,
+    salePriceAtPurchase,
+  } = req.body;
 
   try {
     const userId = req.user.id;
@@ -23,14 +28,20 @@ export const addToCart = async (req, res, next) => {
 
     const itemIndex = cart.items.findIndex(
       (item) =>
-        item.productId.toString() === cartItem.productId &&
-        item.metal === cartItem.metal
+        item.productId.toString() === productId &&
+        item.metalVariantId.toString() === metalVariantId
     );
 
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += cartItem.quantity;
+      cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push(cartItem);
+      cart.items.push({
+        productId,
+        quantity,
+        metalVariantId,
+        priceAtPurchase,
+        salePriceAtPurchase,
+      });
     }
 
     await cart.save();

@@ -2,27 +2,52 @@ import ButtonTag from "./CustomTags/ButtonTag";
 import { MinusIcon, PlusIcon } from "./SVG";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCartItemQuantity } from "../redux/cart/cartSlice";
+import { useEffect, useState } from "react";
 
-function QuantityInput({ itemId }) {
+function QuantityInput({ metalVariantId, maxQuantity }) {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.cart);
+  const item = items.find((item) => item.metalVariantId === metalVariantId);
+  const [quantity, setQuantity] = useState(item.quantity);
 
-  const item = items.find((item) => item._id === itemId);
-
-  const handleUpdateQuantity = (newQuantity) => {
-    if (newQuantity >= 1) {
-      dispatch(
-        updateCartItemQuantity({ cartItemId: itemId, quantity: newQuantity })
-      );
+  const handleIncrease = () => {
+    if (quantity < maxQuantity) {
+      setQuantity((prev) => prev + 1);
     }
   };
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value === "" ? "" : Math.max(1, Number(value)));
+  };
+
+  const handleBlur = () => {
+    if (quantity === "" || quantity < 1) {
+      setQuantity(1);
+    }
+    if (quantity > maxQuantity) {
+      setQuantity(maxQuantity);
+    }
+  };
+
+  useEffect(() => {
+    if (1 <= quantity && quantity <= maxQuantity) {
+      dispatch(updateCartItemQuantity({ metalVariantId, quantity }));
+    }
+  }, [quantity, dispatch, metalVariantId, maxQuantity]);
 
   return (
     <div className="border border-border-secondary w-fit flex justify-center items-center">
       <ButtonTag
         buttonType="icon"
-        onClick={() => handleUpdateQuantity(item.quantity - 1)}
-        disabled={item.quantity === 1}
+        onClick={handleDecrease}
+        disabled={quantity === 1}
         className="p-3"
       >
         <MinusIcon width={10} height={10} />
@@ -30,14 +55,17 @@ function QuantityInput({ itemId }) {
       <input
         className="w-8 text-center text-xs"
         type="number"
-        value={item.quantity}
-        onChange={(e) => handleUpdateQuantity(Number(e.target.value))}
+        value={quantity}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
         min={1}
+        max={maxQuantity}
       />
       <ButtonTag
         buttonType="icon"
-        onClick={() => handleUpdateQuantity(item.quantity + 1)}
+        onClick={handleIncrease}
         className="p-3"
+        disabled={quantity === maxQuantity}
       >
         <PlusIcon width={10} height={10} />
       </ButtonTag>

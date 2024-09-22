@@ -52,7 +52,7 @@ export const syncCartAfterLogin = createAsyncThunk(
         const existingItem = backendCart.items.find(
           (item) =>
             item.productId === localItem.productId &&
-            item.metalType === localItem.metalType
+            item.metalVariantId === localItem.metalVariantId
         );
 
         if (existingItem) {
@@ -72,7 +72,7 @@ export const syncCartAfterLogin = createAsyncThunk(
         }
       );
 
-      localStorage.removeItem("cartItems");
+      localStorage.removeItem("cart");
     }
 
     return backendCart;
@@ -82,25 +82,20 @@ export const syncCartAfterLogin = createAsyncThunk(
 export const handleAddToCart = createAsyncThunk(
   "cart/handleAddToCart",
   async (item, { getState, dispatch }) => {
-    console.log(item);
     const { cart } = getState();
 
     if (cart.isLoggedIn) {
-      await axios.post(
-        "/cart",
-        { item },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      await axios.post("/cart", item, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       dispatch(fetchCart());
     } else {
       const existingItemIndex = cart.items.findIndex(
         (cartItem) =>
-          cartItem.productId === item._id &&
-          cartItem.metalType === item.metalType
+          cartItem.productId === item.productId &&
+          cartItem.metalVariantId === item.metalVariantId
       );
       let updatedItems;
 
@@ -111,16 +106,7 @@ export const handleAddToCart = createAsyncThunk(
             : cartItem
         );
       } else {
-        updatedItems = [
-          ...cart.items,
-          {
-            productId: item._id,
-            quantity: item.quantity,
-            metalType: item.metalType,
-            priceAtPurchase: item.price,
-            salePriceAtPurchase: item.salePrice,
-          },
-        ];
+        updatedItems = [...cart.items, item];
       }
 
       let totalPrice = updatedItems.reduce(
@@ -140,38 +126,33 @@ export const handleAddToCart = createAsyncThunk(
   }
 );
 
-// Update item quantity in the cart
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
-  async ({ productId, quantity, metalType }, { getState, dispatch }) => {
+  async (item, { getState, dispatch }) => {
     const { cart } = getState();
 
     if (cart.isLoggedIn) {
-      await axios.put(
-        `/cart/quantity`,
-        { productId, quantity, metalType },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      await axios.put(`/cart/quantity`, item, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       dispatch(fetchCart());
     } else {
-      const updatedItems = cart.items.map((item) =>
-        item.productId === productId && item.metalType === metalType
-          ? { ...item, quantity }
-          : item
+      const updatedItems = cart.items.map((cartItem) =>
+        cartItem.metalVariantId === item.metalVariantId
+          ? { ...cartItem, quantity: item.quantity }
+          : cartItem
       );
       const totalPrice = updatedItems.reduce(
-        (total, item) =>
+        (total, cartItem) =>
           total +
-          (item.salePriceAtPurchase || item.priceAtPurchase) * item.quantity,
+          (cartItem.salePriceAtPurchase || cartItem.priceAtPurchase) *
+            cartItem.quantity,
         0
       );
-
       localStorage.setItem(
-        "cartItems",
+        "cart",
         JSON.stringify({ items: updatedItems, totalPrice })
       );
       dispatch(updateCart({ items: updatedItems, totalPrice }));
@@ -179,15 +160,13 @@ export const updateCartItemQuantity = createAsyncThunk(
   }
 );
 
-// Remove item from cart
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async ({ productId, metalType }, { getState, dispatch }) => {
+  async (productId, { getState, dispatch }) => {
     const { cart } = getState();
 
     if (cart.isLoggedIn) {
-      await axios.delete(`/cart`, {
-        data: { productId, metalType },
+      await axios.delete(`/cart`, productId, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -195,17 +174,18 @@ export const removeFromCart = createAsyncThunk(
       dispatch(fetchCart());
     } else {
       const updatedItems = cart.items.filter(
-        (item) => item.productId !== productId || item.metalType !== metalType
+        (cartItem) => cartItem.productId !== productId
       );
       const totalPrice = updatedItems.reduce(
-        (total, item) =>
+        (total, cartItem) =>
           total +
-          (item.salePriceAtPurchase || item.priceAtPurchase) * item.quantity,
+          (cartItem.salePriceAtPurchase || cartItem.priceAtPurchase) *
+            cartItem.quantity,
         0
       );
 
       localStorage.setItem(
-        "cartItems",
+        "cart",
         JSON.stringify({ items: updatedItems, totalPrice })
       );
       dispatch(updateCart({ items: updatedItems, totalPrice }));
@@ -220,6 +200,9 @@ const cartSlice = createSlice({
     updateCart: (state, action) => {
       state.items = action.payload.items;
       state.totalPrice = action.payload.totalPrice;
+    },
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -258,5 +241,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { updateCart } = cartSlice.actions;
+export const { updateCart, setIsLoggedIn } = cartSlice.actions;
 export default cartSlice.reducer;
