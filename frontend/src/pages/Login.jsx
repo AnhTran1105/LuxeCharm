@@ -6,7 +6,7 @@ import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { setToken } from "../redux/auth/authSlice";
 import axios from "../utils/axios";
 import OAuth from "../components/OAuth";
-import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
+// import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import AnchorTag from "../components/CustomTags/AnchorTag";
 import ErrorMessage from "../components/ErrorMessage";
@@ -41,8 +41,8 @@ function Login() {
       });
       const { access_token } = response;
       dispatch(setToken(access_token));
-      dispatch(setIsLoggedIn(true));
-      dispatch(syncCartAfterLogin());
+      // dispatch(setIsLoggedIn(true));
+      // dispatch(syncCartAfterLogin());
       window.location.href = "/";
     } catch (error) {
       dispatch(stopLoading());

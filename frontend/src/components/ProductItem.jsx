@@ -74,9 +74,11 @@ function ProductItem({ product }) {
           onClick={() =>
             dispatch(
               handleAddToCart({
-                ...product,
-                metal: product.metal,
+                productId: product._id,
                 quantity: 1,
+                metalType: product.metalVariant.metalType,
+                priceAtPurchase: product.price,
+                salePriceAtPurchase: product.salePrice,
               })
             )
           }

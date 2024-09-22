@@ -24,8 +24,6 @@ function Cart() {
     }
   }, [isShow, dispatch]);
 
-  console.log(items);
-
   return (
     isShow && (
       <Dialog

@@ -15,7 +15,7 @@ function Home() {
     (async () => {
       try {
         const response = await axios.get("/products");
-        setProducts(response);
+        setProducts(response.data);
       } catch (error) {
         console.error(error);
       }
