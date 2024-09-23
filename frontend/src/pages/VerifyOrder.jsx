@@ -20,7 +20,7 @@ function VerifyOrder() {
         }
       );
 
-      if (response.success) {
+      if (response.data.success) {
         window.location.href = `/checkout/success/${orderId}`;
       } else {
         window.location.href = "/checkout/error";

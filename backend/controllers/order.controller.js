@@ -3,6 +3,7 @@ import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import dotenv from "dotenv";
+import { metalTypes } from "../constants.js";
 
 dotenv.config();
 
@@ -32,18 +33,29 @@ export const placeOrder = async (req, res, next) => {
 
     await order.save();
 
-    const lineItems = cart.items.map((item) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.name,
-          images: [item.imageUrl],
-          description: item.metal,
-        },
-        unit_amount: (item.salePrice || item.price) * 100,
-      },
-      quantity: item.quantity,
-    }));
+    const lineItems = await Promise.all(
+      cart.items.map(async (item) => {
+        const product = await Product.findOne({ _id: item.productId });
+
+        const metalVariant = product.metalVariants.find(
+          (variant) => variant._id.toString() === item.metalVariantId.toString()
+        );
+
+        return {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: product.name,
+              images: [metalVariant.images.primary],
+              description: metalTypes[metalVariant.metalType],
+            },
+            unit_amount:
+              (item.salePriceAtPurchase || item.priceAtPurchase) * 100,
+          },
+          quantity: item.quantity,
+        };
+      })
+    );
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -91,13 +103,13 @@ export const verifyOrder = async (req, res, next) => {
       if (!order) {
         return res.status(404).json({
           success: false,
-          message: "Order not found or already processed",
+          message: "Order not found or already processed!",
         });
       }
 
       for (let item of order.cartItems) {
         const updatedProduct = await Product.findOneAndUpdate(
-          { _id: item.productId, "metalVariants.metalType": item.metal },
+          { _id: item.productId, "metalVariants._id": item.metalVariantId },
           {
             $inc: {
               "metalVariants.$.quantity": -item.quantity,
@@ -106,13 +118,6 @@ export const verifyOrder = async (req, res, next) => {
           },
           { new: true }
         );
-
-        if (!updatedProduct) {
-          return res.status(404).json({
-            success: false,
-            message: `Product with ID ${item.productId} and metal ${item.metal} not found.`,
-          });
-        }
       }
 
       const cart = await Cart.findOneAndUpdate(

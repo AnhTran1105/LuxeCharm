@@ -48,7 +48,7 @@ function Jewelry() {
             sortBy: selectedSortingType,
           },
         });
-        setProductsInfo(response);
+        setProductsInfo(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }

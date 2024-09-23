@@ -13,38 +13,23 @@ const cartItemSchema = new mongoose.Schema({
     ref: "Product",
     required: true,
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  salePrice: {
-    type: Number,
-    default: null,
-    validate: {
-      validator: function (value) {
-        return value == null || value < this.price;
-      },
-      message: "Sale price must be lower than the original price",
-    },
-  },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
   quantity: {
     type: Number,
     required: true,
     min: 1,
     default: 1,
   },
-  metal: {
-    type: String,
+  metalVariantId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    enum: ["gold", "goldVermeil", "silver", "sterlingSilver"],
+  },
+  priceAtPurchase: {
+    type: Number,
+    required: true,
+  },
+  salePriceAtPurchase: {
+    type: Number,
+    default: null,
   },
 });
 
