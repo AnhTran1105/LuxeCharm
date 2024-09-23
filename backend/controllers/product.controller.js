@@ -455,7 +455,7 @@ export const searchProducts = async (req, res, next) => {
       },
       {
         name: 1,
-        metals: 1,
+        metalVariants: 1,
         price: 1,
         salePrice: 1,
         rating: 1,

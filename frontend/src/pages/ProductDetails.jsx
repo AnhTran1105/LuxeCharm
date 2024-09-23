@@ -5,7 +5,7 @@ import CustomPaging from "../components/CustomPaging";
 import InfoDisclosure from "../components/InfoDisclosure";
 import Reviews from "../components/Reviews";
 import { Rating } from "react-simple-star-rating";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleAddToCart } from "../redux/cart/cartSlice";
 import { useSearchParams } from "react-router-dom";
 import ButtonTag from "../components/CustomTags/ButtonTag";
@@ -15,48 +15,39 @@ import QuantityWidget from "../components/QuantityWidget";
 
 function ProductDetails() {
   const [product, setProduct] = useState();
-  const [metal, setMetal] = useState();
-  const [status, setStatus] = useState();
-  const [metalImages, setMetalImages] = useState({});
+  const [metalVariant, setMetalVariant] = useState();
   const { id } = useParams();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { items } = useSelector((state) => state.cart);
+  const [maxQuantity, setMaxQuantity] = useState();
 
   useEffect(() => {
-    (async () => {
+    const fetchProductData = async () => {
       try {
         const productResponse = await axios.get(`/products/${id}`);
-        setProduct(productResponse);
-        setMetal(
-          searchParams.get("metal") ||
-            productResponse.metalVariants[0].metalType
-        );
-        setStatus(productResponse.metalVariants[0].status);
-        setMetalImages(
-          productResponse.metalVariants.find(
-            (variant) =>
-              variant.metalType === productResponse.metalVariants[0].metalType
-          ).images
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [id, searchParams]);
+        const product = productResponse.data;
+        setProduct(product);
 
-  useEffect(() => {
-    if (metal) {
-      setMetalImages(
-        product.metalVariants.find((variant) => variant.metalType === metal)
-          .images
-      );
-      setStatus(
-        product.metalVariants.find((variant) => variant.metalType === metal)
-          .status
-      );
-    }
-  }, [metal, product]);
+        const variantId = searchParams.get("variant");
+        const selectedVariant = product.metalVariants.find(
+          (variant) => variant._id === variantId
+        );
+        setMetalVariant(selectedVariant);
+
+        const cartItemQuantity =
+          items.find((item) => item.metalVariantId === selectedVariant._id)
+            ?.quantity || 0;
+
+        setMaxQuantity(selectedVariant.quantity - cartItemQuantity);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchProductData();
+  }, [id, items, searchParams]);
 
   return (
     product && (
@@ -67,9 +58,9 @@ function ProductDetails() {
               <div className="max-sm:w-[95%] mx-auto">
                 <CustomPaging
                   imageUrls={[
-                    metalImages.primary,
-                    metalImages.secondary,
-                    ...metalImages.others,
+                    metalVariant.images.primary,
+                    metalVariant.images.secondary,
+                    ...metalVariant.images.others,
                   ]}
                 />
               </div>
@@ -111,16 +102,16 @@ function ProductDetails() {
                 <div className="flex gap-2">
                   {product.metalVariants.map((variant) => (
                     <ButtonTag
-                      key={variant.metalType}
+                      key={variant._id}
                       buttonType="rounded"
                       className={
-                        variant.metalType === metal
+                        variant.metalType === metalVariant.metalType
                           ? "bg-black text-white hover:text-white cursor-default"
                           : ""
                       }
                       onClick={() => {
-                        setMetal(variant.metalType);
-                        setSearchParams(`metal=${variant.metalType}`);
+                        setMetalVariant(variant);
+                        setSearchParams(`variant=${variant._id}`);
                       }}
                     >
                       {metalTypes[variant.metalType]}
@@ -135,14 +126,14 @@ function ProductDetails() {
                 >
                   <StockIcon
                     className={
-                      status === "inStock"
+                      metalVariant.status === "inStock"
                         ? "fill-[rgb(62,214,96)]"
-                        : status === "lowStock"
+                        : metalVariant.status === "lowStock"
                         ? "fill-[rgb(241,146,38)]"
                         : "fill-[rgb(18,18,18)]"
                     }
                   />
-                  {statusTypes[status]}
+                  {statusTypes[metalVariant.status]}
                 </p>
               </div>
               <div className="my-4">
@@ -150,11 +141,7 @@ function ProductDetails() {
                 <QuantityWidget
                   quantity={quantity}
                   setQuantity={setQuantity}
-                  maxQuantity={
-                    product.metalVariants.find(
-                      (variant) => variant.metalType === metal
-                    ).quantity
-                  }
+                  maxQuantity={maxQuantity}
                 />
               </div>
               <div className="my-4 space-y-4 max-w-[440px]">
@@ -162,11 +149,11 @@ function ProductDetails() {
                   onClick={() =>
                     dispatch(
                       handleAddToCart({
-                        ...product,
-                        metal: product.metalVariants.find(
-                          (m) => m.type === metal
-                        ),
-                        quantity,
+                        productId: product._id,
+                        quantity: quantity,
+                        metalVariantId: metalVariant._id,
+                        priceAtPurchase: product.price,
+                        salePriceAtPurchase: product.salePrice,
                       })
                     )
                   }
@@ -174,9 +161,9 @@ function ProductDetails() {
                   Add to cart
                 </ButtonTag>
                 <ButtonTag
-                  onClick={() =>
-                    dispatch(handleAddToCart({ ...product, metal, quantity }))
-                  }
+                  // onClick={() =>
+                  //   dispatch(handleAddToCart({ ...product, metal, quantity }))
+                  // }
                   className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1] py-0"
                 >
                   Buy with

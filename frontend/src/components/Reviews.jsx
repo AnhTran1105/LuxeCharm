@@ -15,7 +15,7 @@ function Reviews({ productId, avgRating }) {
     (async () => {
       try {
         const response = await axios.get(`/reviews/${productId}`);
-        setReviews(response);
+        setReviews(response.data);
       } catch (error) {
         console.error(error);
       }

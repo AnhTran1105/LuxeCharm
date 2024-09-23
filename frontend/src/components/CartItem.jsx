@@ -73,7 +73,7 @@ function CartItem({ item }) {
                   <span className="">${item.salePriceAtPurchase}.00</span>
                 </>
               ) : (
-                <span> ${item.priceAtPurchases}.00</span>
+                <span> ${item.priceAtPurchase}.00</span>
               )}
             </div>
           </div>

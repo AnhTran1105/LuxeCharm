@@ -49,12 +49,14 @@ function ChangePasswordModal({ isOpened, setIsOpened }) {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        dispatch(sendMessage({ message: response.message, type: "success" }));
+        dispatch(stopLoading());
+        dispatch(
+          sendMessage({ message: response.data.message, type: "success" })
+        );
         setIsOpened(false);
       } catch (error) {
-        dispatch(sendMessage({ message: error.message, type: "error" }));
-      } finally {
         dispatch(stopLoading());
+        dispatch(sendMessage({ message: error.data.message, type: "error" }));
       }
     })();
   };

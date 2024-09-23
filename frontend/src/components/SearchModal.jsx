@@ -31,7 +31,7 @@ function SearchModal() {
       const response = await axios.get("/products/search", {
         params: { search: term },
       });
-      setProducts(response);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products", error);
     }
@@ -91,12 +91,12 @@ function SearchModal() {
                         {products.map((product) => (
                           <a
                             key={product._id}
-                            href={`/products/${product._id}?metal=${product.metals[0].type}`}
+                            href={`/products/${product._id}?variant=${product.metalVariants[0]._id}`}
                             className="flex text-sm px-6 py-2 sm:py-4 hover:bg-background-secondary"
                           >
                             <div className="w-24">
                               <img
-                                src={product.metals[0].images.primary}
+                                src={product.metalVariants[0].images.primary}
                                 alt={product.name}
                                 className="outline outline-[1px] outline-border-secondary"
                               />
@@ -134,16 +134,17 @@ function SearchModal() {
                                   <StockIcon
                                     className={`
                                     ${
-                                      product.metals[0].status === "inStock"
+                                      product.metalVariants[0].status ===
+                                      "inStock"
                                         ? "fill-[rgb(62,214,96)]"
-                                        : product.metals[0].status ===
+                                        : product.metalVariants[0].status ===
                                           "lowStock"
                                         ? "fill-[rgb(241,146,38)]"
                                         : "fill-[rgb(18,18,18)]"
                                     } scale-90
                                   `}
                                   />
-                                  {statusTypes[product.metals[0].status]}
+                                  {statusTypes[product.metalVariants[0].status]}
                                 </p>
                               </div>
                               <div className="mt-1 flex justify-between w-full products-center">

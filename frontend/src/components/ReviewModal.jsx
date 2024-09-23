@@ -58,7 +58,7 @@ function ReviewModal({ isOpened, setOpened, productId }) {
         setIsRefresh(!isRefresh);
       } catch (error) {
         dispatch(stopLoading());
-        dispatch(sendMessage({ message: error.message, type: "error" }));
+        dispatch(sendMessage({ message: error.data.message, type: "error" }));
       }
     })();
   };

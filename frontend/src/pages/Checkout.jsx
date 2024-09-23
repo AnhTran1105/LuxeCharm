@@ -52,11 +52,11 @@ function Checkout() {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setValue("email", response.email);
-        setValue("firstName", response.firstName);
-        setValue("lastName", response.lastName);
-        setValue("address", response.address);
-        setValue("phoneNumber", response.phoneNumber);
+        setValue("email", response.data.email);
+        setValue("firstName", response.data.firstName);
+        setValue("lastName", response.data.lastName);
+        setValue("address", response.data.address);
+        setValue("phoneNumber", response.data.phoneNumber);
       } catch (error) {
         console.error(error);
       }
@@ -84,11 +84,11 @@ function Checkout() {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        if (response.url) {
-          window.location.href = response.url;
+        if (response.data.url) {
+          window.location.href = response.data.url;
         }
       } catch (error) {
-        dispatch(sendMessage({ message: error.message, type: "error" }));
+        dispatch(sendMessage({ message: error.data.message, type: "error" }));
         console.error("Error during checkout:", error);
       } finally {
         dispatch(stopLoading());

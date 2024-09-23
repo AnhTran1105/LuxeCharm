@@ -54,18 +54,18 @@ function Account() {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setValue("email", accountResponse.email);
-        setValue("firstName", accountResponse.firstName);
-        setValue("lastName", accountResponse.lastName);
-        setValue("address", accountResponse.address);
-        setValue("phoneNumber", accountResponse.phoneNumber);
+        setValue("email", accountResponse.data.email);
+        setValue("firstName", accountResponse.data.firstName);
+        setValue("lastName", accountResponse.data.lastName);
+        setValue("address", accountResponse.data.address);
+        setValue("phoneNumber", accountResponse.data.phoneNumber);
 
         const ordersResponse = await axios.get("/orders", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setOrders(ordersResponse);
+        setOrders(ordersResponse.data);
       } catch (error) {
         console.error(error);
       }
@@ -379,10 +379,11 @@ function Account() {
                       </li>
                     ))
                   ) : (
-                    <div className="p-5 flex justify-center items-center gap-1 text-sm">
+                    <div className="p-5 space-y-2">
                       <div>You haven't placed any orders yet.</div>
                       <ButtonTag
                         onClick={() => (window.location.href = "/all-jewelry")}
+                        className="w-fit"
                       >
                         Shopping now
                       </ButtonTag>

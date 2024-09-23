@@ -8,8 +8,8 @@ const CheckoutButton = ({ formData }) => {
           Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
       });
-      if (response.url) {
-        window.location.href = response.url;
+      if (response.data.url) {
+        window.location.href = response.data.url;
       }
     } catch (error) {
       console.error("Error during checkout:", error);

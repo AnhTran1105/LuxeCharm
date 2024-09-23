@@ -15,7 +15,7 @@ function CheckoutSuccess() {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setOrder(response);
+        setOrder(response.data);
       } catch (error) {
         console.error(error);
       }
