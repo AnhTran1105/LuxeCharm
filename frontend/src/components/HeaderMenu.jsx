@@ -17,7 +17,7 @@ function HeaderMenu({ isOpened, setIsOpened }) {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         });
-        setUserInfo(response);
+        setUserInfo(response.data);
       } catch (error) {
         console.error(error);
       }

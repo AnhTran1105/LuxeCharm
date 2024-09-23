@@ -1,29 +1,28 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase";
 import axios from "../utils/axios";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import ButtonTag from "./CustomTags/ButtonTag";
+import { useDispatch } from "react-redux";
+import { setToken } from "../redux/auth/authSlice";
 
 function OAuth() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
-
       const result = await signInWithPopup(auth, provider);
-      const response = await axios.post("auth/google", {
-        name: result.user.displayName,
+      const response = await axios.post("auth/login-google", {
+        firstName: result.user.displayName.split(" ").slice(0, -1).join(" "),
+        lastName: result.user.displayName.split(" ").at(-1),
         email: result.user.email,
-        photo: result.user.photoURL,
+        phoneNumber: result.user.phoneNumber,
       });
-
-      navigate("/");
+      const { access_token } = response.data;
+      dispatch(setToken(access_token));
+      window.location.href = "/";
     } catch (error) {
-      console.log("Could not login with Google", error);
+      console.error(error);
     }
   };
 

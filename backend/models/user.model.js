@@ -13,8 +13,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    phoneNumber: { type: String, required: true },
-    address: { type: String, required: true, trim: true },
+    phoneNumber: { type: String },
+    address: { type: String, trim: true },
     cartId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Cart",
