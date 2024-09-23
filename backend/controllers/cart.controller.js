@@ -46,24 +46,26 @@ export const addToCart = async (req, res, next) => {
 
     await cart.save();
 
-    res.status(200).json({ message: "Product added to cart", cart });
+    res.status(200).json({ message: "Item added to cart!", cart });
   } catch (error) {
     next(error);
   }
 };
 
 export const removeFromCart = async (req, res, next) => {
-  const { id } = req.params;
+  const { metalVariantId } = req.params;
 
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
 
     if (cart) {
-      cart.items = cart.items.filter((item) => item._id.toString() !== id);
+      cart.items = cart.items.filter(
+        (item) => item.metalVariantId.toString() !== metalVariantId
+      );
       await cart.save();
-      res.status(200).json({ message: "Product removed from cart" });
+      res.status(200).json({ message: "Product removed from cart!" });
     } else {
-      res.status(404).json({ message: "Cart not found" });
+      res.status(404).json({ message: "Cart not found!" });
     }
   } catch (error) {
     next(error);
@@ -71,7 +73,7 @@ export const removeFromCart = async (req, res, next) => {
 };
 
 export const updateCartItemQuantity = async (req, res, next) => {
-  const { cartItemId, quantity } = req.body;
+  const { metalVariantId, quantity } = req.body;
 
   try {
     const userId = req.user.id;
@@ -83,18 +85,18 @@ export const updateCartItemQuantity = async (req, res, next) => {
     }
 
     const itemIndex = cart.items.findIndex(
-      (item) => item._id.toString() === cartItemId
+      (item) => item.metalVariantId.toString() === metalVariantId
     );
 
     if (itemIndex === -1) {
-      return res.status(404).json({ message: "Product not found in cart!" });
+      return res.status(404).json({ message: "Item not found in cart!" });
     }
 
     cart.items[itemIndex].quantity = quantity;
 
     await cart.save();
 
-    res.status(200).json({ message: "Quantity updated", cart });
+    res.status(200).json({ message: "Quantity updated!", cart });
   } catch (error) {
     next(error);
   }

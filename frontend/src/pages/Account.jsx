@@ -12,7 +12,6 @@ import moment from "moment";
 import ChangePasswordModal from "../components/ChangePasswordModal";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import ErrorMessage from "../components/ErrorMessage";
-import { useNavigate } from "react-router-dom";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Fragment } from "react";
 import { EditIcon, LogoutIcon, PasswordIcon } from "../components/SVG";
@@ -33,7 +32,6 @@ const schema = yup
 
 function Account() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
@@ -171,7 +169,10 @@ function Account() {
                     Change password
                   </ButtonTag>
                   <ButtonTag
-                    onClick={() => dispatch(logout())}
+                    onClick={() => {
+                      dispatch(logout());
+                      dispatch(fetchCart());
+                    }}
                     className="px-2 py-1 w-fit flex items-center gap-2"
                   >
                     <LogoutIcon

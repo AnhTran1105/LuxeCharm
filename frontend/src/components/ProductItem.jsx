@@ -6,7 +6,7 @@ import { openOptionsModal } from "../redux/optionsModal/optionsModalSlice";
 function ProductItem({ product }) {
   const dispatch = useDispatch();
 
-  console.log(product);
+  // console.log(product);
 
   return (
     <li className="group cursor-pointer relative carousel-item">

@@ -42,7 +42,7 @@ function CartItem({ item }) {
           <ButtonTag
             buttonType="icon"
             onClick={() => {
-              dispatch(removeFromCart(product._id));
+              dispatch(removeFromCart(item.metalVariantId));
             }}
             className="absolute top-0 right-0"
           >

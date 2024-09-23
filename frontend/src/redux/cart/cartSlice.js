@@ -1,39 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { showCart } from "../cartModal/cartModalSlice";
 
 const initialState = {
   items: JSON.parse(localStorage.getItem("cart"))?.items || [],
   totalPrice: JSON.parse(localStorage.getItem("cart"))?.totalPrice || 0,
-  isLoggedIn: !!localStorage.getItem("access_token"),
   loading: false,
   error: null,
 };
 
-export const fetchCart = createAsyncThunk(
-  "cart/fetchCart",
-  async (_, { getState }) => {
-    const { cart } = getState();
-
-    if (cart.isLoggedIn) {
-      const response = await axios.get("/cart", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      return response.data;
-    } else {
-      const localCart = JSON.parse(localStorage.getItem("cart")) || {
-        items: [],
-        totalPrice: 0,
-      };
-      return localCart;
-    }
+export const fetchCart = createAsyncThunk("cart/fetchCart", async () => {
+  if (localStorage.getItem("access_token")) {
+    const response = await axios.get("/cart", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    return response.data;
+  } else {
+    const localCart = JSON.parse(localStorage.getItem("cart")) || {
+      items: [],
+      totalPrice: 0,
+    };
+    return localCart;
   }
-);
+});
 
 export const syncCartAfterLogin = createAsyncThunk(
   "cart/syncCartAfterLogin",
-  async () => {
+  async (_, { dispatch }) => {
     const localCart = JSON.parse(localStorage.getItem("cart")) || {
       items: [],
       totalPrice: 0,
@@ -62,17 +57,16 @@ export const syncCartAfterLogin = createAsyncThunk(
         }
       }
 
-      await axios.put(
-        "/cart",
-        { items: backendCart.items },
-        {
+      for (const item of backendCart.items) {
+        await axios.post("/cart", item, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
-        }
-      );
+        });
+      }
 
       localStorage.removeItem("cart");
+      dispatch(fetchCart());
     }
 
     return backendCart;
@@ -84,13 +78,14 @@ export const handleAddToCart = createAsyncThunk(
   async (item, { getState, dispatch }) => {
     const { cart } = getState();
 
-    if (cart.isLoggedIn) {
+    if (localStorage.getItem("access_token")) {
       await axios.post("/cart", item, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
       dispatch(fetchCart());
+      dispatch(showCart());
     } else {
       const existingItemIndex = cart.items.findIndex(
         (cartItem) =>
@@ -122,6 +117,7 @@ export const handleAddToCart = createAsyncThunk(
         JSON.stringify({ items: updatedItems, totalPrice })
       );
       dispatch(updateCart({ items: updatedItems, totalPrice }));
+      dispatch(showCart());
     }
   }
 );
@@ -131,7 +127,7 @@ export const updateCartItemQuantity = createAsyncThunk(
   async (item, { getState, dispatch }) => {
     const { cart } = getState();
 
-    if (cart.isLoggedIn) {
+    if (localStorage.getItem("access_token")) {
       await axios.put(`/cart/quantity`, item, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -162,11 +158,11 @@ export const updateCartItemQuantity = createAsyncThunk(
 
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async (productId, { getState, dispatch }) => {
+  async (metalVariantId, { getState, dispatch }) => {
     const { cart } = getState();
 
-    if (cart.isLoggedIn) {
-      await axios.delete(`/cart`, productId, {
+    if (localStorage.getItem("access_token")) {
+      await axios.delete(`/cart/${metalVariantId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -174,7 +170,7 @@ export const removeFromCart = createAsyncThunk(
       dispatch(fetchCart());
     } else {
       const updatedItems = cart.items.filter(
-        (cartItem) => cartItem.productId !== productId
+        (cartItem) => cartItem.metalVariantId !== metalVariantId
       );
       const totalPrice = updatedItems.reduce(
         (total, cartItem) =>
@@ -200,9 +196,6 @@ const cartSlice = createSlice({
     updateCart: (state, action) => {
       state.items = action.payload.items;
       state.totalPrice = action.payload.totalPrice;
-    },
-    setIsLoggedIn: (state, action) => {
-      state.isLoggedIn = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -241,5 +234,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { updateCart, setIsLoggedIn } = cartSlice.actions;
+export const { updateCart } = cartSlice.actions;
 export default cartSlice.reducer;

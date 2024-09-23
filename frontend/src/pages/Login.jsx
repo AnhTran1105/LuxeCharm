@@ -6,7 +6,7 @@ import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { setToken } from "../redux/auth/authSlice";
 import axios from "../utils/axios";
 import OAuth from "../components/OAuth";
-import { setIsLoggedIn, syncCartAfterLogin } from "../redux/cart/cartSlice";
+import { syncCartAfterLogin } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
 import AnchorTag from "../components/CustomTags/AnchorTag";
 import ErrorMessage from "../components/ErrorMessage";
@@ -39,9 +39,8 @@ function Login() {
         email: formData.email,
         password: formData.password,
       });
-      const { access_token } = response;
+      const { access_token } = response.data;
       dispatch(setToken(access_token));
-      dispatch(setIsLoggedIn(true));
       dispatch(syncCartAfterLogin());
       window.location.href = "/";
     } catch (error) {
