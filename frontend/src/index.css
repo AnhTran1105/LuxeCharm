@@ -458,10 +458,6 @@ textarea::placeholder {
   object-fit: cover;
 }
 
-.slick-dots.slick-thumb li:not(.slick-active) a img {
-  @apply hover:opacity-75;
-}
-
 .custom-paging .slick-arrow {
   @apply top-[40%];
   background-color: transparent !important;
