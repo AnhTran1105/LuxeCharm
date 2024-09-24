@@ -65,13 +65,14 @@ function Checkout() {
 
   const onSubmit = (formData) => {
     dispatch(startLoading());
-    const data = new FormData();
-
-    data.append("firstName", formData.firstName);
-    data.append("lastName", formData.lastName);
-    data.append("address", formData.address);
-    data.append("phoneNumber", formData.phoneNumber);
-    data.append("notes", formData.notes);
+    const data = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      address: formData.address,
+      phoneNumber: formData.phoneNumber,
+      notes: formData.notes,
+      cart: { items, totalPrice },
+    };
 
     (async () => {
       try {

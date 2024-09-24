@@ -12,9 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const placeOrder = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { address, phoneNumber, notes, firstName, lastName } = req.body;
-
-    const cart = await Cart.findOne({ userId });
+    const { address, phoneNumber, notes, firstName, lastName, cart } = req.body;
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
@@ -95,7 +93,7 @@ export const verifyOrder = async (req, res, next) => {
 
     if (success) {
       const order = await Order.findOneAndUpdate(
-        { userId, status: "Pending" },
+        { userId, _id: orderId, status: "Pending" },
         { status: "Paid" },
         { new: true }
       );
@@ -162,6 +160,7 @@ export const getOrdersByUserId = async (req, res, next) => {
             );
 
             return {
+              _id: item._id,
               productId: item.productId,
               name: product.name,
               metalType: metalVariant.metalType,
