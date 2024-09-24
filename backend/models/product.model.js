@@ -164,9 +164,7 @@ productSchema.statics.findSimilarProducts = async function (
   return this.find({
     _id: { $ne: product._id },
     category: product.category,
-  })
-    .limit(limit)
-    .select("name category price images");
+  }).limit(limit);
 };
 
 const Product = mongoose.model("Product", productSchema);

@@ -2,6 +2,8 @@ import Slider from "react-slick";
 import { CaretIcon } from "./SVG";
 import { useState } from "react";
 import ButtonTag from "./CustomTags/ButtonTag";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 function CustomPaging({ imageUrls }) {
   const [sliderRef, setSliderRef] = useState(null);
@@ -58,9 +60,11 @@ function CustomPaging({ imageUrls }) {
     <div className="slider-container custom-paging">
       <Slider ref={setSliderRef} {...settings}>
         {imageUrls.map((url) => (
-          <div key={url} className="!flex justify-center">
-            <img src={url} className="w-full lg:w-1/2 aspect-[3/4]" />
-          </div>
+          <Zoom key={url}>
+            <div className="!flex justify-center">
+              <img src={url} className="w-full lg:w-1/2 aspect-[3/4]" />
+            </div>
+          </Zoom>
         ))}
       </Slider>
     </div>

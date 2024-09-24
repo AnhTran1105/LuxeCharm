@@ -12,9 +12,16 @@ import ButtonTag from "../components/CustomTags/ButtonTag";
 import { StockIcon, StripeIcon } from "../components/SVG";
 import { metalTypes, statusTypes } from "../constants";
 import QuantityWidget from "../components/QuantityWidget";
+import SuggestionCarousel from "../components/SuggestionCarousel";
+
+const getRandomProducts = (products, num) => {
+  const shuffled = products.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+};
 
 function ProductDetails() {
   const [product, setProduct] = useState();
+  const [similarProducts, setSimilarProducts] = useState();
   const [metalVariant, setMetalVariant] = useState();
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -29,6 +36,11 @@ function ProductDetails() {
         const productResponse = await axios.get(`/products/${id}`);
         const product = productResponse.data;
         setProduct(product);
+
+        const similarProductsResponse = await axios.get(
+          `/products/get-similar/${id}`
+        );
+        setSimilarProducts(similarProductsResponse.data);
 
         const variantId = searchParams.get("variant");
         const selectedVariant = product.metalVariants.find(
@@ -50,7 +62,8 @@ function ProductDetails() {
   }, [id, items, searchParams]);
 
   return (
-    product && (
+    product &&
+    metalVariant && (
       <>
         <section className="">
           <div className="sm:flex max-sm:space-y-6">
@@ -208,6 +221,14 @@ function ProductDetails() {
             </div>
           </div>
         </section>
+        {similarProducts && similarProducts.length > 0 && (
+          <section className="mt-12 space-y-6">
+            <h2 className="text-xl">You May Also Like</h2>
+            <SuggestionCarousel
+              products={getRandomProducts(similarProducts, 5)}
+            />
+          </section>
+        )}
         <Reviews productId={product._id} avgRating={product.rating.avgRating} />
       </>
     )

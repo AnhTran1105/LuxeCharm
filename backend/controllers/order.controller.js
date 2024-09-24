@@ -164,6 +164,7 @@ export const getOrdersByUserId = async (req, res, next) => {
               productId: item.productId,
               name: product.name,
               metalType: metalVariant.metalType,
+              metalVariantId: metalVariant._id,
               imageUrl: metalVariant.images.primary,
               quantity: item.quantity,
               priceAtPurchase: item.priceAtPurchase,

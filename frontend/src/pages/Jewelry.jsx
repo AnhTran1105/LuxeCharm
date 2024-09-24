@@ -171,7 +171,7 @@ function Jewelry() {
             ))}
 
             {(minPrice || maxPrice) && (
-              <li className="mb-5 border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center">
+              <li className="border-border-secondary border rounded-full px-2 py-1 flex gap-2 justify-center items-center">
                 Price: ${minPrice}.00 - ${maxPrice || productsInfo.highestPrice}
                 .00
                 <ButtonTag

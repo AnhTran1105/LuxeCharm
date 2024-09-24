@@ -93,6 +93,8 @@ function Checkout() {
     })();
   };
 
+  console.log(items);
+
   return (
     <section className="w-full text-center">
       <h1 className="text-4xl">Checkout</h1>
@@ -210,7 +212,7 @@ function Checkout() {
             </div>
             <ul role="list" className="">
               {[...items].reverse().map((item) => (
-                <CartItem key={item._id} item={item} />
+                <CartItem key={item.metalVariantId} item={item} />
               ))}
             </ul>
             <div className="border-t border-border p-5">

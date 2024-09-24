@@ -405,10 +405,9 @@ textarea::placeholder {
   padding: 0;
 }
 
-/* .slider-container .slick-track {
-  display: flex;
-  justify-content: center;
-} */
+.slick-track {
+  margin: 0;
+}
 
 .product-carousel .slick-prev {
   left: -45px;

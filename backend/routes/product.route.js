@@ -7,6 +7,7 @@ import {
   updateProduct,
   searchProducts,
   getFilteredProducts,
+  getSimilarProducts,
 } from "../controllers/product.controller.js";
 import { verifyAdmin } from "../middlewares/auth.js";
 import { param } from "express-validator";
@@ -23,6 +24,13 @@ router.get(
   [param("id").notEmpty().withMessage("Product ID is required")],
   getProductById
 );
+
+router.get(
+  "/products/get-similar/:id",
+  [param("id").notEmpty().withMessage("Product ID is required")],
+  getSimilarProducts
+);
+
 router.get("/products", getAllProducts);
 
 const metalFields = Array.from({ length: 10 }, (_, index) => [

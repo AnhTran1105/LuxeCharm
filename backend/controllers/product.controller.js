@@ -477,3 +477,30 @@ export const searchProducts = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSimilarProducts = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const similarProducts = await Product.findSimilarProducts(id, 5);
+
+    const expandedProducts = similarProducts.flatMap((product) => {
+      const totalVariants = product.metalVariants.length;
+
+      return product.metalVariants.map((metalVariant) => ({
+        _id: product._id,
+        name: `${product.name} ${
+          totalVariants > 1 ? `- ${metalTypes[metalVariant.metalType]}` : ""
+        }`,
+        price: product.price,
+        salePrice: product.salePrice,
+        metalVariant: metalVariant,
+        category: product.category,
+        totalVariants: totalVariants,
+      }));
+    });
+
+    res.status(200).json(expandedProducts);
+  } catch (error) {
+    next(error);
+  }
+};

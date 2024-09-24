@@ -355,7 +355,7 @@ function Account() {
                             <div className="pl-5 w-full relative">
                               <div className="text-left">
                                 <a
-                                  href={`/products/${cartItem._id}?variant=${cartItem.metalVariantId}`}
+                                  href={`/products/${cartItem.productId}?variant=${cartItem.metalVariantId}`}
                                   alt={cartItem.name}
                                   className="mr-2 font-SofiaBold text-sm leading-5"
                                   tabIndex={0}
