@@ -86,7 +86,7 @@ function OptionsModal() {
               <div className="w-full sm:w-[55%]">
                 <div className="flex justify-center">
                   <img
-                    src={metalVariant.images.primary}
+                    src={selectedMetalVariant.images.primary}
                     className="w-full md:w-4/5 xl:w-3/4 aspect-[3/4]"
                   />
                 </div>
@@ -190,7 +190,18 @@ function OptionsModal() {
                     Add to cart
                   </ButtonTag>
                   <ButtonTag
-                    onClick={() => (window.location.href = "/checkout-stripe")}
+                    onClick={() => {
+                      dispatch(
+                        handleAddToCart({
+                          productId: product._id,
+                          quantity: quantity,
+                          metalVariantId: selectedMetalVariant._id,
+                          priceAtPurchase: product.price,
+                          salePriceAtPurchase: product.salePrice,
+                        })
+                      );
+                      window.location.href = "/checkout";
+                    }}
                     className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1] py-0"
                   >
                     Buy with

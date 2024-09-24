@@ -161,7 +161,18 @@ function ProductDetails() {
                   Add to cart
                 </ButtonTag>
                 <ButtonTag
-                  onClick={() => (window.location.href = "/checkout-stripe")}
+                  onClick={() => {
+                    dispatch(
+                      handleAddToCart({
+                        productId: product._id,
+                        quantity: quantity,
+                        metalVariantId: metalVariant._id,
+                        priceAtPurchase: product.price,
+                        salePriceAtPurchase: product.salePrice,
+                      })
+                    );
+                    window.location.href = "/checkout";
+                  }}
                   className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1] py-0"
                 >
                   Buy with

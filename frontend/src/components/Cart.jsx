@@ -83,7 +83,6 @@ function Cart() {
             <ButtonTag
               disabled={items.length === 0}
               onClick={() => {
-                dispatch(hideCart());
                 window.location.href = "/checkout";
               }}
               className={`py-2`}
