@@ -61,8 +61,8 @@ function ProductItem({ product }) {
           onClick={() =>
             dispatch(
               openOptionsModal({
-                productId: product._id.split("-")[0],
-                metal: product.metal,
+                productId: product._id,
+                metalVariant: product.metalVariant,
               })
             )
           }

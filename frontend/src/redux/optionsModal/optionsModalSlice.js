@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isOpened: false,
   productId: null,
-  metal: null,
+  metalVariant: null,
 };
 
 const optionsModalSlice = createSlice({
@@ -13,12 +13,12 @@ const optionsModalSlice = createSlice({
     openOptionsModal: (state, action) => {
       state.isOpened = true;
       state.productId = action.payload.productId;
-      state.metal = action.payload.metal;
+      state.metalVariant = action.payload.metalVariant;
     },
     closeOptionsModal: (state) => {
       state.isOpened = false;
       state.productId = null;
-      state.metal = null;
+      state.metalVariant = null;
     },
   },
 });

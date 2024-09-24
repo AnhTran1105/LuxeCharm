@@ -18,34 +18,50 @@ import AnchorTag from "./CustomTags/AnchorTag";
 import QuantityWidget from "./QuantityWidget";
 
 function OptionsModal() {
-  const { isOpened, productId, metal } = useSelector(
+  const { isOpened, productId, metalVariant } = useSelector(
     (state) => state.optionsModal
   );
+  const { items } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
-  const [product, setProduct] = useState();
-  const [selectedMetal, setSelectedMetal] = useState(metal ? metal.type : "");
-  const [status, setStatus] = useState(metal ? metal.status : "");
+  const [product, setProduct] = useState(null);
+  const [selectedMetalVariant, setSelectedMetalVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [maxQuantity, setMaxQuantity] = useState(0);
+
+  useEffect(() => {
+    if (metalVariant) {
+      setSelectedMetalVariant(metalVariant);
+    }
+  }, [metalVariant]);
 
   useEffect(() => {
     if (productId) {
-      setSelectedMetal(metal.type);
-      setStatus(metal.status);
       (async () => {
         try {
           const response = await axios.get(`/products/${productId}`);
-          setProduct(response);
+          setProduct(response.data);
         } catch (error) {
-          console.error(error);
+          console.error("Error fetching product:", error);
         }
       })();
     }
   }, [productId]);
 
+  useEffect(() => {
+    if (selectedMetalVariant && items) {
+      const cartItemQuantity =
+        items.find((item) => item.metalVariantId === selectedMetalVariant._id)
+          ?.quantity || 0;
+
+      setMaxQuantity(selectedMetalVariant.quantity - cartItemQuantity);
+    }
+  }, [selectedMetalVariant, items]);
+
   return (
     isOpened &&
-    product && (
+    product &&
+    selectedMetalVariant && (
       <Dialog
         open={isOpened}
         onClose={() => dispatch(closeOptionsModal())}
@@ -70,10 +86,7 @@ function OptionsModal() {
               <div className="w-full sm:w-[55%]">
                 <div className="flex justify-center">
                   <img
-                    src={
-                      product.metals.find((item) => item.type === selectedMetal)
-                        .images.primary
-                    }
+                    src={metalVariant.images.primary}
                     className="w-full md:w-4/5 xl:w-3/4 aspect-[3/4]"
                   />
                 </div>
@@ -117,20 +130,20 @@ function OptionsModal() {
                 <div className="my-4">
                   <p className="text-sm text-text-primary mb-3">Metal</p>
                   <div className="flex gap-2">
-                    {product.metals.map((item) => (
+                    {product.metalVariants.map((variant) => (
                       <ButtonTag
-                        key={item.type}
+                        key={variant._id}
                         buttonType="rounded"
                         className={
-                          item.type === selectedMetal
+                          variant.metalType === selectedMetalVariant.metalType
                             ? "bg-black text-white hover:text-white cursor-default"
                             : ""
                         }
                         onClick={() => {
-                          setSelectedMetal(item.type);
+                          setSelectedMetalVariant(variant);
                         }}
                       >
-                        {metalTypes[item.type]}
+                        {metalTypes[variant.metalType]}
                       </ButtonTag>
                     ))}
                   </div>
@@ -142,14 +155,14 @@ function OptionsModal() {
                   >
                     <StockIcon
                       className={
-                        status === "inStock"
+                        selectedMetalVariant.status === "inStock"
                           ? "fill-[rgb(62,214,96)]"
-                          : status === "lowStock"
+                          : selectedMetalVariant.status === "lowStock"
                           ? "fill-[rgb(241,146,38)]"
                           : "fill-[rgb(18,18,18)]"
                       }
                     />
-                    {statusTypes[status]}
+                    {statusTypes[selectedMetalVariant.status]}
                   </p>
                 </div>
                 <div className="my-4">
@@ -157,20 +170,27 @@ function OptionsModal() {
                   <QuantityWidget
                     quantity={quantity}
                     setQuantity={setQuantity}
+                    maxQuantity={maxQuantity}
                   />
                 </div>
                 <div className="my-4 space-y-4 max-w-[440px]">
                   <ButtonTag
                     onClick={() =>
-                      dispatch(handleAddToCart({ ...product, metal, quantity }))
+                      dispatch(
+                        handleAddToCart({
+                          productId: product._id,
+                          quantity: quantity,
+                          metalVariantId: selectedMetalVariant._id,
+                          priceAtPurchase: product.price,
+                          salePriceAtPurchase: product.salePrice,
+                        })
+                      )
                     }
                   >
                     Add to cart
                   </ButtonTag>
                   <ButtonTag
-                    onClick={() =>
-                      dispatch(handleAddToCart({ ...product, metal, quantity }))
-                    }
+                    onClick={() => (window.location.href = "/checkout-stripe")}
                     className="bg-[#646fde] border-none text-white flex justify-center items-center gap-2 hover:bg-[#5762c1] py-0"
                   >
                     Buy with
@@ -179,7 +199,7 @@ function OptionsModal() {
                 </div>
                 <div className="my-4">
                   <AnchorTag
-                    href={`/products/${product._id}?metal=${selectedMetal}`}
+                    href={`/products/${product._id}?variant=${selectedMetalVariant._id}`}
                     className="gap-3 items-center flex"
                   >
                     View full details

@@ -26,6 +26,7 @@ import { fetchCart } from "./redux/cart/cartSlice.js";
 import OptionsModal from "./components/OptionsModal.jsx";
 import Layout from "./components/Layout.jsx";
 import SearchModal from "./components/SearchModal.jsx";
+import CheckoutStripe from "./pages/CheckoutStripe.jsx";
 
 export default function App() {
   const root = document.querySelector("#root");
@@ -90,6 +91,7 @@ export default function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/account" element={<Account />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout-stripe" element={<CheckoutStripe />} />
               <Route path="/checkout/verify" element={<VerifyOrder />} />
               <Route
                 path="/checkout/success/:orderId"
