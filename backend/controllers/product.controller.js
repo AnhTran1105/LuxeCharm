@@ -54,27 +54,35 @@ export const getFilteredProducts = async (req, res) => {
             { price: { $gte: minPriceNum, $lte: maxPriceNum } },
           ],
         },
-
         {
           $and: [
             { salePrice: { $ne: null } },
             { salePrice: { $gte: minPriceNum, $lte: maxPriceNum } },
           ],
         },
-
-        {
-          $and: [
-            { salePrice: { $ne: null } },
-            { price: { $gte: minPriceNum, $lte: maxPriceNum } },
-            { $expr: { $lt: ["$price", "$salePrice"] } },
-          ],
-        },
       ];
     }
+
+    let pipeline = [
+      { $match: query },
+      {
+        $addFields: {
+          effectivePrice: {
+            $cond: {
+              if: { $ne: ["$salePrice", null] },
+              then: "$salePrice",
+              else: "$price",
+            },
+          },
+          totalSoldCount: { $sum: "$metalVariants.soldCount" },
+        },
+      },
+    ];
 
     switch (sortBy) {
       case "rating_desc":
         sort = { "rating.avgRating": -1 };
+        break;
       case "alphabetical_asc":
         sort = { name: 1 };
         break;
@@ -82,10 +90,10 @@ export const getFilteredProducts = async (req, res) => {
         sort = { name: -1 };
         break;
       case "price_asc":
-        sort = { price: 1 };
+        sort = { effectivePrice: 1 };
         break;
       case "price_desc":
-        sort = { price: -1 };
+        sort = { effectivePrice: -1 };
         break;
       case "date_asc":
         sort = { createdAt: 1 };
@@ -94,15 +102,17 @@ export const getFilteredProducts = async (req, res) => {
         sort = { createdAt: -1 };
         break;
       default:
-        sort = { soldCount: -1 };
+        sort = { totalSoldCount: -1 };
     }
 
-    const filteredProducts = await Product.find(query).sort(sort);
-    const allProducts = await Product.find();
+    pipeline.push({ $sort: sort });
 
+    const filteredProducts = await Product.aggregate(pipeline);
+
+    const allProducts = await Product.find();
     let highestPrice = 0;
 
-    if (categories === "" && metals === "") {
+    if (!categories && !metals) {
       highestPrice = Math.max(
         ...allProducts.map((product) =>
           product.salePrice ? product.salePrice : product.price

@@ -147,11 +147,40 @@ export const getOrdersByUserId = async (req, res, next) => {
 
     const orders = await Order.find({ userId });
 
-    if (!orders) {
-      res.status(404).json({ message: "Order not found" });
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "Orders not found" });
     }
 
-    res.json(orders);
+    const ordersWithProductDetails = await Promise.all(
+      orders.map(async (order) => {
+        const detailedCartItems = await Promise.all(
+          order.cartItems.map(async (item) => {
+            const product = await Product.findById(item.productId);
+            const metalVariant = product.metalVariants.find(
+              (variant) =>
+                variant._id.toString() === item.metalVariantId.toString()
+            );
+
+            return {
+              productId: item.productId,
+              name: product.name,
+              metalType: metalVariant.metalType,
+              imageUrl: metalVariant.images.primary,
+              quantity: item.quantity,
+              priceAtPurchase: item.priceAtPurchase,
+              salePriceAtPurchase: item.salePriceAtPurchase,
+            };
+          })
+        );
+
+        return {
+          ...order.toObject(),
+          cartItems: detailedCartItems,
+        };
+      })
+    );
+
+    res.json(ordersWithProductDetails);
   } catch (error) {
     next(error);
   }

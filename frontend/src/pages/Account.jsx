@@ -105,6 +105,8 @@ function Account() {
 
   useEffect(() => {}, [isRefresh]);
 
+  console.log(orders);
+
   return (
     <>
       <section className="w-full text-center">
@@ -324,7 +326,9 @@ function Account() {
                             {item.cartItems.reduce((total, item) => {
                               return (
                                 total +
-                                (item.salePrice || item.price) * item.quantity
+                                (item.salePriceAtPurchase ||
+                                  item.priceAtPurchase) *
+                                  item.quantity
                               );
                             }, 0)}{" "}
                             USD
@@ -338,7 +342,7 @@ function Account() {
                           >
                             <div className="w-24">
                               <a
-                                href={`/products/${cartItem.productId}`}
+                                href={`/products/${cartItem.productId}?variant=${cartItem.metalVariantId}`}
                                 tabIndex={-1}
                               >
                                 <img
@@ -351,7 +355,7 @@ function Account() {
                             <div className="pl-5 w-full relative">
                               <div className="text-left">
                                 <a
-                                  href={`/products/${cartItem._id}`}
+                                  href={`/products/${cartItem._id}?variant=${cartItem.metalVariantId}`}
                                   alt={cartItem.name}
                                   className="mr-2 font-SofiaBold text-sm leading-5"
                                   tabIndex={0}
@@ -360,7 +364,7 @@ function Account() {
                                 </a>
                               </div>
                               <div className="leading-3 text-xs text-left">
-                                {metalTypes[cartItem.metal]}
+                                {metalTypes[cartItem.metalType]}
                               </div>
                               <div className="flex justify-between w-full items-center">
                                 <div className="mt-[10px] text-left text-xs">
@@ -369,7 +373,10 @@ function Account() {
                                 <div className="mt-[5px] text-right text-xs leading-4">
                                   <span>
                                     {" "}
-                                    ${cartItem.salePrice || cartItem.price}.00
+                                    $
+                                    {cartItem.salePriceAtPurchase ||
+                                      cartItem.priceAtPurchase}
+                                    .00
                                   </span>
                                 </div>
                               </div>

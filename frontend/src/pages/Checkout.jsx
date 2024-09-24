@@ -7,13 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../redux/notification/notificationSlice";
 import { startLoading, stopLoading } from "../redux/loading/loadingSlice";
 import { fetchCart } from "../redux/cart/cartSlice";
-import { removeFromCart } from "../redux/cart/cartSlice";
 import ButtonTag from "../components/CustomTags/ButtonTag";
-import { StripeIcon, TrashIcon } from "../components/SVG";
-import AnchorTag from "../components/CustomTags/AnchorTag";
+import { StripeIcon } from "../components/SVG";
 import ErrorMessage from "../components/ErrorMessage";
-import QuantityInput from "../components/QuantityInput";
-import { metalTypes } from "../constants";
 import CartItem from "../components/CartItem";
 
 const phoneRegExp =
